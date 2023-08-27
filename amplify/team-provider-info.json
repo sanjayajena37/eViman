@@ -1,0 +1,23 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-eviman-dev-200706-authRole",
+      "UnauthRoleArn": "arn:aws:iam::397174610402:role/amplify-eviman-dev-200706-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::397174610402:role/amplify-eviman-dev-200706-authRole",
+      "Region": "ap-south-1",
+      "DeploymentBucketName": "amplify-eviman-dev-200706-deployment",
+      "UnauthRoleName": "amplify-eviman-dev-200706-unauthRole",
+      "StackName": "amplify-eviman-dev-200706",
+      "StackId": "arn:aws:cloudformation:ap-south-1:397174610402:stack/amplify-eviman-dev-200706/35a78810-44e7-11ee-99e1-0a586b208460",
+      "AmplifyAppId": "d1v19adm6vui48"
+    },
+    "categories": {
+      "auth": {
+        "eviman741eba18": {}
+      },
+      "api": {
+        "eviman": {}
+      }
+    }
+  }
+}
