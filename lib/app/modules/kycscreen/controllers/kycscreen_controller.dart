@@ -520,7 +520,7 @@ class KycscreenController extends GetxController with Helper{
       if (currentStep < 2) {
         currentStep = currentStep + 1;
       }
-      // createProfile();
+      createProfile();
     } else if ((currentStep == 2) && allValidation3()) {
       if (currentStep < 2) {
         currentStep = currentStep + 1;

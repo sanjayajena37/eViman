@@ -7,3 +7,19 @@ type Todo @model {
   name: String!
   description: String
 }
+
+type Message
+  @model
+  @auth(rules: [{ allow: public, operations: [read, create] }]) {
+  id: ID!
+  userId: String!
+  username: String!
+  message: String!
+  type: String!
+    @index(
+      name: "messagesByDate"
+      queryField: "messagesByDate"
+      sortKeyFields: ["createdAt"]
+    )
+  createdAt: String!
+}

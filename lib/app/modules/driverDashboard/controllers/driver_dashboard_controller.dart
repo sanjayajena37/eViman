@@ -17,6 +17,7 @@ import 'package:iconsax/iconsax.dart';
 import 'package:location/location.dart';
 import 'package:vibration/vibration.dart';
 
+import '../../../../models/ModelProvider.dart';
 import '../../../constants/helper.dart';
 import '../../../widgets/CustomeTittleText.dart';
 import '../../../widgets/MyWidget.dart';
@@ -26,7 +27,6 @@ import '../../ConnectorController.dart';
 import '../IncomingBooking.dart';
 import 'package:amplify_core/src/types/api/graphql/graphql_response.dart' as gr;
 
-import '../ModelProvider.dart';
 
 part 'mapcontroller.dart';
 part 'appsyncController.dart';
@@ -89,7 +89,9 @@ class DriverDashboardController extends GetxController with Helper {
       final api = AmplifyAPI(modelProvider: ModelProvider.instance);
       final auth = AmplifyAuthCognito();
       await Amplify.addPlugins([api, auth]);
-      await Amplify.configure(amplifyconfig);
+      if (!Amplify.isConfigured) {
+        await Amplify.configure(amplifyconfig);
+      }
       safePrint("Amplify configured successfully");
     } catch (e) {
       safePrint("Error configuring Amplify: $e");
