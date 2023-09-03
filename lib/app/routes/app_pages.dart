@@ -34,6 +34,8 @@ import '../modules/signupscreen/bindings/signupscreen_binding.dart';
 import '../modules/signupscreen/views/signupscreen_view.dart';
 import '../modules/spalshscreen/bindings/spalshscreen_binding.dart';
 import '../modules/spalshscreen/views/spalshscreen_view.dart';
+import '../modules/vehicleDetails/bindings/vehicle_details_binding.dart';
+import '../modules/vehicleDetails/views/vehicle_details_view.dart';
 import '../modules/waletscreen/bindings/waletscreen_binding.dart';
 import '../modules/waletscreen/views/waletscreen_view.dart';
 
@@ -57,8 +59,8 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.INTROSCREEN,
-      transition: Transition.fadeIn,
-      transitionDuration: Duration(milliseconds: 1000),
+      /*transition: Transition.fadeIn,
+      transitionDuration: Duration(milliseconds: 900000),*/
       page: () => IntroscreenView(),
       binding: IntroscreenBinding(),
     ),
@@ -144,22 +146,27 @@ class AppPages {
       name: _Paths.WALETSCREEN,
       transition: Transition.fadeIn,
       transitionDuration: Duration(milliseconds: 1000),
-      page: () =>  WaletscreenView(),
+      page: () => WaletscreenView(),
       binding: WaletscreenBinding(),
     ),
     GetPage(
       name: _Paths.HISTORYSCREEN,
       transition: Transition.fadeIn,
       transitionDuration: Duration(milliseconds: 1000),
-      page: () =>  HistoryscreenView(),
+      page: () => HistoryscreenView(),
       binding: HistoryscreenBinding(),
     ),
     GetPage(
       name: _Paths.INVITESCREEN,
       transition: Transition.fadeIn,
       transitionDuration: Duration(milliseconds: 1000),
-      page: () =>  InvitescreenView(),
+      page: () => InvitescreenView(),
       binding: InvitescreenBinding(),
+    ),
+    GetPage(
+      name: _Paths.VEHICLE_DETAILS,
+      page: () =>  VehicleDetailsView(),
+      binding: VehicleDetailsBinding(),
     ),
   ];
 }

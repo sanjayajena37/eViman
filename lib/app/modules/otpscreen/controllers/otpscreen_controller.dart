@@ -1,4 +1,8 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:get/get.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 import 'package:timer_count_down/timer_controller.dart';
@@ -9,6 +13,7 @@ import '../../../data/ApiFactory.dart';
 import '../../../routes/app_pages.dart';
 import '../../../widgets/MyWidget.dart';
 import '../../../widgets/Snack.dart';
+import '../../../widgets/test.dart';
 import '../../ConnectorController.dart';
 
 class OtpscreenController extends GetxController with CodeAutoFill,Helper {
@@ -22,9 +27,14 @@ class OtpscreenController extends GetxController with CodeAutoFill,Helper {
   Map mapData = {'otp':"000000"};
   @override
   void onInit() {
-    mapData = Get.arguments;
+    getDataFromArguments();
     super.onInit();
     listenOtp();
+  }
+
+  getDataFromArguments()  {
+     mapData = Get.arguments;
+    update(['otp']);
   }
 
   Future<void> listenOtp() async {
@@ -44,7 +54,6 @@ class OtpscreenController extends GetxController with CodeAutoFill,Helper {
   @override
   void onClose() {
     super.onClose();
-    otpEditingController.dispose();
     SmsAutoFill().unregisterListener();
   }
 
@@ -68,7 +77,7 @@ class OtpscreenController extends GetxController with CodeAutoFill,Helper {
         api: ApiFactory.LOGIN,
         json: sendData,
         fun: (map) {
-          closeDialogIfOpen();
+          Get.back();
           if(map is Map && map.containsKey('success')&& map['success'] == true){
             otpEditingController.text="";
             mapData =  {"mobile": mapData['mobile'],"otpToken":map['token'],"otp":map['otp']};
@@ -83,7 +92,7 @@ class OtpscreenController extends GetxController with CodeAutoFill,Helper {
 
 
   void verifyOtp(String otp) async {
-
+    WidgetsFlutterBinding.ensureInitialized();
     Map sendData = {
       "otpToken":mapData['otpToken']?? "",
       "otp": otp??""
@@ -95,30 +104,58 @@ class OtpscreenController extends GetxController with CodeAutoFill,Helper {
         api: ApiFactory.VERIFY_OTP,
         json: sendData,
         fun: (map) async {
-          closeDialogIfOpen();
-          if(map is Map && map.containsKey('success')&& map['success'] == true){
-            otpEditingController.text="";
-            // Get.toNamed(Routes.KYCSCREEN,arguments:mapData['mobile']?? "" );
-            if(map['status'] == "new-user"){
-              Get.toNamed(Routes.KYCSCREEN,arguments: {"mobile":mapData['mobile'] ?? "","index":0});
-            }else if(map['status'] == "vehicle-pending"){
-              Get.toNamed(Routes.KYCSCREEN,arguments: {"mobile":mapData['mobile'] ?? "","index":2,"riderId":(map['riderId'])??0});
-            }else if(map['status'] == "kyc-pending"){
-              await SharedPreferencesKeys().setStringData(key: "riderId", text: (map['riderId']??0).toString());
-              showUnderProcess();
-            }else if(map['status'] == "kyc-verified"){
-              await SharedPreferencesKeys().setStringData(key: "riderId", text: (map['riderId']??0).toString());
-              Get.offAndToNamed(Routes.DRIVER_DASHBOARD);
+          Get.back();
+          if(map is Map && map.containsKey('success')){
+            if(map['success'] == true){
+              otpEditingController.text="";
+              // Get.toNamed(Routes.KYCSCREEN,arguments:mapData['mobile']?? "" );
+              if(map['status'] == "new-user"){
+                Get.offAndToNamed(Routes.KYCSCREEN,arguments: {"mobile":mapData['mobile'] ?? "","index":0,"authToken":map['authToken']??""});
+              }else if(map['status'] == "vehicle-pending"){
+                Get.offAndToNamed(Routes.KYCSCREEN,arguments: {"mobile":mapData['mobile'] ?? "","index":2,
+                  "riderId":(map['riderId'])??0,"authToken":map['authToken']??""});
+              }else if(map['status'] == "kyc-pending"){
+                await SharedPreferencesKeys().setStringData(key: "authToken", text: (map['authToken']??"").toString());
+                await SharedPreferencesKeys().setStringData(key: "isLogin", text: "true");
+                await SharedPreferencesKeys().setStringData(key: "riderId", text: (map['riderId']??"").toString());
+                   await SharedPreferencesKeys().setStringData(key: "vehicleId", text: (map['vehicleId']??0).toString());
+                  String? authToken =
+                      await SharedPreferencesKeys().getStringData(key: 'authToken');
+                  log(">>>>>>>>>>>authToken"+authToken.toString());
+
+                showUnderProcess(map);
+              }else if(map['status'] == "kyc-verified"){
+                await SharedPreferencesKeys().setStringData(key: "authToken", text: (map['authToken']??0).toString());
+                await SharedPreferencesKeys().setStringData(key: "isLogin", text: "true");
+                await SharedPreferencesKeys().setStringData(key: "riderId", text: (map['riderId']??0).toString());
+                await SharedPreferencesKeys().setStringData(key: "vehicleId", text: (map['vehicleId']??0).toString());
+                Get.delete<OtpscreenController>();
+                Get.offAndToNamed(Routes.DRIVER_DASHBOARD);
+              }else{
+                Snack.callError((map['message']??"Something went wrong"));
+              }
             }else{
-              Snack.callError("Something went wrong");
+              Snack.callError((map['message']??"Something went wrong"));
             }
+
           }else{
-            Snack.callError("Something went wrong");
+            Snack.callError((map??"Something went wrong").toString());
           }
-          print(">>>>>" + map.toString());
+          log(">>>>>" + map.toString());
         });
   }
-  void showUnderProcess() async {
+
+  calBackgroundServices(Map map) async {
+    final service = FlutterBackgroundService();
+    bool isRunning = await service.isRunning();
+    if(isRunning == false){
+      service.startService();
+    }
+    // FlutterBackgroundService().invoke("setAsForeground");
+    FlutterBackgroundService().invoke("setAsBackground",map as Map<String,dynamic>);
+  }
+
+  void showUnderProcess(Map map) async {
     bool isOk = await showCommonPopupNew2(
       "Your kyc verification under process?",
       "Please wait until nex update.",
@@ -126,7 +163,16 @@ class OtpscreenController extends GetxController with CodeAutoFill,Helper {
       isYesOrNoPopup: false,
     );
     if (isOk) {
+      Get.delete<OtpscreenController>();
+      calBackgroundServices(map);
       Get.toNamed(Routes.DRIVER_DASHBOARD);
+
+      /*Navigator.push(
+        Get.context!,
+        MaterialPageRoute(builder: (context) => TestPage()),
+      );*/
+
+
       // ignore: use_build_context_synchronously
     }
   }
@@ -136,6 +182,7 @@ class OtpscreenController extends GetxController with CodeAutoFill,Helper {
   }
   @override
   void dispose() {
+    messageOtpCode.value = "";
     // TODO: implement dispose
     super.dispose();
   }

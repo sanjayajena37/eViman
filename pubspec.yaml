@@ -47,6 +47,19 @@ dependencies:
   amplify_flutter: 1.3.3
   amplify_api:
   amplify_auth_cognito:
+  cached_network_image:
+  workmanager:
+  android_alarm_manager_plus:
+  permission_handler:
+  shake: ^2.2.0
+  # device_info_plus: ^8.1.0
+
+  flutter_background_service_android:
+  flutter_background_service_ios:
+  flutter_local_notifications:
+  telephony:
+  fluttertoast:
+  geolocator:
 
 #  simple_animations:
 

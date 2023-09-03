@@ -67,7 +67,7 @@ class IntroscreenView extends GetView<IntroscreenController> {
             backgroundColor: AppTheme.backgroundColor,
             textColor: AppTheme.primaryTextColor,
             onTap: () {
-              Get.toNamed(Routes.SIGNUPSCREEN);
+              Get.toNamed(Routes.DRIVER_DASHBOARD);
               // NavigationServices(context).gotoSignScreen();
             },
           ),

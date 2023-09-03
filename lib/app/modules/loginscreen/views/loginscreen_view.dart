@@ -11,11 +11,11 @@ import '../../../widgets/remove_focuse.dart';
 import '../FacebookTwitterButtonView.dart';
 import '../controllers/loginscreen_controller.dart';
 
-class LoginscreenView extends GetView<LoginscreenController> {
+class LoginscreenView extends StatelessWidget {
   // final AnimationController ? animationController;
    LoginscreenView({Key? key}) : super(key: key);
 
-   LoginscreenController controller = Get.find<LoginscreenController>();
+   LoginscreenController controllerX = Get.put<LoginscreenController>(LoginscreenController());
 
 
 
@@ -79,8 +79,8 @@ class LoginscreenView extends GetView<LoginscreenController> {
                               left: 24, right: 24, bottom: 16),
                           buttonText: "Send The Code",
                           onTap: () {
-                            if (controller.allValidation()) {
-                              controller.submit();
+                            if (controllerX.allValidation()) {
+                              controllerX.submit();
                             }
                           },
                         ),

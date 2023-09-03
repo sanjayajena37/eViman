@@ -16,12 +16,15 @@ import 'package:image_picker/image_picker.dart';
 import '../../../constants/themes.dart';
 import '../../../data/ApiFactory.dart';
 import '../../../routes/app_pages.dart';
+import '../../../widgets/KeyvalueModel.dart';
 import '../../../widgets/MyWidget.dart';
 import '../../../widgets/common_button.dart';
 import '../../ConnectorController.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:dio/dio.dart' as service;
 import 'package:location/location.dart' as lo;
+
+import '../FareInfoModel.dart';
 
 class KycscreenController extends GetxController with Helper{
   //TODO: Implement KycscreenController
@@ -60,6 +63,7 @@ class KycscreenController extends GetxController with Helper{
   String? lng;
 
   File? imageData;
+  File? profileImage;
   File? imageData1;
   File? imageData2;
   File? imageData3;
@@ -98,6 +102,7 @@ class KycscreenController extends GetxController with Helper{
   Dio dioIns = dio.Dio();
 
   String? image1;
+  String? profileImg;
   String? image2;
   String? image3;
 
@@ -516,10 +521,9 @@ class KycscreenController extends GetxController with Helper{
       if (currentStep < 2) {
         currentStep = currentStep + 1;
       }
+      update(['ref']);
     } else if ((currentStep == 1) && allValidation2()) {
-      if (currentStep < 2) {
-        currentStep = currentStep + 1;
-      }
+
       createProfile();
     } else if ((currentStep == 2) && allValidation3()) {
       if (currentStep < 2) {
@@ -527,6 +531,7 @@ class KycscreenController extends GetxController with Helper{
       }
       addVehicle();
     } else {
+      update(['ref']);
       Snack.callError("Please enter your details");
     }
 
@@ -534,7 +539,7 @@ class KycscreenController extends GetxController with Helper{
         currentStep1.toString() +
         "      " +
         currentStep.toString());
-    update(['ref']);
+
   }
 
   String riderId = "";
@@ -552,7 +557,8 @@ class KycscreenController extends GetxController with Helper{
       "pin": int.parse(pinController.text),
       "dl_image": image1 ?? "dlImage",
       "aadhaar_image": image2 ?? "aadhaarImage",
-      "pan_image": image3 ?? "panImage"
+      "pan_image": image3 ?? "panImage",
+      "profile_image":profileImg??""
     };
     print(">>>>>>" + jsonEncode(sendData).toString());
     MyWidgets.showLoading3();
@@ -564,7 +570,13 @@ class KycscreenController extends GetxController with Helper{
           if (map is Map &&
               map.containsKey('success') &&
               map['success'] == true) {
-            riderId = map['riderId'].toString();
+             riderId =( map['riderId']??"").toString();
+             print(">>>>>"+(map['riderId']??"").toString());
+            if (currentStep < 2) {
+              currentStep = currentStep + 1;
+            }
+            authToken = map['authToken'];
+            update(['ref']);
             Snack.callSuccess((map['message'] ?? "").toString());
           } else {
             Snack.callError((map ?? "Something went wrong").toString());
@@ -575,7 +587,7 @@ class KycscreenController extends GetxController with Helper{
 
   void addVehicle() {
     Map sendData = {
-      "riderId": data['riderId']??"0",
+      "riderId": riderId??"",
       "regdNumber": regNumberController.text??"",
       "chasisNumber": chasisNumberController.text??"",
       "engineNumber": engineNumberController.text??"",
@@ -584,7 +596,7 @@ class KycscreenController extends GetxController with Helper{
       "vehicleImage": image5,
       "insuranceImage": image6,
       "pollutionImage": image7,
-      "vehicleTye": vehicleTypeController.text??"",
+      "vehicleType": vehicleTypeController.text??"",
       "vehicleSubType": vehicleSubTypeController.text??"",
       "address1": address1VehicleController.text??"",
       "address2": address2VehicleController.text??"",
@@ -598,7 +610,7 @@ class KycscreenController extends GetxController with Helper{
     };
     print(">>>>>> add vehicle" + jsonEncode(sendData).toString());
     MyWidgets.showLoading3();
-    Get.find<ConnectorController>().POSTMETHOD(
+    Get.find<ConnectorController>().POSTMETHOD_TOKEN(
         api: "http://65.1.169.159:3000/api/vehicles/v1/create",
         json: sendData,
         fun: (map) {
@@ -609,6 +621,7 @@ class KycscreenController extends GetxController with Helper{
               map.containsKey('success') &&
               map['success'] == true) {
             riderId = map['riderId'].toString();
+            update(['ref']);
             if (currentStep1 > 2) {
               showUnderProcess();
             }
@@ -617,7 +630,7 @@ class KycscreenController extends GetxController with Helper{
             Snack.callError((map ?? "Something went wrong").toString());
           }
           print(">>>>>" + map.toString());
-        });
+        }, token: authToken??"");
   }
   void showUnderProcess() async {
     bool isOk = await showCommonPopupNew2(
@@ -671,7 +684,7 @@ class KycscreenController extends GetxController with Helper{
       bool rc = false,
       bool vehicle = false,
       bool insurance = false,
-      bool pollution = false}) async {
+      bool pollution = false,bool profile = false}) async {
     try {
       final image = await ImagePicker().pickImage(source: source);
       if (image == null) return;
@@ -704,6 +717,10 @@ class KycscreenController extends GetxController with Helper{
         imageDataPollution = imageTemporary;
         MyWidgets.showLoading3();
         postDocument(imageTemporary, pollution: pollution);
+      }else if (profile) {
+        profileImage = imageTemporary;
+        MyWidgets.showLoading3();
+        postDocument(imageTemporary, profile: profile);
       } else {
         Snack.callError("Something went wrong");
       }
@@ -721,7 +738,7 @@ class KycscreenController extends GetxController with Helper{
       bool rc = false,
       bool vehicle = false,
       bool insurance = false,
-      bool pollution = false}) {
+      bool pollution = false,bool profile = false}) {
     showCupertinoModalPopup(
         context: Get.context!,
         builder: (BuildContext cont) {
@@ -738,7 +755,7 @@ class KycscreenController extends GetxController with Helper{
                       pollution: pollution,
                       insurance: insurance,
                       vehicle: vehicle,
-                      rc: rc);
+                      rc: rc,profile:profile);
                 },
                 child: const Text('Use Camera'),
               ),
@@ -753,7 +770,7 @@ class KycscreenController extends GetxController with Helper{
                       pollution: pollution,
                       insurance: insurance,
                       vehicle: vehicle,
-                      rc: rc);
+                      rc: rc,profile:profile);
                 },
                 child: const Text('Upload from files'),
               ),
@@ -795,7 +812,7 @@ class KycscreenController extends GetxController with Helper{
       bool rc = false,
       bool vehicle = false,
       bool insurance = false,
-      bool pollution = false}) async {
+      bool pollution = false,bool profile = false}) async {
     try {
       service.Response response;
       response = await dioIns.post(
@@ -831,6 +848,9 @@ class KycscreenController extends GetxController with Helper{
           } else if (pollution) {
             image7 = response.data['uploadedFile'];
             update(['image7']);
+          }else if (profile) {
+            profileImg = response.data['uploadedFile'];
+            update(['image0']);
           } else {}
         }
         print(">>>>>>>>>>response" + response.data.toString());
@@ -905,6 +925,7 @@ class KycscreenController extends GetxController with Helper{
   }
   Map<String,dynamic> data = {};
   int helpStep = 0;
+  String authToken = "";
   @override
   void onInit() {
     getCurrentLocation();
@@ -912,13 +933,65 @@ class KycscreenController extends GetxController with Helper{
     currentStep = data['index']??0;
     helpStep = data['index']??0;
     mobile = data['mobile']??"";
+    authToken = data['authToken']??"";
+    riderId = (data['riderId']??"").toString();
     mobileController.text = mobile;
     dioIns = dio.Dio();
     super.onInit();
   }
 
+  FareInfoModel? fareInfoModel = FareInfoModel(fareList: <FareList>[]);
+
+  List<KeyvalueModel> vehicleTypeList = [];
+  List<KeyvalueModel> subVehicleTypeList = [];
+   List<Vehicle> vehicles = [];
+
+  getFareInfo(){
+    MyWidgets.showLoading3();
+    Get.find<ConnectorController>().GETMETHODCALL(
+        api: "http://65.1.169.159:3000/api/fareinfo/v1/get-fare-list",
+        fun: (map) {
+          Get.back();
+          print(">>>>>>>>>" + map.toString());
+
+          if (map is Map &&
+              map.containsKey('success') &&
+              map['success'] == true) {
+            fareInfoModel = FareInfoModel.fromJson(map as Map<String,dynamic>) ;
+            if(fareInfoModel?.fareList != null && (fareInfoModel?.fareList?.length??0) >0){
+               vehicles = fareInfoModel!.fareList!.map((e) => Vehicle.fromJson(e.toJson() as Map<String, dynamic>)).toList();
+            }
+            final Set<String> uniqueVehicleTypes = vehicles.map((vehicle) => vehicle.vehicleType).toSet();
+            print(">>>>>>>>>>>>vehicles"+uniqueVehicleTypes.toString());
+            vehicleTypeList.clear();
+            List data = uniqueVehicleTypes.toList();
+            for(int i=0;i<(data.length??0);i++){
+              vehicleTypeList.add(new KeyvalueModel(key:data[i]??"" ,
+                  name:data[i]??"" ));
+            }
+            print(">>>>>>>>>>>>vehicleTypeList"+vehicleTypeList.toString());
+
+            // Snack.callSuccess((map['message'] ?? "").toString(),);
+          } else {
+            fareInfoModel = FareInfoModel(fareList: []);
+            Snack.callError((map ?? "Something went wrong").toString());
+          }
+          print(">>>>>" + map.toString());
+        });
+  }
+  filterSubType(String key ){
+    subVehicleTypeList.clear();
+    fareInfoModel?.fareList?.forEach((element) {
+      if(element.vehicleType.toString().trim().toLowerCase() == key.toString().trim().toLowerCase()){
+        subVehicleTypeList.add(new KeyvalueModel(key:element.vehicleSubType??"" ,name:element.vehicleSubType??"" ));
+      }
+    });
+    update(['subt']);
+  }
+
   @override
   void onReady() {
+    getFareInfo();
     super.onReady();
   }
 

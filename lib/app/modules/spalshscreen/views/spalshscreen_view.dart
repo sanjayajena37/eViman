@@ -15,6 +15,8 @@ import '../controllers/spalshscreen_controller.dart';
 class SpalshscreenView extends GetView<SpalshscreenController> {
   SpalshscreenView({Key? key}) : super(key: key);
 
+  SpalshscreenController controllerX = Get.put<SpalshscreenController>(SpalshscreenController());
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

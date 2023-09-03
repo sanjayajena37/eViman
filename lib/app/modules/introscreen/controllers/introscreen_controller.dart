@@ -1,9 +1,12 @@
 import 'dart:async';
 
+import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:get/get.dart';
 
 import '../../../constants/localfiles.dart';
+import '../../driverDashboard/controllers/workmanager_initializer.dart';
 import '../pagePopup.dart';
 
 class IntroscreenController extends GetxController with GetTickerProviderStateMixin{
@@ -17,8 +20,7 @@ class IntroscreenController extends GetxController with GetTickerProviderStateMi
   var currentShowIndex = 0;
 
   @override
-  void onInit() {
-
+  void onInit()  {
 
 
     pageViewModelData.add(PageViewData(
@@ -55,8 +57,25 @@ class IntroscreenController extends GetxController with GetTickerProviderStateMi
   }
 
   @override
-  void onReady() {
+  Future<void> onReady() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    callServices();
+
     super.onReady();
+  }
+
+  callServices() async {
+    final service = FlutterBackgroundService();
+    bool isRunning = await service.isRunning();
+    if(isRunning){
+      service.invoke("stopService");
+    }
+   /* else{
+      service.startService();
+      FlutterBackgroundService().invoke("setAsForeground");
+      Future.delayed(const Duration(seconds: 7));
+      FlutterBackgroundService().invoke("setAsBackground");
+    }*/
   }
 
   @override

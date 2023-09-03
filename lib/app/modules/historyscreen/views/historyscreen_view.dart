@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
+import '../../../widgets/CommonHistory.dart';
 import '../../../widgets/common_appbar_view.dart';
 import '../../../widgets/remove_focuse.dart';
 import '../controllers/historyscreen_controller.dart';
@@ -28,12 +29,13 @@ class HistoryscreenView extends GetView<HistoryscreenController> {
             ),
             Expanded(
               child: ListView.builder(
-                  itemCount: 1,
+                  itemCount: 30,
+                  physics: BouncingScrollPhysics(),
                   itemBuilder: (context, index) {
-                    return Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(),
-                      ),
+                    return const Padding(
+                      padding: EdgeInsets.only(left: 12.0,right: 12,bottom: 5,top: 2),
+                      child: CommonHistoryWidget(amount: "123",date: "Today, 10:30 AM",
+                          destination: "Nyapalli,BeheraSahi BBSR",source: "Korua, L.N. College",driverName: "JKS"),
                     );
                   }),
             )

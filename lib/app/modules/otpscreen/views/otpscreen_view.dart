@@ -15,7 +15,7 @@ class OtpscreenView extends GetView<OtpscreenController> {
 
    OtpscreenView({Key? key}) : super(key: key);
 
-   OtpscreenController controller = Get.find<OtpscreenController>();
+   OtpscreenController controllerX = Get.put<OtpscreenController>(OtpscreenController());
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +71,7 @@ class OtpscreenView extends GetView<OtpscreenController> {
                               fontSize: 12,
                             ),
                           ),
-                          Text((controller.mapData['otp']??"").toString()),
+                          Text((controllerX.mapData['otp']??"").toString()),
                           SizedBox(
                             height: MediaQuery.of(context).size.height * 0.07,
                           ),
@@ -85,7 +85,7 @@ class OtpscreenView extends GetView<OtpscreenController> {
                           enableInteractiveSelection: true,
                           focusNode:FocusNode() ,*/
                               codeLength: 6,
-                              controller: controller.otpEditingController,
+                              controller: controllerX.otpEditingController,
                               decoration: UnderlineDecoration(
                                 textStyle: const TextStyle(
                                     fontSize: 16, color: Colors.blue),
@@ -96,16 +96,15 @@ class OtpscreenView extends GetView<OtpscreenController> {
                                   Colors.grey.withOpacity(0.2),
                                 ),
                               ),
-                              currentCode: controller.messageOtpCode.value,
+                              currentCode: controllerX.messageOtpCode.value,
                               onCodeSubmitted: (code) {
                                 print("onCodeSubmitted $code");
                               },
                               onCodeChanged: (code) {
-                                controller.messageOtpCode.value = code??"000000";
+                                controllerX.messageOtpCode.value = code??"000000";
                                 // controller.countdownController.pause();
-                                if (code?.length == 6) {
-                                  controller. closeDialogIfOpen();
-                                  controller.verifyOtp(code ??"000000");
+                                if (code?.length == 6 && code != "000000") {
+                                  controllerX.verifyOtp(code ??"000000");
                                   // To perform some operation
                                 }
                               },
@@ -114,9 +113,9 @@ class OtpscreenView extends GetView<OtpscreenController> {
                           const SizedBox(
                             height: 8,
                           ),
-                          (!controller.reSendOtp)
+                          (!controllerX.reSendOtp)
                               ? Countdown(
-                                  controller: controller.countdownController,
+                                  controller: controllerX.countdownController,
                                   seconds: 15,
                                   interval: const Duration(milliseconds: 1000),
                                   build: (context, currentRemainingTime) {
@@ -142,14 +141,14 @@ class OtpscreenView extends GetView<OtpscreenController> {
                                   },
                                   onFinished: () {
                                     // reSendOtp
-                                    controller.reSendOtp = true;
+                                    controllerX.reSendOtp = true;
 
-                                    controller.update(['otp']);
+                                    controllerX.update(['otp']);
                                   },
                                 )
                               : InkWell(
                                   onTap:(){
-                                    controller.otpResend();
+                                    controllerX.otpResend();
                                   },
                                 child: Padding(
                                     padding: const EdgeInsets.all(5.0),

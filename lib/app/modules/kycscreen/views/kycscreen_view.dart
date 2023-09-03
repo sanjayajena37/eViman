@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+import '../../../widgets/DropDown.dart';
+import '../../../widgets/KeyvalueModel.dart';
 import '../../../widgets/MapPopup.dart';
 import '../../../widgets/common_appbar_view.dart';
 import '../../../widgets/common_button.dart';
@@ -14,7 +16,8 @@ import '../controllers/kycscreen_controller.dart';
 class KycscreenView extends GetView<KycscreenController> {
   KycscreenView({Key? key}) : super(key: key);
 
-  KycscreenController controller = Get.find<KycscreenController>();
+  KycscreenController controller =
+  Get.put<KycscreenController>(KycscreenController());
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +67,8 @@ class KycscreenView extends GetView<KycscreenController> {
 
                                 if (controller.locationDetail.isNotEmpty) {
                                   controller.update(['loc']);
-                                  controller.getLocationDetailsFromLatLong1( controller.locationDetail);
+                                  controller.getLocationDetailsFromLatLong1(
+                                      controller.locationDetail);
                                 }
                               },
                               child: const Text('Select Your Location'),
@@ -205,6 +209,90 @@ class KycscreenView extends GetView<KycscreenController> {
                               decoration: BoxDecoration(
                                 color: Colors.white.withOpacity(0.8),
                                 borderRadius: BorderRadius.circular(15),
+                                image: const DecorationImage(
+                                    image: AssetImage(
+                                        "assets/images/background1.jpg")),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.3),
+                                    blurRadius: 7,
+                                    spreadRadius: 2, //New
+                                  )
+                                ],
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(0.0),
+                                child: Column(
+                                  children: [
+                                    SizedBox(
+                                      height: 4,
+                                    ),
+                                    GetBuilder<KycscreenController>(
+                                      assignId: true,
+                                      id: "image0",
+                                      builder: (controller) {
+                                        return Container(
+                                          width: Get.width * 0.35,
+                                          height: Get.height * 0.16,
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                              BorderRadius.circular(50)),
+                                          child: ClipRRect(
+                                            borderRadius:
+                                            BorderRadius.circular(50),
+                                            child: SizedBox.fromSize(
+                                                size: const Size.fromRadius(
+                                                    50), // Image radius
+                                                child: Padding(
+                                                  padding:
+                                                  const EdgeInsets.all(3.0),
+                                                  child: ClipOval(
+                                                    child: SizedBox.fromSize(
+                                                      size: const Size
+                                                          .fromRadius(
+                                                          50), // Image radius
+                                                      child: controller
+                                                          .profileImage ==
+                                                          null
+                                                          ? Image.asset(
+                                                        'assets/images/avatar1.jpg',
+                                                        fit: BoxFit.cover,
+                                                      )
+                                                          : Image.file(
+                                                        controller
+                                                            .profileImage!,
+                                                        fit: BoxFit.cover,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                )),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                    SizedBox(
+                                      height: 8,
+                                    ),
+                                    CommonButton(
+                                      padding: const EdgeInsets.only(
+                                          left: 4, right: 4, bottom: 5),
+                                      buttonText: "Upload Profile Picture",
+                                      radius: 7,
+                                      onTap: () {
+                                        controller.show(profile: true);
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 7,
+                            ),
+                            Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.8),
+                                borderRadius: BorderRadius.circular(15),
                                 boxShadow: [
                                   BoxShadow(
                                     color: Colors.grey.withOpacity(0.3),
@@ -228,15 +316,15 @@ class KycscreenView extends GetView<KycscreenController> {
                                               borderRadius:
                                               BorderRadius.circular(15)),
                                           child: ClipRRect(
-                                            borderRadius: BorderRadius.circular(
-                                                15),
+                                            borderRadius:
+                                            BorderRadius.circular(15),
                                             child: SizedBox.fromSize(
                                               size: const Size.fromRadius(
                                                   48), // Image radius
                                               child: controller.imageData1 ==
                                                   null
                                                   ? Image.asset(
-                                                'assets/images/mapImage.png',
+                                                'assets/images/id-card.png',
                                                 fit: BoxFit.cover,
                                               )
                                                   : Image.file(
@@ -294,8 +382,8 @@ class KycscreenView extends GetView<KycscreenController> {
                                               borderRadius:
                                               BorderRadius.circular(15)),
                                           child: ClipRRect(
-                                            borderRadius: BorderRadius.circular(
-                                                15),
+                                            borderRadius:
+                                            BorderRadius.circular(15),
                                             child: SizedBox.fromSize(
                                               size: const Size.fromRadius(
                                                   48), // Image radius
@@ -360,8 +448,8 @@ class KycscreenView extends GetView<KycscreenController> {
                                               borderRadius:
                                               BorderRadius.circular(15)),
                                           child: ClipRRect(
-                                            borderRadius: BorderRadius.circular(
-                                                15),
+                                            borderRadius:
+                                            BorderRadius.circular(15),
                                             child: SizedBox.fromSize(
                                               size: const Size.fromRadius(
                                                   48), // Image radius
@@ -416,8 +504,8 @@ class KycscreenView extends GetView<KycscreenController> {
                                 id: "loc",
                                 builder: (controller) {
                                   return Row(
-                                    mainAxisAlignment: MainAxisAlignment
-                                        .spaceAround,
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
                                     children: [
                                       const Text("Lat: "),
                                       Text(controller.locationDetail['lat']
@@ -429,8 +517,8 @@ class KycscreenView extends GetView<KycscreenController> {
                                 id: "loc",
                                 builder: (controller) {
                                   return Row(
-                                    mainAxisAlignment: MainAxisAlignment
-                                        .spaceAround,
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
                                     children: [
                                       const Text("Lng: "),
                                       Text(controller.locationDetail['lng']
@@ -447,7 +535,8 @@ class KycscreenView extends GetView<KycscreenController> {
 
                                 if (controller.locationDetail.isNotEmpty) {
                                   controller.update(['loc']);
-                                  controller.getLocationDetailsFromLatLong( controller.locationDetail);
+                                  controller.getLocationDetailsFromLatLong(
+                                      controller.locationDetail);
                                 }
                               },
                               child: const Text('Select Your Location'),
@@ -530,8 +619,8 @@ class KycscreenView extends GetView<KycscreenController> {
                                               borderRadius:
                                               BorderRadius.circular(15)),
                                           child: ClipRRect(
-                                            borderRadius: BorderRadius.circular(
-                                                15),
+                                            borderRadius:
+                                            BorderRadius.circular(15),
                                             child: SizedBox.fromSize(
                                               size: const Size.fromRadius(
                                                   48), // Image radius
@@ -596,20 +685,21 @@ class KycscreenView extends GetView<KycscreenController> {
                                               borderRadius:
                                               BorderRadius.circular(15)),
                                           child: ClipRRect(
-                                            borderRadius: BorderRadius.circular(
-                                                15),
+                                            borderRadius:
+                                            BorderRadius.circular(15),
                                             child: SizedBox.fromSize(
                                               size: const Size.fromRadius(
                                                   48), // Image radius
-                                              child: controller
-                                                  .imageDataVehicle ==
+                                              child:
+                                              controller.imageDataVehicle ==
                                                   null
                                                   ? Image.asset(
                                                 'assets/images/mapImage.png',
                                                 fit: BoxFit.cover,
                                               )
                                                   : Image.file(
-                                                controller.imageDataVehicle!,
+                                                controller
+                                                    .imageDataVehicle!,
                                                 fit: BoxFit.cover,
                                               ),
                                             ),
@@ -663,19 +753,21 @@ class KycscreenView extends GetView<KycscreenController> {
                                               borderRadius:
                                               BorderRadius.circular(15)),
                                           child: ClipRRect(
-                                            borderRadius: BorderRadius.circular(
-                                                15),
+                                            borderRadius:
+                                            BorderRadius.circular(15),
                                             child: SizedBox.fromSize(
                                               size: const Size.fromRadius(
                                                   48), // Image radius
                                               child: controller
-                                                  .imageDataInsurance == null
+                                                  .imageDataInsurance ==
+                                                  null
                                                   ? Image.asset(
                                                 'assets/images/mapImage.png',
                                                 fit: BoxFit.cover,
                                               )
                                                   : Image.file(
-                                                controller.imageDataInsurance!,
+                                                controller
+                                                    .imageDataInsurance!,
                                                 fit: BoxFit.cover,
                                               ),
                                             ),
@@ -729,19 +821,21 @@ class KycscreenView extends GetView<KycscreenController> {
                                               borderRadius:
                                               BorderRadius.circular(15)),
                                           child: ClipRRect(
-                                            borderRadius: BorderRadius.circular(
-                                                15),
+                                            borderRadius:
+                                            BorderRadius.circular(15),
                                             child: SizedBox.fromSize(
                                               size: const Size.fromRadius(
                                                   48), // Image radius
                                               child: controller
-                                                  .imageDataPollution == null
+                                                  .imageDataPollution ==
+                                                  null
                                                   ? Image.asset(
                                                 'assets/images/mapImage.png',
                                                 fit: BoxFit.cover,
                                               )
                                                   : Image.file(
-                                                controller.imageDataPollution!,
+                                                controller
+                                                    .imageDataPollution!,
                                                 fit: BoxFit.cover,
                                               ),
                                             ),
@@ -768,7 +862,73 @@ class KycscreenView extends GetView<KycscreenController> {
                             SizedBox(
                               height: 7,
                             ),
-                            CommonTextFieldView(
+                            Card(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(24),
+                              ),
+                              shadowColor: Colors.grey.withOpacity(
+                                Theme
+                                    .of(context)
+                                    .brightness == Brightness.dark
+                                    ? 0.6
+                                    : 0.6,
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: SizedBox(
+                                    height: 35,
+                                    child: Center(
+                                      child: DropDown.staticDropdown(
+                                          "Select Vehicle Type",
+                                          "vehicle",
+                                          controller.vehicleTypeList,
+                                              (KeyvalueModel val) {
+                                            controller.vehicleTypeController
+                                                .text = val.key;
+                                            controller.filterSubType(
+                                                val.key);
+                                          }),
+                                    )),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 7,
+                            ),
+                            Card(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(24),
+                              ),
+                              shadowColor: Colors.grey.withOpacity(
+                                Theme
+                                    .of(context)
+                                    .brightness == Brightness.dark
+                                    ? 0.6
+                                    : 0.6,
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: GetBuilder<KycscreenController>(
+                                  assignId: true,
+                                  id:"subt",
+                                  builder: (logic) {
+                                    return SizedBox(
+                                        height: 35,
+                                        child: Center(
+                                          child: DropDown.staticDropdown(
+                                              "Select Vehicle Sub-Type",
+                                              "vehicle",
+                                              controller.subVehicleTypeList,
+                                                  (KeyvalueModel val) {
+                                                controller
+                                                    .vehicleSubTypeController
+                                                    .text = val.key;
+                                              }),
+                                        ));
+                                  },
+                                ),
+                              ),
+                            ),
+                           /* CommonTextFieldView(
                               titleText: "Vehicle Type",
                               contextNew: context,
                               errorText: controller.errorVehicleType,
@@ -791,7 +951,7 @@ class KycscreenView extends GetView<KycscreenController> {
                               keyboardType: TextInputType.text,
                               onChanged: (String txt) {},
                               pad: 16,
-                            ),
+                            ),*/
                             CommonTextFieldView(
                               titleText: "Address1",
                               contextNew: context,
@@ -863,16 +1023,14 @@ class KycscreenView extends GetView<KycscreenController> {
                               titleText: "Current City",
                               contextNew: context,
                               errorText: controller.errorVehicleCurrentCity,
-                              controller: controller
-                                  .currentCityVehicleController,
+                              controller:
+                              controller.currentCityVehicleController,
                               padding: const EdgeInsets.only(
                                   left: 0, right: 0, bottom: 2),
                               hintText: "enter your Current City",
                               keyboardType: TextInputType.text,
                               onChanged: (String txt) {},
                             ),
-
-
                           ],
                         );
                       },

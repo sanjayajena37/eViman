@@ -13,16 +13,17 @@ import '../../../constants/text_styles.dart';
 import '../../../constants/themes.dart';
 import '../../../routes/app_pages.dart';
 import '../../../widgets/CustomeTittleText.dart';
+import '../../../widgets/DraggablePopup.dart';
 import '../../../widgets/MovableContainer.dart';
 import '../../../widgets/RoundedButtonWidget.dart';
 import '../../../widgets/tap_effect.dart';
 import '../controllers/driver_dashboard_controller.dart';
 import 'package:dateplan/app/constants/helper.dart';
 
-class DriverDashboardView extends GetView<DriverDashboardController> {
+class DriverDashboardView extends StatelessWidget {
   DriverDashboardView({Key? key}) : super(key: key);
 
-  DriverDashboardController controllerX = Get.find<DriverDashboardController>();
+  DriverDashboardController controllerX = Get.put<DriverDashboardController>(DriverDashboardController());
 
   @override
   Widget build(BuildContext context) {
@@ -63,10 +64,7 @@ class DriverDashboardView extends GetView<DriverDashboardController> {
               padding: EdgeInsets.zero,
               children: [
                 SizedBox(
-                  height: MediaQuery
-                      .of(context)
-                      .size
-                      .height * 0.27,
+                  height: MediaQuery.of(context).size.height * 0.27,
                   child: DrawerHeader(
                     // decoration: const BoxDecoration(color: Colors.),
                     child: Column(
@@ -84,10 +82,8 @@ class DriverDashboardView extends GetView<DriverDashboardController> {
                                 SizedBox(
                                   height: 05,
                                 ),
-                                Text(
-                                    "evidriver12@gmail.com",
-                                    style: TextStyles(context).getBoldStyle()
-                                ),
+                                Text("evidriver12@gmail.com",
+                                    style: TextStyles(context).getBoldStyle()),
                               ],
                             ),
                             CircleAvatar(
@@ -95,13 +91,13 @@ class DriverDashboardView extends GetView<DriverDashboardController> {
                               backgroundColor: Colors.white,
                               child: Padding(
                                 padding:
-                                const EdgeInsets.all(1), // Border radius
+                                    const EdgeInsets.all(1), // Border radius
                                 child: ClipOval(
                                     child: Image.asset(
-                                      'assets/images/avatar2.jpg',
-                                      filterQuality: FilterQuality.high,
-                                      fit: BoxFit.cover,
-                                    )),
+                                  'assets/images/avatar2.jpg',
+                                  filterQuality: FilterQuality.high,
+                                  fit: BoxFit.cover,
+                                )),
                               ),
                             )
                           ],
@@ -128,9 +124,8 @@ class DriverDashboardView extends GetView<DriverDashboardController> {
                   onTap: () {
                     controllerX.advancedDrawerController.hideDrawer();
                   },
-                  leading: Icon(Icons.home, color: Theme
-                      .of(context)
-                      .primaryColor),
+                  leading:
+                      Icon(Icons.home, color: Theme.of(context).primaryColor),
                   title: Text(
                     'Home',
                     style: TextStyles(context)
@@ -142,10 +137,8 @@ class DriverDashboardView extends GetView<DriverDashboardController> {
                   onTap: () {
                     Get.toNamed(Routes.PROFILESCREEN);
                   },
-                  leading:
-                  Icon(Icons.account_circle_rounded, color: Theme
-                      .of(context)
-                      .primaryColor),
+                  leading: Icon(Icons.account_circle_rounded,
+                      color: Theme.of(context).primaryColor),
                   title: Text(
                     'Profile',
                     style: TextStyles(context)
@@ -155,11 +148,21 @@ class DriverDashboardView extends GetView<DriverDashboardController> {
                 ),
                 ListTile(
                   onTap: () {
-
+                    Get.toNamed(Routes.VEHICLE_DETAILS);
                   },
-                  leading: Icon(Icons.money, color: Theme
-                      .of(context)
-                      .primaryColor),
+                  leading: Icon(Icons.electric_car,
+                      color: Theme.of(context).primaryColor),
+                  title: Text(
+                    'Vehicle Details',
+                    style: TextStyles(context)
+                        .getRegularStyle()
+                        .copyWith(fontSize: 15),
+                  ),
+                ),
+                ListTile(
+                  onTap: () {},
+                  leading:
+                      Icon(Icons.money, color: Theme.of(context).primaryColor),
                   title: Text(
                     'My Earning',
                     style: TextStyles(context)
@@ -171,9 +174,8 @@ class DriverDashboardView extends GetView<DriverDashboardController> {
                   onTap: () {
                     Get.toNamed(Routes.WALETSCREEN);
                   },
-                  leading: Icon(Icons.wallet, color: Theme
-                      .of(context)
-                      .primaryColor),
+                  leading:
+                      Icon(Icons.wallet, color: Theme.of(context).primaryColor),
                   title: Text(
                     'My Wallet',
                     style: TextStyles(context)
@@ -185,9 +187,8 @@ class DriverDashboardView extends GetView<DriverDashboardController> {
                   onTap: () {
                     Get.toNamed(Routes.HISTORYSCREEN);
                   },
-                  leading: Icon(Icons.history, color: Theme
-                      .of(context)
-                      .primaryColor),
+                  leading: Icon(Icons.history,
+                      color: Theme.of(context).primaryColor),
                   title: Text(
                     'History',
                     style: TextStyles(context)
@@ -197,10 +198,8 @@ class DriverDashboardView extends GetView<DriverDashboardController> {
                 ),
                 ListTile(
                   onTap: () {},
-                  leading:
-                  Icon(Icons.notifications_active, color: Theme
-                      .of(context)
-                      .primaryColor),
+                  leading: Icon(Icons.notifications_active,
+                      color: Theme.of(context).primaryColor),
                   title: Text(
                     'Notification',
                     style: TextStyles(context)
@@ -212,10 +211,8 @@ class DriverDashboardView extends GetView<DriverDashboardController> {
                   onTap: () {
                     Get.toNamed(Routes.INVITESCREEN);
                   },
-                  leading:
-                  Icon(Icons.card_giftcard_outlined, color: Theme
-                      .of(context)
-                      .primaryColor),
+                  leading: Icon(Icons.card_giftcard_outlined,
+                      color: Theme.of(context).primaryColor),
                   title: Text(
                     'Invite a Friend',
                     style: TextStyles(context)
@@ -227,9 +224,10 @@ class DriverDashboardView extends GetView<DriverDashboardController> {
                   onTap: () {
                     Get.toNamed(Routes.SETTINGSCREEN);
                   },
-                  leading: Icon(Icons.settings, color: Theme
-                      .of(context)
-                      .primaryColor,),
+                  leading: Icon(
+                    Icons.settings,
+                    color: Theme.of(context).primaryColor,
+                  ),
                   title: Text(
                     'Settings',
                     style: TextStyles(context)
@@ -241,9 +239,8 @@ class DriverDashboardView extends GetView<DriverDashboardController> {
                   onTap: () {
                     controllerX.gotoSplashScreen();
                   },
-                  leading: Icon(Icons.logout, color: Theme
-                      .of(context)
-                      .primaryColor),
+                  leading:
+                      Icon(Icons.logout, color: Theme.of(context).primaryColor),
                   title: Text(
                     'Logout',
                     style: TextStyles(context)
@@ -271,62 +268,66 @@ class DriverDashboardView extends GetView<DriverDashboardController> {
                           builder: (controllerX) {
                             return (controllerX.currentLocation == null)
                                 ? Center(
-                              child: Container(
-                                child: CircularProgressIndicator(),
-                              ),
-                            )
+                                    child: Container(
+                                      child: CircularProgressIndicator(),
+                                    ),
+                                  )
                                 : GoogleMap(
-                              initialCameraPosition: CameraPosition(
-                                  target: LatLng(
-                                      controllerX.currentLocation
-                                          ?.latitude ??
-                                          0,
-                                      controllerX.currentLocation
-                                          ?.longitude ??
-                                          0),
-                                  zoom: 14.5),
-                              mapType: MapType.normal,
-                              onMapCreated: (GoogleMapController contr) {
-                                controllerX.mapControl = Completer();
-                                controllerX.mapController = contr;
-                                controllerX.mapControl.complete(contr);
-                                // controllerX.adjustBounds();
-                              },
-                              compassEnabled: true,
-                              myLocationEnabled: true,
-                              myLocationButtonEnabled: true,
-                              mapToolbarEnabled: true,
-                              padding: EdgeInsets.all(25),
-                              polylines: (controllerX.routeCoordinates
-                                  .isNotEmpty) ?
-                              Set<Polyline>.from(
-                                controllerX.routeCoordinates
-                                    .asMap()
-                                    .entries
-                                    .map((entry) {
-                                  final index = entry.key;
-                                  final route = entry.value;
-                                  // final color = controllerX.routeColors[index % controllerX.routeColors.length];
-                                  final color = controllerX
-                                      .routeColorsMap[route];
-                                  final isSelected = (index ==
-                                      controllerX.selectedRouteIndex);
-                                  return Polyline(
-                                      polylineId: PolylineId("route_$index"),
-                                      color: isSelected
-                                          ? Colors.orange
-                                          : color ?? Colors.blue,
-                                      width: isSelected ? 12 : 8,
-                                      points: route,
-                                      consumeTapEvents: true,
-                                      onTap: () {
-                                        controllerX.selectedRouteIndex = index;
-                                        print(">>>>index" + index.toString());
-                                        controllerX.update(['map']);
-                                      }
-                                  );
-                                }),
-                              )
+                                    initialCameraPosition: CameraPosition(
+                                        target: LatLng(
+                                            controllerX.currentLocation
+                                                    ?.latitude ??
+                                                0,
+                                            controllerX.currentLocation
+                                                    ?.longitude ??
+                                                0),
+                                        zoom: 14.5),
+                                    mapType: MapType.normal,
+                                    onMapCreated: (GoogleMapController contr) {
+                                      controllerX.mapControl = Completer();
+                                      controllerX.mapController = contr;
+                                      controllerX.mapControl.complete(contr);
+                                      // controllerX.adjustBounds();
+                                    },
+                                    compassEnabled: true,
+                                    myLocationEnabled: true,
+                                    myLocationButtonEnabled: true,
+                                    mapToolbarEnabled: true,
+                                    padding: EdgeInsets.all(25),
+                                    polylines: (controllerX
+                                            .routeCoordinates.isNotEmpty)
+                                        ? Set<Polyline>.from(
+                                            controllerX.routeCoordinates
+                                                .asMap()
+                                                .entries
+                                                .map((entry) {
+                                              final index = entry.key;
+                                              final route = entry.value;
+                                              // final color = controllerX.routeColors[index % controllerX.routeColors.length];
+                                              final color = controllerX
+                                                  .routeColorsMap[route];
+                                              final isSelected = (index ==
+                                                  controllerX
+                                                      .selectedRouteIndex);
+                                              return Polyline(
+                                                  polylineId: PolylineId(
+                                                      "route_$index"),
+                                                  color: isSelected
+                                                      ? Colors.orange
+                                                      : color ?? Colors.blue,
+                                                  width: isSelected ? 12 : 8,
+                                                  points: route,
+                                                  consumeTapEvents: true,
+                                                  onTap: () {
+                                                    controllerX
+                                                            .selectedRouteIndex =
+                                                        index;
+                                                    print(">>>>index" +
+                                                        index.toString());
+                                                    controllerX.update(['map']);
+                                                  });
+                                            }),
+                                          )
 /*
                                     Set<Polyline>.from([
                                       Polyline(
@@ -336,8 +337,8 @@ class DriverDashboardView extends GetView<DriverDashboardController> {
                                         points: controllerX.routeCoordinates[controllerX.selectedRouteIndex],
                                       ),
                                     ])*/
-                                  : {},
-                              /*polylines:
+                                        : {},
+                                    /*polylines:
                                     {
                                       Polyline(
                                           polylineId: PolylineId('route'),
@@ -349,33 +350,30 @@ class DriverDashboardView extends GetView<DriverDashboardController> {
                                           consumeTapEvents: true,
                                           geodesic: true)
                                     },*/
-                              markers: {
-                                Marker(
-                                    markerId: MarkerId("source"),
-                                    position: controllerX.sourceLocation,
-                                    icon: controllerX.sourceIcon),
-                                Marker(
-                                    markerId: MarkerId("Destination"),
-                                    position: controllerX.destination,
-                                    icon: controllerX.destinationIcon),
-                                Marker(
-                                    markerId: MarkerId("Destination"),
-                                    position: LatLng(
-                                        controllerX
-                                            .currentLocation!.latitude!,
-                                        controllerX
-                                            .currentLocation!.longitude!),
-                                    icon: controllerX.currentLocationIcon)
-                              },
-                            );
+                                    markers: {
+                                      Marker(
+                                          markerId: MarkerId("source"),
+                                          position: controllerX.sourceLocation,
+                                          icon: controllerX.sourceIcon),
+                                      Marker(
+                                          markerId: MarkerId("Destination"),
+                                          position: controllerX.destination,
+                                          icon: controllerX.destinationIcon),
+                                      Marker(
+                                          markerId: MarkerId("Destination"),
+                                          position: LatLng(
+                                              controllerX
+                                                  .currentLocation!.latitude!,
+                                              controllerX
+                                                  .currentLocation!.longitude!),
+                                          icon: controllerX.currentLocationIcon)
+                                    },
+                                  );
                           }),
                     );
                   }),
                   Positioned(
-                    top: MediaQuery
-                        .of(context)
-                        .padding
-                        .top + 25,
+                    top: MediaQuery.of(context).padding.top + 25,
                     left: 0,
                     right: 0,
                     child: Padding(
@@ -385,20 +383,19 @@ class DriverDashboardView extends GetView<DriverDashboardController> {
                         children: [
                           Card(
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(
-                                  5.0), //<-- SEE HERE
+                              borderRadius:
+                                  BorderRadius.circular(5.0), //<-- SEE HERE
                             ),
                             margin: EdgeInsets.all(2),
                             elevation: 5,
-
                             child: IconButton(
                               onPressed: controllerX.handleMenuButtonPressed,
                               padding: EdgeInsets.all(2),
-                              visualDensity: VisualDensity(
-                                  horizontal: -4, vertical: -4),
+                              visualDensity:
+                                  VisualDensity(horizontal: -4, vertical: -4),
                               icon: ValueListenableBuilder<AdvancedDrawerValue>(
                                 valueListenable:
-                                controllerX.advancedDrawerController,
+                                    controllerX.advancedDrawerController,
                                 builder: (_, value, __) {
                                   return AnimatedSwitcher(
                                     duration: Duration(milliseconds: 250),
@@ -411,122 +408,123 @@ class DriverDashboardView extends GetView<DriverDashboardController> {
                               ),
                             ),
                           ),
-                          Card(
-                              elevation: 5,
-                              color: Theme
-                                  .of(context)
-                                  .cardColor,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  "₹0.00",
-                                  style: Theme
-                                      .of(context)
-                                      .textTheme
-                                      .headline5!
-                                      .copyWith(
-                                      fontSize: 25, color: Colors.white),
+                          InkWell(
+                            onTap: (){
+                              controllerX.showRideAcceptDialog(context,Get.width*0.9);
+                            },
+                            child: Card(
+                                elevation: 5,
+                                color: Theme.of(context).cardColor,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8.0),
                                 ),
-                              )),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    "₹0.00",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headline5!
+                                        .copyWith(
+                                            fontSize: 25, color: Colors.white),
+                                  ),
+                                )),
+                          ),
                           Obx(() {
-                            return (controllerX.isDisappear.value)?CupertinoSwitch(
-                              value: controllerX.isDisappear.value,
-                              dragStartBehavior:DragStartBehavior.start,
-                              onChanged: (value) {
-                                controllerX.goOnline(value);
-                              },
-                            ):Container();
+                            return (controllerX.isDisappear.value)
+                                ? CupertinoSwitch(
+                                    value: controllerX.isDisappear.value,
+                                    dragStartBehavior: DragStartBehavior.start,
+                                    onChanged: (value) {
+                                      controllerX.goOnline(value);
+                                    },
+                                  )
+                                : Container();
                           }),
                         ],
                       ),
                     ),
                   ),
                   Obx(
-                        () =>
-                    (controllerX.isDisappear.value == false)
+                    () => (controllerX.isDisappear.value == false)
                         ? MovableContainer(onTap: () {
-                      controllerX.goOnline(controllerX.isDisappear.value);
-                    })
+                            controllerX.goOnline(controllerX.isDisappear.value);
+                          })
                         : Container(),
                   ),
                   Obx(
-                        () =>
-                    (controllerX.isDisappear.value == true)
+                    () => (controllerX.isDisappear.value == true)
                         ? DraggableScrollableSheet(
-                        initialChildSize: 0.1,
-                        minChildSize: 0.1,
-                        maxChildSize: 1,
-                        snapSizes: [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 1],
-                        snap: true,
-                        builder:
-                            (BuildContext context, scrollSheetController) {
-                          return Container(
-                              color: Colors.white,
-                              child: ListView(
-                                controller: scrollSheetController,
-                                padding: EdgeInsets.zero,
-                                physics: ClampingScrollPhysics(),
-                                children: [
-                                  SizedBox(
-                                    height: Get.height * 0.05,
-                                    child: Row(
-                                      mainAxisAlignment:
-                                      MainAxisAlignment.center,
-                                      children: [
-                                        DefaultTextStyle(
-                                          style: Theme
-                                              .of(context)
-                                              .textTheme
-                                              .headline3!
-                                              .copyWith(
-                                            fontSize: 25.0,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                          child: AnimatedTextKit(
-                                            animatedTexts: [
-                                              FadeAnimatedText(
-                                                  'You are online'),
-                                              FadeAnimatedText(
-                                                  'Finding trips'),
-                                            ],
-                                            repeatForever: true,
-                                            isRepeatingAnimation: true,
-                                            onTap: () {
-                                              print("Tap Event");
-                                            },
-                                          ),
+                            initialChildSize: 0.1,
+                            minChildSize: 0.1,
+                            maxChildSize: 1,
+                            snapSizes: [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 1],
+                            snap: true,
+                            builder:
+                                (BuildContext context, scrollSheetController) {
+                              return Container(
+                                  color: Colors.white,
+                                  child: ListView(
+                                    controller: scrollSheetController,
+                                    padding: EdgeInsets.zero,
+                                    physics: ClampingScrollPhysics(),
+                                    children: [
+                                      SizedBox(
+                                        height: Get.height * 0.05,
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            DefaultTextStyle(
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headline3!
+                                                  .copyWith(
+                                                    fontSize: 25.0,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                              child: AnimatedTextKit(
+                                                animatedTexts: [
+                                                  FadeAnimatedText(
+                                                      'You are online'),
+                                                  FadeAnimatedText(
+                                                      'Finding trips'),
+                                                ],
+                                                repeatForever: true,
+                                                isRepeatingAnimation: true,
+                                                onTap: () {
+                                                  print("Tap Event");
+                                                },
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                      ],
-                                    ),
-                                  ),
-                                  LinearProgressIndicator(
-                                    color: Colors.grey,
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Column(
-                                      children: controllerX.routeCoordinates
-                                          .asMap()
-                                          .entries
-                                          .map((entry) {
-                                        final index = entry.key;
-                                        return ListTile(
-                                          title: Text("Route ${index + 1}"),
-                                          onTap: () {
-                                            controllerX.selectedRouteIndex =
-                                                index;
-                                            controllerX.update(['top']);
-                                          },
-                                        );
-                                      }).toList(),
-                                    ),
-                                  ),
-                                ],
-                              ));
-                        })
+                                      ),
+                                      LinearProgressIndicator(
+                                        color: Colors.grey,
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Column(
+                                          children: controllerX.routeCoordinates
+                                              .asMap()
+                                              .entries
+                                              .map((entry) {
+                                            final index = entry.key;
+                                            return ListTile(
+                                              title: Text("Route ${index + 1}"),
+                                              onTap: () {
+                                                controllerX.selectedRouteIndex =
+                                                    index;
+                                                controllerX.update(['top']);
+                                              },
+                                            );
+                                          }).toList(),
+                                        ),
+                                      ),
+                                    ],
+                                  ));
+                            })
                         : Container(),
                   )
                 ],
@@ -545,9 +543,7 @@ Widget driverINfoWidget(String img, String tittle, String Subtittle) {
         height: 30,
         width: 30,
         // color: Color(0xFF4FBE9F),
-        color: Theme
-            .of(Get.context!)
-            .primaryColor,
+        color: Theme.of(Get.context!).primaryColor,
       ),
       const SizedBox(
         height: 5,

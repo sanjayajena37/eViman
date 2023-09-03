@@ -38,6 +38,9 @@ class RiderData {
   int? pin;
   String? drivingLicenseNo;
   String? dlImage;
+  String? profile_image;
+  String? aadhaar_image;
+  String? pan_image;
   bool? isVerified;
   bool? isActive;
   bool? isOnline;
@@ -62,7 +65,10 @@ class RiderData {
         this.isActive,
         this.isOnline,
         this.createdAt,
-        this.updatedAt});
+        this.updatedAt,
+        this.profile_image,
+        this.aadhaar_image,
+        this.pan_image});
 
   RiderData.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -78,6 +84,9 @@ class RiderData {
     pin = json['pin'];
     drivingLicenseNo = json['driving_license_no'];
     dlImage = json['dl_image'];
+    profile_image = json['profile_image'];
+    aadhaar_image = json['aadhaar_image'];
+    pan_image = json['pan_image'];
     isVerified = json['is_verified'];
     isActive = json['is_active'];
     isOnline = json['is_online'];
@@ -100,6 +109,9 @@ class RiderData {
     data['pin'] = this.pin;
     data['driving_license_no'] = this.drivingLicenseNo;
     data['dl_image'] = this.dlImage;
+    data['profile_image'] = this.profile_image;
+    data['aadhaar_image'] = this.aadhaar_image;
+    data['pan_image'] = this.pan_image;
     data['is_verified'] = this.isVerified;
     data['is_active'] = this.isActive;
     data['is_online'] = this.isOnline;

@@ -1,26 +1,21 @@
-import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:dateplan/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
 
 import '../../../widgets/CustomeTittleText.dart';
 import '../../../widgets/Textfield_widget.dart';
 import '../../../widgets/UploadDocumentWidget.dart';
 import '../../../widgets/common_appbar_view.dart';
-import '../../../widgets/common_button.dart';
 import '../../../widgets/remove_focuse.dart';
-import '../controllers/profilescreen_controller.dart';
+import '../controllers/vehicle_details_controller.dart';
 
-class ProfilescreenView extends GetView<ProfilescreenController> {
-  ProfilescreenView({Key? key}) : super(key: key);
+class VehicleDetailsView extends GetView<VehicleDetailsController> {
 
-  ProfilescreenController controllerX =
-      Get.put<ProfilescreenController>(ProfilescreenController());
+   VehicleDetailsView({Key? key}) : super(key: key);
+
+   VehicleDetailsController controllerX =
+   Get.put<VehicleDetailsController>(VehicleDetailsController());
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +24,7 @@ class ProfilescreenView extends GetView<ProfilescreenController> {
         onClick: () {
           FocusScope.of(context).requestFocus(FocusNode());
         },
-        child: GetBuilder<ProfilescreenController>(
+        child: GetBuilder<VehicleDetailsController>(
             id: "ref",
             builder: (controllerX) {
               return Column(
@@ -44,12 +39,12 @@ class ProfilescreenView extends GetView<ProfilescreenController> {
                         onBackClick: () {
                           Navigator.pop(context);
                         },
-                        titleText: "Profile",
+                        titleText: "Vehicle Details",
                       ),
                       InkWell(
                           onTap: () {
                             controller.isEnabled = !controller.isEnabled;
-                            controller.update(['ref', 'button']);
+                            controller.update(['ref']);
                           },
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
@@ -61,7 +56,7 @@ class ProfilescreenView extends GetView<ProfilescreenController> {
                   ),
                   Expanded(
                     child:
-                        NotificationListener<OverscrollIndicatorNotification>(
+                    NotificationListener<OverscrollIndicatorNotification>(
                       onNotification: (overscroll) {
                         overscroll.disallowGlow();
                         return true;
@@ -82,9 +77,9 @@ class ProfilescreenView extends GetView<ProfilescreenController> {
                                 padding: const EdgeInsets.all(30),
                                 child: Column(
                                   children: [
-                                    GetBuilder<ProfilescreenController>(
+                                    GetBuilder<VehicleDetailsController>(
                                       assignId: true,
-                                      id: "profile",
+                                      id: "vehicle",
                                       builder: (controllerX) {
                                         return Container(
                                           alignment: Alignment.center,
@@ -94,83 +89,83 @@ class ProfilescreenView extends GetView<ProfilescreenController> {
                                               children: <Widget>[
                                                 Row(
                                                   crossAxisAlignment:
-                                                      CrossAxisAlignment.center,
+                                                  CrossAxisAlignment.center,
                                                   mainAxisAlignment:
-                                                      MainAxisAlignment.center,
+                                                  MainAxisAlignment.center,
                                                   children: <Widget>[
                                                     ClipOval(
                                                       child: SizedBox.fromSize(
                                                         size: const Size
-                                                                .fromRadius(
+                                                            .fromRadius(
                                                             50), // Image radius
                                                         child: controllerX
-                                                                    .imageData ==
-                                                                null
-                                                            ? (controllerX.profileImageUrl !=
-                                                                        null &&
-                                                                    controllerX
-                                                                            .profileImageUrl
-                                                                            .toString()
-                                                                            .trim() !=
-                                                                        "")
-                                                                ? CachedNetworkImage(
-                                                                    imageUrl:
-                                                                        controllerX.profileImageUrl ??
-                                                                            "",
-                                                                    imageBuilder:
-                                                                        (context,
-                                                                                imageProvider) =>
-                                                                            Container(
-                                                                      decoration:
-                                                                          BoxDecoration(
-                                                                        image: DecorationImage(
-                                                                            image:
-                                                                                imageProvider,
-                                                                            fit:
-                                                                                BoxFit.cover,
-                                                                            colorFilter: ColorFilter.mode(Colors.red, BlendMode.colorBurn)),
-                                                                      ),
-                                                                    ),
-                                                                    progressIndicatorBuilder: (context,
-                                                                            url,
-                                                                            downloadProgress) =>
-                                                                        Column(
-                                                                      mainAxisAlignment:
-                                                                          MainAxisAlignment
-                                                                              .center,
-                                                                      children: [
-                                                                        SizedBox(
-                                                                          height:
-                                                                              Get.height * 0.06,
-                                                                          width:
-                                                                              Get.width * 0.2,
-                                                                          child:
-                                                                              Padding(
-                                                                            padding:
-                                                                                const EdgeInsets.all(18.0),
-                                                                            child:
-                                                                                CircularProgressIndicator(value: downloadProgress.progress),
-                                                                          ),
-                                                                        ),
-                                                                      ],
-                                                                    ),
-                                                                    errorWidget: (context,
-                                                                            url,
-                                                                            error) =>
-                                                                        Icon(Icons
-                                                                            .error),
-                                                                  )
-                                                                : Image.asset(
-                                                                    'assets/images/avatar2.jpg',
-                                                                    fit: BoxFit
-                                                                        .cover,
-                                                                  )
-                                                            : Image.file(
-                                                                controllerX
-                                                                    .imageData!,
-                                                                fit: BoxFit
-                                                                    .cover,
+                                                            .imageData ==
+                                                            null
+                                                            ? (controllerX.vehicleImageUrl !=
+                                                            null &&
+                                                            controllerX
+                                                                .vehicleImageUrl
+                                                                .toString()
+                                                                .trim() !=
+                                                                "")
+                                                            ? CachedNetworkImage(
+                                                          imageUrl:
+                                                          controllerX.vehicleImageUrl ??
+                                                              "",
+                                                          imageBuilder:
+                                                              (context,
+                                                              imageProvider) =>
+                                                              Container(
+                                                                decoration:
+                                                                BoxDecoration(
+                                                                  image: DecorationImage(
+                                                                      image:
+                                                                      imageProvider,
+                                                                      fit:
+                                                                      BoxFit.cover,
+                                                                      colorFilter: ColorFilter.mode(Colors.red, BlendMode.colorBurn)),
+                                                                ),
                                                               ),
+                                                          progressIndicatorBuilder: (context,
+                                                              url,
+                                                              downloadProgress) =>
+                                                              Column(
+                                                                mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                                children: [
+                                                                  SizedBox(
+                                                                    height:
+                                                                    Get.height * 0.06,
+                                                                    width:
+                                                                    Get.width * 0.2,
+                                                                    child:
+                                                                    Padding(
+                                                                      padding:
+                                                                      const EdgeInsets.all(18.0),
+                                                                      child:
+                                                                      CircularProgressIndicator(value: downloadProgress.progress),
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                          errorWidget: (context,
+                                                              url,
+                                                              error) =>
+                                                              Icon(Icons
+                                                                  .error),
+                                                        )
+                                                            : Image.asset(
+                                                          'assets/images/avatar2.jpg',
+                                                          fit: BoxFit
+                                                              .cover,
+                                                        )
+                                                            : Image.file(
+                                                          controllerX
+                                                              .imageData!,
+                                                          fit: BoxFit
+                                                              .cover,
+                                                        ),
                                                       ),
                                                     )
                                                   ],
@@ -178,39 +173,39 @@ class ProfilescreenView extends GetView<ProfilescreenController> {
                                                 controllerX.isEnabled == false
                                                     ? const SizedBox()
                                                     : Positioned(
-                                                        bottom: 0,
-                                                        left: Get.width / 2.2,
-                                                        child: InkWell(
-                                                          onTap: () {
-                                                            controllerX.show(
-                                                                profile: true);
-                                                          },
-                                                          child: Container(
-                                                              decoration: BoxDecoration(
+                                                    bottom: 0,
+                                                    left: Get.width / 2.2,
+                                                    child: InkWell(
+                                                      onTap: () {
+                                                        controllerX.show(
+                                                            vehicle: true);
+                                                      },
+                                                      child: Container(
+                                                          decoration: BoxDecoration(
+                                                              color: Colors
+                                                                  .white,
+                                                              border: Border.all(
                                                                   color: Colors
-                                                                      .white,
-                                                                  border: Border.all(
-                                                                      color: Colors
-                                                                          .grey
-                                                                          .shade200),
-                                                                  borderRadius:
-                                                                      BorderRadius.circular(
-                                                                          Get.width /
-                                                                              2)),
-                                                              child:
-                                                                  const Padding(
-                                                                padding:
-                                                                    EdgeInsets
-                                                                        .all(
-                                                                            10.0),
-                                                                child: Icon(
-                                                                  Icons
-                                                                      .camera_alt,
-                                                                  // color: primaryColor,
-                                                                  size: 18,
-                                                                ),
-                                                              )),
-                                                        ))
+                                                                      .grey
+                                                                      .shade200),
+                                                              borderRadius:
+                                                              BorderRadius.circular(
+                                                                  Get.width /
+                                                                      2)),
+                                                          child:
+                                                          const Padding(
+                                                            padding:
+                                                            EdgeInsets
+                                                                .all(
+                                                                10.0),
+                                                            child: Icon(
+                                                              Icons
+                                                                  .camera_alt,
+                                                              // color: primaryColor,
+                                                              size: 18,
+                                                            ),
+                                                          )),
+                                                    ))
                                               ]),
                                         );
                                       },
@@ -236,18 +231,18 @@ class ProfilescreenView extends GetView<ProfilescreenController> {
                                     Obx(() {
                                       return Container(
                                           child: (controllerX
-                                                      .activeStatus?.value ??
-                                                  false)
+                                              .activeStatus?.value ??
+                                              false)
                                               ? CustomeSubTittleText(
-                                                  text: "Online",
-                                                  color: Colors.green,
-                                                  fontWeight: FontWeight.w600,
-                                                )
+                                            text: "Online",
+                                            color: Colors.green,
+                                            fontWeight: FontWeight.w600,
+                                          )
                                               : CustomeSubTittleText(
-                                                  text: "Offline",
-                                                  color: Colors.red,
-                                                  fontWeight: FontWeight.w600,
-                                                ));
+                                            text: "Offline",
+                                            color: Colors.red,
+                                            fontWeight: FontWeight.w600,
+                                          ));
                                     }),
                                   ],
                                 ),
@@ -277,13 +272,13 @@ class ProfilescreenView extends GetView<ProfilescreenController> {
                                   overscroll.disallowGlow();
                                   return true;
                                 },
-                                child: GetBuilder<ProfilescreenController>(
+                                child: GetBuilder<VehicleDetailsController>(
                                   assignId: true,
                                   id: "inform",
                                   builder: (controllerX) {
                                     return ListView.builder(
                                       physics:
-                                          const NeverScrollableScrollPhysics(),
+                                      const NeverScrollableScrollPhysics(),
                                       shrinkWrap: true,
                                       itemCount: profileInfoList.length,
                                       padding: EdgeInsets.all(2),
@@ -296,7 +291,7 @@ class ProfilescreenView extends GetView<ProfilescreenController> {
                                               bottom: 0),
                                           child: Column(
                                             crossAxisAlignment:
-                                                CrossAxisAlignment.start,
+                                            CrossAxisAlignment.start,
                                             children: [
                                               CustomeSubTittleText(
                                                 text: profileInfoList[index]
@@ -311,14 +306,14 @@ class ProfilescreenView extends GetView<ProfilescreenController> {
                                               Textfield_widget(
                                                 isOutlineBorder: true,
                                                 isEnabled:
-                                                    controllerX.isEnabled,
+                                                controllerX.isEnabled,
                                                 validator: (_) {},
                                                 hint: profileInfoList[index]
                                                     .hinTetxt
                                                     .toString(),
                                                 textController: controllerX
-                                                        .textEditingController[
-                                                    index],
+                                                    .textEditingController[
+                                                index],
                                               ),
                                               const SizedBox(
                                                 height: 05,
@@ -354,50 +349,38 @@ class ProfilescreenView extends GetView<ProfilescreenController> {
                             ),
                             Container(
                               color: Colors.white,
-                              child: GetBuilder<ProfilescreenController>(
+                              child: GetBuilder<VehicleDetailsController>(
                                 assignId: true,
                                 id: "document",
                                 builder: (controllerX) {
                                   return Column(
                                     children: [
-                                      GetBuilder<ProfilescreenController>(
+                                      GetBuilder<VehicleDetailsController>(
                                         assignId: true,
-                                        id: "dl",
+                                        id: "insurance",
                                         builder: (controllerX) {
                                           return UploadDocumentAndView(
-                                              fileData: controllerX.dlImage,
-                                              imageUrl: controllerX.dlImageUrl,
+                                              fileData: controllerX.insuranceImage,
+                                              imageUrl: controllerX.insuranceImageUrl,
                                               callback: () {
-                                                controllerX.show(dl: true);
+                                                controllerX.show(insurance: true);
                                               });
                                         },
                                       ),
-                                      GetBuilder<ProfilescreenController>(
+                                      GetBuilder<VehicleDetailsController>(
                                         assignId: true,
-                                        id: "aadhaar",
+                                        id: "pollution",
                                         builder: (controllerX) {
                                           return UploadDocumentAndView(
                                               fileData:
-                                                  controllerX.aadhaarImage,
+                                              controllerX.pollutionImage,
                                               imageUrl:
-                                                  controllerX.aadhaarImageUrl,
+                                              controllerX.pollutionImageUrl,
                                               callback: () {
-                                                controllerX.show(aadhaar: true);
+                                                controllerX.show(pollution: true);
                                               });
                                         },
-                                      ),
-                                      GetBuilder<ProfilescreenController>(
-                                        assignId: true,
-                                        id: "pan",
-                                        builder: (logic) {
-                                          return UploadDocumentAndView(
-                                              fileData: controllerX.panImage,
-                                              imageUrl: controllerX.panImageUrl,
-                                              callback: () {
-                                                controllerX.show(pan: true);
-                                              });
-                                        },
-                                      ),
+                                      )
                                     ],
                                   );
                                 },
@@ -411,26 +394,6 @@ class ProfilescreenView extends GetView<ProfilescreenController> {
                 ],
               );
             }),
-      ),
-      bottomNavigationBar: GetBuilder<ProfilescreenController>(
-        assignId: true,
-        id: "button",
-        builder: (controllerX) {
-          return Container(
-            child: (controllerX.isEnabled == true)
-                ? CommonButton(
-                    padding:
-                        const EdgeInsets.only(left: 24, right: 24, bottom: 16),
-                    buttonText: "Update",
-                    onTap: () {
-                      controllerX.updateApi();
-                    },
-                  )
-                : Container(
-                    child: Text(""),
-                  ),
-          );
-        },
       ),
     );
   }

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dateplan/app/data/ApiFactory.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
@@ -9,8 +11,7 @@ import '../../../widgets/MyWidget.dart';
 import '../../../widgets/Snack.dart';
 import '../../ConnectorController.dart';
 
-class LoginscreenController extends GetxController
-    with GetTickerProviderStateMixin {
+class LoginscreenController extends GetxController {
   //TODO: Implement LoginscreenController
 
   final count = 0.obs;
@@ -68,6 +69,7 @@ class LoginscreenController extends GetxController
 
   @override
   void onReady() {
+
     super.onReady();
   }
 

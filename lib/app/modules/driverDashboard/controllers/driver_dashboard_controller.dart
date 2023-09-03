@@ -5,11 +5,12 @@ import 'dart:math';
 import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
-import 'package:dateplan/amplifyconfiguration.dart';
+
 import 'package:dateplan/app/routes/app_pages.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_polyline_points_plus/flutter_polyline_points_plus.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -17,22 +18,31 @@ import 'package:iconsax/iconsax.dart';
 import 'package:location/location.dart';
 import 'package:vibration/vibration.dart';
 
+import '../../../../amplifyconfiguration.dart';
+import '../../../../models/IncomingBooking.dart';
 import '../../../../models/ModelProvider.dart';
 import '../../../constants/helper.dart';
+import '../../../constants/shared_preferences_keys.dart';
+import '../../../constants/text_styles.dart';
 import '../../../widgets/CustomeTittleText.dart';
 import '../../../widgets/MyWidget.dart';
 import '../../../widgets/RoundedButtonWidget.dart';
+import '../../../widgets/Snack.dart';
 import '../../../widgets/common_button.dart';
 import '../../ConnectorController.dart';
+import '../../loginscreen/controllers/loginscreen_controller.dart';
 import '../IncomingBooking.dart';
 import 'package:amplify_core/src/types/api/graphql/graphql_response.dart' as gr;
 
-
+import '../LocationService.dart';
+import 'AmplifyApiName.dart';
+import 'package:geocoding/geocoding.dart' as geoc;
 part 'mapcontroller.dart';
 part 'appsyncController.dart';
 part 'helpercontroller.dart';
 
-class DriverDashboardController extends GetxController with Helper {
+class DriverDashboardController extends GetxController
+    with Helper, WidgetsBindingObserver {
   //TODO: Implement DriverDashboardController
   final advancedDrawerController = AdvancedDrawerController();
   final count = 0.obs;
@@ -63,35 +73,23 @@ class DriverDashboardController extends GetxController with Helper {
     Colors.orange,
     Colors.deepPurple
   ];
-  StreamSubscription<gr.GraphQLResponse<InComingBooking>>? subscription;
+  StreamSubscription<gr.GraphQLResponse<String>>? subscription;
 
-  void _configureAmplify() async {
-    try {
-      await Amplify.addPlugins([
-        AmplifyAPI(
-          subscriptionOptions: const GraphQLSubscriptionOptions(
-            retryOptions: RetryOptions(maxAttempts: 10),
-          ),
-        )
-      ]);
-      await Amplify.configure(jsonEncode(amplifyconfig));
-      // subscribe();
-    } on AmplifyAlreadyConfiguredException {
-      safePrint(
-          "Tried to reconfigure Amplify; this can occur when your app restarts on Android.");
-    } catch (e) {
-      print("Amplify configuration failed: $e");
-    }
+  String? riderIdNew;
+  String? authToken;
+  getRiderId() async {
+    riderIdNew = await SharedPreferencesKeys().getStringData(key: 'riderId');
+    authToken = await SharedPreferencesKeys().getStringData(key: 'authToken');
+    configureAmplify();
   }
-
   Future<void> configureAmplify() async {
     try {
       final api = AmplifyAPI(modelProvider: ModelProvider.instance);
-      final auth = AmplifyAuthCognito();
-      await Amplify.addPlugins([api, auth]);
-      if (!Amplify.isConfigured) {
+      if (!(Amplify.isConfigured)) {
+        await Amplify.addPlugins([api]);
         await Amplify.configure(amplifyconfig);
       }
+      subscribe();
       safePrint("Amplify configured successfully");
     } catch (e) {
       safePrint("Error configuring Amplify: $e");
@@ -99,16 +97,41 @@ class DriverDashboardController extends GetxController with Helper {
   }
 
   void subscribe() {
-    final subscriptionRequest =
-        ModelSubscriptions.onCreate(InComingBooking.classType);
-    final Stream<gr.GraphQLResponse<InComingBooking>> operation =
-        Amplify.API.subscribe(
-      subscriptionRequest,
-      onEstablished: () => safePrint('Subscription established'),
-    );
+    print(">>>>>>>>>>>>>>>>>riderId"+riderIdNew.toString());
+     int riderId = int.parse((riderIdNew != null && riderIdNew != "")?((riderIdNew??0).toString()) :"0"); // Replace with the desired rider ID
+
+    // Subscribe to the GraphQL subscription with the parameter
+    final Stream<gr.GraphQLResponse<String>> operation = Amplify.API.subscribe(
+        GraphQLRequest<String>(
+          document: """
+          subscription IncomingBooking(\$rider: Int!) {
+            incomingBooking(rider: \$rider) {
+              rider
+              clientLat
+              clientLng
+              clientName
+              clientPhone
+              clientId
+              fareInfo
+            }
+          }
+        """,
+          variables: {
+            'rider': riderId,
+          },
+        ), onEstablished: () {
+      safePrint('Subscription established');
+    });
+
     subscription = operation.listen(
       (event) {
         safePrint('Subscription event data received: ${event.data}');
+
+       /* Map? receiveData = jsonDecode(event.data as String)??{};
+        if(receiveData != null && receiveData.isNotEmpty){
+          showRideAcceptDialog(Get.context!,Get.width*0.9);
+        }*/
+
       },
       onError: (Object e) => safePrint('Error in subscription stream: $e'),
     );
@@ -116,7 +139,6 @@ class DriverDashboardController extends GetxController with Helper {
 
   void unsubscribe() {
     subscription?.cancel();
-    subscription = null;
   }
 
   subscriptionStatus() {
@@ -130,15 +152,19 @@ class DriverDashboardController extends GetxController with Helper {
     );
   }
 
+
   @override
   void onInit() {
-    configureAmplify();
+    WidgetsBinding.instance.addObserver(this);
+    getRiderId();
+    // getRiderId();
     callTest();
     super.onInit();
   }
 
   @override
   void onReady() {
+    // Timer.periodic(Duration(seconds: 20), (timer) { showRideAcceptDialog(Get.context!,Get.width*0.9); });
     getCurrentLocation();
     // getPolyPoints();
     /* setCustomMarkerIcon();
@@ -154,8 +180,28 @@ class DriverDashboardController extends GetxController with Helper {
   void onClose() {
     advancedDrawerController.dispose();
     mapControl = Completer<GoogleMapController>();
+    WidgetsBinding.instance.removeObserver(this);
+    unsubscribe();
+    // locationUpdateTimer?.cancel();
+    // locationService.stopLocationUpdates();
     super.onClose();
   }
 
   void increment() => count.value++;
+  LocationService locationService = LocationService();
+  Timer? locationUpdateTimer;
+
+
+  geoc.Placemark? locationDetails;
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    print(">>>>>>>>>>>>>>>>jks" + state.toString());
+    /*if(state == AppLifecycleState.paused){
+      getRiderId();
+    }*/
+    if (state == AppLifecycleState.detached) {
+      // locationService.stopLocationUpdates();
+    }
+  }
 }

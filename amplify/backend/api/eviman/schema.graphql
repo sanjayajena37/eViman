@@ -23,3 +23,14 @@ type Message
     )
   createdAt: String!
 }
+
+type IncomingBooking @model {
+  id: ID!
+  rider: Int!
+  clientLat: Float!
+  clientLng: Float!
+  clientName: String!
+  clientPhone: String!
+  clientId: String!
+  fareInfo: String!
+}

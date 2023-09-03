@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 
 import '../data/app_data.dart';
 import 'KeyvalueModel.dart';
@@ -11,21 +13,12 @@ class DropDown{
   static staticDropdown(
       String label, String callFrom, List<KeyvalueModel> list, Function fun) {
     return (DropdownSearch<KeyvalueModel>(
-      popupProps: PopupProps.modalBottomSheet(
+      popupProps: PopupProps.modalBottomSheet (
         showSelectedItems: false,
         showSearchBox: true,
-        searchFieldProps: TextFieldProps(decoration: InputDecoration(
-          // border: OutlineInputBorder(
-          //   borderRadius: BorderRadius.circular(8.0),
-          //   //borderSide: BorderSide(color: Colors.blueGrey,width: 1.0),
-          //
-          //   //gapPadding: 20.0,
-          //
-          // ),
 
-          //     labelStyle: TextStyle(
-          //   color: Colors.blueGrey,
-          // ),
+
+        searchFieldProps: TextFieldProps(decoration: InputDecoration(
 
           fillColor: Colors.grey,
           hintText: 'Search Here',
@@ -39,20 +32,12 @@ class DropDown{
       ),
       dropdownDecoratorProps: DropDownDecoratorProps(
         //dropdownSearchDecoration: InputDecoration(border: InputBorder.underline),
-          dropdownSearchDecoration: InputDecoration(hintText: label,
-            hintStyle: TextStyle(color: Colors.black,fontSize: 12),
-            contentPadding: EdgeInsets.only(left: 0),
-            border: UnderlineInputBorder(
-                borderSide:BorderSide(color: Colors.grey)
-            ),
-            /* border:OutlineInputBorder(
-                borderSide: const BorderSide(color: Colors.green, width: 3.0),
-                borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(3.0),
-                    bottomRight: Radius.circular(3.0),
-                    topRight: Radius.circular(3.0),
-                    topLeft: Radius.circular(3.0)),
-              ),*/
+          dropdownSearchDecoration: InputDecoration(
+            hintText: label,
+            // hintStyle: TextStyle(color: Colors.black,fontSize: 12),
+            contentPadding: EdgeInsets.only(left: 4,top: 4,bottom: 14,right: 4),
+            border: InputBorder.none,
+            hintStyle: TextStyle(color: Theme.of(Get.context!).disabledColor),
           ),
           textAlignVertical:TextAlignVertical.center
       ),

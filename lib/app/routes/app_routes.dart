@@ -20,6 +20,7 @@ abstract class Routes {
   static const WALETSCREEN = _Paths.WALETSCREEN;
   static const HISTORYSCREEN = _Paths.HISTORYSCREEN;
   static const INVITESCREEN = _Paths.INVITESCREEN;
+  static const VEHICLE_DETAILS = _Paths.VEHICLE_DETAILS;
 }
 
 abstract class _Paths {
@@ -41,4 +42,5 @@ abstract class _Paths {
   static const WALETSCREEN = '/waletscreen';
   static const HISTORYSCREEN = '/historyscreen';
   static const INVITESCREEN = '/invitescreen';
+  static const VEHICLE_DETAILS = '/vehicle-details';
 }
