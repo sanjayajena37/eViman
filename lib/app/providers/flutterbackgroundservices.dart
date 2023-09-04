@@ -77,13 +77,13 @@ postCurrentLoc(ServiceInstance service,
       await SharedPreferencesKeys().getStringData(key: 'vehicleId');
   String? authToken =
       await SharedPreferencesKeys().getStringData(key: 'authToken');
-  print(">>>>>>>>>>>authToken????\n " + authToken.toString());
+  // print(">>>>>>>>>>>authToken????\n " + authToken.toString());
 
   Timer.periodic(Duration(seconds: 25), (timer) async {
     Position? curentPosition;
     vehicleId = await SharedPreferencesKeys().getStringData(key: 'vehicleId');
     authToken = await SharedPreferencesKeys().getStringData(key: 'authToken');
-    print(">>>>>>>>>>>authToken????\n " + authToken.toString());
+    // print(">>>>>>>>>>>authToken????\n " + authToken.toString());
     if (vehicleId != null && authToken != null) {
       if (service is AndroidServiceInstance) {
         if (await service.isForegroundService()) {
@@ -99,15 +99,7 @@ postCurrentLoc(ServiceInstance service,
               "lat": (position.latitude ?? 0).toString(),
               "lng": (position.longitude ?? 0).toString()
             };
-            print(">>>>>postData" + postData.toString());
-            /*PATCH_METHOD_TOKEN(
-                api: "http://65.1.169.159:3000/api/vehicles/v1/update/location/" +
-                    (riderId ?? 0).toString(),
-                token: authToken ?? "",
-                json: postData,
-                fun: (map) {
-                  print(">>>>>>>>>>"+(map??"").toString());
-                });*/
+            // print(">>>>>postData" + postData.toString());
             print(">>>>>>>>api" +
                 "http://65.1.169.159:3000/api/vehicles/v1/update/location/" +
                 (vehicleId ?? 0).toString());
@@ -115,7 +107,8 @@ postCurrentLoc(ServiceInstance service,
               var dio = Dio();
               service1.Response response = await dio.patch(
                 "http://65.1.169.159:3000/api/vehicles/v1/update/location/${vehicleId ?? 0}",
-                options: Options(headers: {
+                options: Options(
+                    headers: {
                   "Authorization":
                       "Bearer " + ((authToken != null) ? authToken ?? '' : "")
                 }),

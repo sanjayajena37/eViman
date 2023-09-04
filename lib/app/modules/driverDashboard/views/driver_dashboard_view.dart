@@ -457,8 +457,9 @@ class DriverDashboardView extends StatelessWidget {
                         ? DraggableScrollableSheet(
                             initialChildSize: 0.1,
                             minChildSize: 0.1,
-                            maxChildSize: 1,
-                            snapSizes: [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 1],
+                            maxChildSize: 0.8,
+                            // snapSizes: [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7],
+                            snapSizes: controllerX.snapSize.value,
                             snap: true,
                             builder:
                                 (BuildContext context, scrollSheetController) {

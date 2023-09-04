@@ -60,6 +60,7 @@ dependencies:
   telephony:
   fluttertoast:
   geolocator:
+  http:
 
 #  simple_animations:
 

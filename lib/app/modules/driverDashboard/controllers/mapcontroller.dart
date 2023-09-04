@@ -45,37 +45,40 @@ extension MapHelper on DriverDashboardController {
     }
   }
 
-  Future<void> calculateDistanceUsingAPI() async {
-    List<String> travelModes = ["driving", "walking"]; //
-    String apiKey = "YOUR_GOOGLE_MAPS_API_KEY";
+  Future<String> calculateDistanceUsingAPI({double? desLat,double? desLong}) async {
+    List<String> travelModes = ["driving"]; //
+    String apiKey = "AIzaSyDwVSaWuD9KLlbKhJWj9tgKZN_QDDrvmpQ";
     String origin =
-        "Source Latitude,Source Longitude"; // Replace with actual values
+        "${currentLocation?.latitude},${currentLocation?.longitude}"; // Replace with actual values
     String destination =
-        "Dest Latitude,Dest Longitude"; // Replace with actual values
+        "${desLat??0},${desLong??0}"; // Replace with actual values
     String travelMode =
         "driving"; // Replace with the desired travel mode ("driving", "walking", "transit", "bicycling")
 
-    String url = "https://maps.googleapis.com/maps/api/distancematrix/json?" +
-        "origins=$origin" +
-        "&destinations=$destination" +
-        "&mode=$travelMode" +
-        "&key=$apiKey";
+    String url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=$origin&destinations=$destination&mode=$travelMode&key=$apiKey";
 
-    // final response = await http.get(Uri.parse(url));
-    final response = Response();
+    final response = await http.get(Uri.parse(url));
 
-    final data = json.decode(response.body);
+    if(response.statusCode == 200){
+      final data = json.decode(response.body);
 
-    if (data["status"] == "OK") {
-      String distanceText = data["rows"][0]["elements"][0]["distance"]["text"];
-      int distanceValue = data["rows"][0]["elements"][0]["distance"]["value"];
+      if (data["status"] == "OK") {
+        String distanceText = data["rows"][0]["elements"][0]["distance"]["text"];
+        int distanceValue = data["rows"][0]["elements"][0]["distance"]["value"];
 
-      print(
-          "Distance: $distanceText"); // Distance in text format (e.g., "5.4 km")
-      print("Distance Value: $distanceValue meters"); // Distance in meters
-    } else {
-      print("Error calculating distance");
+        print(
+            "Distance: $distanceText"); // Distance in text format (e.g., "5.4 km")
+        print("Distance Value: $distanceValue meters"); // Distance in meters
+        return distanceText;
+      } else {
+        return "0.00";
+        print("Error calculating distance");
+      }
+    }else{
+      return "0.00";
     }
+
+
   }
 
   double calculateDistance(List<LatLng> route) {
@@ -114,12 +117,14 @@ extension MapHelper on DriverDashboardController {
     Location location = new Location();
     location.getLocation().then((value) {
       currentLocation = LatLng(value.latitude!, value.longitude!);
+      sourceLocation = LatLng(value.latitude!, value.longitude!);
       // currentLocation = LatLng(20.296367,85.8085564);
       update(['map']);
     });
     GoogleMapController googleMapController = await mapControl.future;
     location.onLocationChanged.listen((newLoc) {
       currentLocation = LatLng(newLoc.latitude!, newLoc.longitude!);
+      sourceLocation = LatLng(newLoc.latitude!, newLoc.longitude!);
       // currentLocation = LatLng(20.296367,85.8085564);
       googleMapController.animateCamera(CameraUpdate.newCameraPosition(
           CameraPosition(
@@ -127,6 +132,55 @@ extension MapHelper on DriverDashboardController {
               target: LatLng(newLoc.latitude!, newLoc.longitude!))));
       update(['map']);
     });
+  }
+
+
+  Future<geoc.Placemark?> getDetailsByLatLong(double? lat,double? lon) async {
+    geoc.Placemark? locationDetailsUser;
+    if(lat != null && lon != null && lat != 0 && lon != 0){
+      try{
+        List<geoc.Placemark> placeMarks = await geoc.placemarkFromCoordinates(
+            lat,
+            lon);
+        if(placeMarks.isNotEmpty){
+          locationDetailsUser = placeMarks.first;
+        }
+        return locationDetailsUser;
+      }catch(e){
+        return locationDetailsUser;
+      }
+
+    }else{
+      return locationDetailsUser;
+    }
+
+  }
+
+
+
+
+  Future<String> getCityName(double latitude, double longitude, String apiKey) async {
+    final url = Uri.parse('https://maps.googleapis.com/maps/api/geocode/json?latlng=$latitude,$longitude&key=$apiKey');
+
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+
+      if (data['status'] == 'OK') {
+        final results = data['results'];
+        if (results.isNotEmpty) {
+          for (final component in results[0]['address_components']) {
+            final types = component['types'];
+            if (types.contains('locality') || types.contains('administrative_area_level_2')) {
+              return component['long_name'];
+            }
+          }
+        }
+      }
+    }
+
+    return 'Unknown';
   }
 
   void adjustBounds() {

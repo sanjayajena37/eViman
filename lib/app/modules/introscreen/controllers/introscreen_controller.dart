@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:flutter/cupertino.dart';
@@ -65,17 +66,18 @@ class IntroscreenController extends GetxController with GetTickerProviderStateMi
   }
 
   callServices() async {
-    final service = FlutterBackgroundService();
-    bool isRunning = await service.isRunning();
-    if(isRunning){
-      service.invoke("stopService");
+    WidgetsFlutterBinding.ensureInitialized();
+    DartPluginRegistrant.ensureInitialized();
+    try{
+      final service = FlutterBackgroundService();
+      bool isRunning = await service.isRunning();
+      if(isRunning){
+        service.invoke("stopService");
+      }
+    }catch(e){
+      print(">>>>>>"+e.toString());
     }
-   /* else{
-      service.startService();
-      FlutterBackgroundService().invoke("setAsForeground");
-      Future.delayed(const Duration(seconds: 7));
-      FlutterBackgroundService().invoke("setAsBackground");
-    }*/
+
   }
 
   @override

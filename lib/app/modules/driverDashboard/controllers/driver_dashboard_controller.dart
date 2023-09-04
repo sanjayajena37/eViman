@@ -37,6 +37,7 @@ import 'package:amplify_core/src/types/api/graphql/graphql_response.dart' as gr;
 import '../LocationService.dart';
 import 'AmplifyApiName.dart';
 import 'package:geocoding/geocoding.dart' as geoc;
+import 'package:http/http.dart' as http;
 part 'mapcontroller.dart';
 part 'appsyncController.dart';
 part 'helpercontroller.dart';
@@ -77,6 +78,9 @@ class DriverDashboardController extends GetxController
 
   String? riderIdNew;
   String? authToken;
+
+  geoc.Placemark? locationDetailsUser;
+
   getRiderId() async {
     riderIdNew = await SharedPreferencesKeys().getStringData(key: 'riderId');
     authToken = await SharedPreferencesKeys().getStringData(key: 'authToken');
@@ -89,7 +93,7 @@ class DriverDashboardController extends GetxController
         await Amplify.addPlugins([api]);
         await Amplify.configure(amplifyconfig);
       }
-      subscribe();
+
       safePrint("Amplify configured successfully");
     } catch (e) {
       safePrint("Error configuring Amplify: $e");
@@ -113,6 +117,7 @@ class DriverDashboardController extends GetxController
               clientPhone
               clientId
               fareInfo
+              bookingId
             }
           }
         """,
@@ -125,20 +130,33 @@ class DriverDashboardController extends GetxController
 
     subscription = operation.listen(
       (event) {
+        if(event.data != null){
+          if(userDetails == ""){
+            userDetails = (event.data??"").toString();
+             Map? receiveData = jsonDecode(event.data as String)??{};
+            calculateDistanceUsingAPI(desLat:double.tryParse(receiveData?['incomingBooking']['clientLat']??"0") ,
+                desLong:double.tryParse(receiveData?['incomingBooking']['clientLng']??"0") ).then((value) {
+                  print("distance"+value.toString());
+            });
+            showRideAcceptDialog(Get.context!,Get.width*0.9);
+            safePrint(">>>>>>>>>>>mapData"+receiveData.toString());
+          }else{
+            Snack.callSuccess("Please take action quick");
+          }
+        }
         safePrint('Subscription event data received: ${event.data}');
 
-       /* Map? receiveData = jsonDecode(event.data as String)??{};
-        if(receiveData != null && receiveData.isNotEmpty){
-          showRideAcceptDialog(Get.context!,Get.width*0.9);
-        }*/
+
 
       },
       onError: (Object e) => safePrint('Error in subscription stream: $e'),
     );
   }
-
+  String userDetails = "";
   void unsubscribe() {
-    subscription?.cancel();
+    if(subscription != null){
+      subscription?.cancel();
+    }
   }
 
   subscriptionStatus() {
@@ -152,13 +170,12 @@ class DriverDashboardController extends GetxController
     );
   }
 
-
+  Rx<List<double>> snapSize = Rx<List<double>>([0.1,0.2]);
   @override
   void onInit() {
     WidgetsBinding.instance.addObserver(this);
     getRiderId();
     // getRiderId();
-    callTest();
     super.onInit();
   }
 
@@ -170,7 +187,6 @@ class DriverDashboardController extends GetxController
     /* setCustomMarkerIcon();
 
     fetchDirections();*/
-    showModalbottomSheet();
     super.onReady();
   }
 

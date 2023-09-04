@@ -55,6 +55,7 @@ class IntroscreenView extends GetView<IntroscreenController> {
             const EdgeInsets.only(left: 48, right: 48, bottom: 8, top: 32),
             buttonText: "Login",
             onTap: () {
+              Get.delete<IntroscreenController>();
               Get.toNamed(Routes.LOGINSCREEN);
               // Get.to(()=> LoginscreenView(),transition: Transition.zoom);
               // NavigationServices(context).gotoLoginScreen();

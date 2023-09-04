@@ -6,17 +6,23 @@ extension HelperController on DriverDashboardController {
       "status": (val)?1:0,
     };
     print(">>>>>"+sendData.toString());
-    Get.find<ConnectorController>().PATCHMETHODCALL(
+    Get.find<ConnectorController>().PATCH_METHOD_TOKEN(
         api: "http://65.1.169.159:3000/api/riders/v1/update-online-status/30",
         json: sendData,
+        token:authToken??"",
         fun: (map) {
           print(">>>>>>" + map.toString());
           if (map is Map &&
               map.containsKey("success") &&
               map['success'] == true) {
+
             if (isDisappear.value == true) {
+              userDetails = "";
+              unsubscribe();
               isDisappear = Rx<bool>(false);
             } else {
+              subscribe();
+              userDetails = "";
               isDisappear = Rx<bool>(true);
             }
             isDisappear.refresh();
@@ -198,11 +204,9 @@ extension HelperController on DriverDashboardController {
   }
 
   void showRideAcceptDialog(BuildContext context, double screenSizeWidth) {
-    showDialog(
-      context: context,
+    Get.dialog(
       barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
+       AlertDialog(
           content:  Stack(children: [
             Container(
               height: Get.height*0.44,
@@ -377,6 +381,7 @@ extension HelperController on DriverDashboardController {
                           buttonText: "Cancel",
                           backgroundColor: Colors.red,
                           onTap: () {
+                            userDetails = "";
                             Get.back();
                           },
                         ),
@@ -390,6 +395,7 @@ extension HelperController on DriverDashboardController {
                               left: 2, right: 2, bottom: 4),
                           buttonText: "Accept",
                           onTap: () {
+                            userDetails = "";
 
                           },
                         ),
@@ -415,6 +421,7 @@ extension HelperController on DriverDashboardController {
                         color: Colors.white,
                       ),
                       onPressed: () {
+                        userDetails = "";
                         Navigator.pop(context);
                       },
                     ),
@@ -423,8 +430,7 @@ extension HelperController on DriverDashboardController {
           ]),backgroundColor: const Color(0xff16192C),
           insetPadding: EdgeInsets.all(2),
           contentPadding: EdgeInsets.all(0),
-        );
-      },
+        )
     );
   }
 
