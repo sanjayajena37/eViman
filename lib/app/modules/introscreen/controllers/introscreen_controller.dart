@@ -61,7 +61,6 @@ class IntroscreenController extends GetxController with GetTickerProviderStateMi
   Future<void> onReady() async {
     WidgetsFlutterBinding.ensureInitialized();
     callOrStopServices();
-
     super.onReady();
   }
 

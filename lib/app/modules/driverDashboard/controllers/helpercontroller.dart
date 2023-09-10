@@ -21,6 +21,7 @@ extension HelperController on DriverDashboardController {
                 userDetails = "";
                 incomingBookingModel = null;
                 unsubscribe();
+                unsubscribe2();
               });
               isDisappear = Rx<bool>(false);
               userDetails = "";
@@ -506,6 +507,7 @@ extension HelperController on DriverDashboardController {
                                         85.845584);
                                 getPolyPoints();
                                 setCustomMarkerIcon();
+                                Get.back();
                               } catch (e) {
                                 userDetails = "";
                                 maxChildSize = Rx<double>(0.2);
@@ -519,12 +521,13 @@ extension HelperController on DriverDashboardController {
                                 unsubscribe2();
                                 snapSize.refresh();
                                 maxChildSize.refresh();
+                                Get.back();
                               }
 
                               // fetchDirections();
                             }
 
-                            Get.back();
+
                           },
                         ),
                       ),

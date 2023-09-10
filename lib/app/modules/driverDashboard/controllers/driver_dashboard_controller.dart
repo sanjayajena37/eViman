@@ -138,11 +138,13 @@ class DriverDashboardController extends GetxController
                 maxChildSize = Rx<double>(0.7);
                 initialChildSize = Rx<double>(0.5);
                 snapSize = Rx<List<double>>([0.1, 0.2, 0.25, 0.3, 0.35, 0.4, 0.5, 0.6]);
+                subscribeBookingDetails( checkStatusModel?.riderStatus?.activeRide?.bookingId??"");
                 getPolyPoints();
                 setCustomMarkerIcon();
                 update(['top']);
               }
             }
+
             if(checkStatusModel != null &&  checkStatusModel?.riderStatus?.isOnline != null){
               if(checkStatusModel?.riderStatus?.isOnline??false ){
                 isDisappear = Rx<bool>(true);
@@ -338,7 +340,10 @@ class DriverDashboardController extends GetxController
       (event) {
         if (event.data != null) {
           Map? receiveDataNew = jsonDecode(event.data as String) ?? {};
-          if(receiveDataNew != null && receiveDataNew['subscribeBookingDetails']['bookingStatus'].toString().trim() == "Booking Timeout"){
+          if(receiveDataNew != null && ((receiveDataNew['subscribeBookingDetails']['bookingStatus'].toString().
+          trim() == "Booking Timeout")  ||  (receiveDataNew['subscribeBookingDetails']['bookingStatus'].toString().
+          trim() == "CANCELLED BY CUSTOMER" )||  (receiveDataNew['subscribeBookingDetails']['bookingStatus'].toString().
+          trim() == "CANCELLED BY RIDER" ) )){
             userDetails = "";
             initialChildSize = Rx<double>(0.1);
             maxChildSize = Rx<double>(0.1);
@@ -346,6 +351,7 @@ class DriverDashboardController extends GetxController
             incomingBookingModel = null;
             subscribeBookingDetailsModel = null;
             polylineCoordinates = [];
+            unsubscribe2();
             update(['top']);
           }else{
             Map? receiveData = jsonDecode(event.data as String) ?? {};
@@ -367,7 +373,7 @@ class DriverDashboardController extends GetxController
       "bookingStatus": sta ?? "COMPLETED",
       "updatedById": riderIdNew ?? "41",
       "updatedByUserType": "Rider",
-      "amountReceived": 950 //Pass when bookingStatus is COMPLETED
+      "amountReceived":double.tryParse(amountEditingController.text?? "950")??950 //Pass when bookingStatus is COMPLETED
     };
     print(">>>>>>>>>>>>>>>" + jsonEncode(postData).toString());
     Get.find<ConnectorController>().PATCH_METHOD1_POST_TOKEN(

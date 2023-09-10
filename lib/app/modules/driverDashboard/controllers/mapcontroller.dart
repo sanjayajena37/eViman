@@ -226,12 +226,12 @@ extension MapHelper on DriverDashboardController {
   }
 
   void setCustomMarkerIcon() {
-    BitmapDescriptor.fromAssetImage(
+  /*  BitmapDescriptor.fromAssetImage(
             ImageConfiguration.empty, "assets/images/location.png")
         .then((value) => sourceIcon = value);
     BitmapDescriptor.fromAssetImage(
             ImageConfiguration.empty, "assets/images/location.png")
-        .then((value) => destinationIcon = value);
+        .then((value) => destinationIcon = value);*/
     BitmapDescriptor.fromAssetImage(
             ImageConfiguration.empty, "assets/images/motorbike.png")
         .then((value) => currentLocationIcon = value);

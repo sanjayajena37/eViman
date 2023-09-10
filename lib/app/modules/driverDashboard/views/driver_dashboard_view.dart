@@ -19,6 +19,8 @@ import '../../../widgets/DraggablePopup.dart';
 import '../../../widgets/MovableContainer.dart';
 import '../../../widgets/RoundedButtonWidget.dart';
 import '../../../widgets/common_button.dart';
+import '../../../widgets/common_text_field_view.dart';
+import '../../../widgets/remove_focuse.dart';
 import '../../../widgets/tap_effect.dart';
 import '../controllers/driver_dashboard_controller.dart';
 import 'package:dateplan/app/constants/helper.dart';
@@ -334,7 +336,7 @@ class DriverDashboardView extends StatelessWidget {
                                             }),
                                           )
                                         : {},*/
-                                    {
+                                        {
                                       Polyline(
                                           polylineId: PolylineId('route'),
                                           points:
@@ -348,14 +350,13 @@ class DriverDashboardView extends StatelessWidget {
                                     markers: {
                                       Marker(
                                           markerId: MarkerId("source"),
-                                          position: controllerX.sourceLocation,
-                                          icon: controllerX.sourceIcon),
+                                          position: controllerX.sourceLocation),
                                       Marker(
                                           markerId: MarkerId("Destination"),
-                                          position: controllerX.destination,
-                                          icon: controllerX.destinationIcon),
+                                          position: controllerX.destination),
                                       Marker(
-                                          markerId: MarkerId("Current Location"),
+                                          markerId:
+                                              MarkerId("Current Location"),
                                           position: LatLng(
                                               controllerX
                                                   .currentLocation!.latitude!,
@@ -455,7 +456,8 @@ class DriverDashboardView extends StatelessWidget {
                       return Obx(
                         () => (controllerX.isDisappear.value == true)
                             ? DraggableScrollableSheet(
-                                initialChildSize: controllerX.initialChildSize.value,
+                                initialChildSize:
+                                    controllerX.initialChildSize.value,
                                 minChildSize: 0.1,
                                 maxChildSize: controllerX.maxChildSize.value,
                                 // snapSizes: [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7],
@@ -508,414 +510,525 @@ class DriverDashboardView extends StatelessWidget {
                                           ),
                                           (controllerX.incomingBookingModel !=
                                                   null)
-                                              ? Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Padding(
-                                                      padding: const EdgeInsets
-                                                              .symmetric(
-                                                          horizontal: 5.0,
-                                                          vertical: 2),
-                                                      child: Container(
-                                                        color: Colors.white,
-                                                        child: Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .spaceBetween,
-                                                          children: [
-                                                            Row(
-                                                              children: [
-                                                                const CircleAvatar(
-                                                                  backgroundColor:
-                                                                      Colors
-                                                                          .transparent,
-                                                                  backgroundImage:
-                                                                      AssetImage(
-                                                                          "assets/images/avatar1.jpg"),
-                                                                  maxRadius: 20,
-                                                                  minRadius: 10,
-                                                                ),
-                                                                SizedBox(
-                                                                  width: 10,
-                                                                ),
-                                                                CustomeTittleText(
-                                                                  text:
-                                                                  controllerX.incomingBookingModel?.incomingBooking?.clientName?? "Amrit Jena",
-                                                                  textsize: 18,
-                                                                ),
-                                                              ],
-                                                            ),
-                                                            InkWell(
-                                                              onTap: () {
-                                                                controllerX
-                                                                    .makingPhoneCall(controllerX.incomingBookingModel?.incomingBooking?.clientPhone);
-                                                                // await FlutterPhoneDirectCaller.callNumber("919178488130");
-                                                              },
-                                                              child: lottie
-                                                                  .Lottie.asset(
-                                                                "assets/json/call.json",
-                                                                fit: BoxFit
-                                                                    .contain,
-                                                                height: 70,
-                                                                width: 70,
-                                                                filterQuality:
-                                                                    FilterQuality
-                                                                        .high,
-                                                              ),
-                                                            )
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    Padding(
-                                                      padding: const EdgeInsets
-                                                              .symmetric(
-                                                          horizontal: 5.0,
-                                                          vertical: 0),
-                                                      child: Row(
-                                                        children: [
-                                                          Icon(
-                                                            Icons
-                                                                .location_searching_rounded,
-                                                            size: 20,
-                                                            color: Colors.black,
-                                                          ),
-                                                          SizedBox(
-                                                            width: 10,
-                                                          ),
-                                                          Container(
-                                                            width: Get.width*0.86,
-                                                            child: Text(
-                                                              controllerX.incomingBookingModel?.incomingBooking?.pickupAddress??
-                                                                  "Lagos-Abeokuta Expressway KM 748",
-                                                              maxLines: 3,softWrap: true,
-                                                              style: TextStyles(
-                                                                      context)
-                                                                  .getDescriptionStyle()
-                                                                  .copyWith(
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold,
-                                                                      fontSize:
-                                                                          13),
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                    const SizedBox(
-                                                      height: 2,
-                                                    ),
-                                                    Padding(
-                                                      padding: const EdgeInsets
-                                                              .symmetric(
-                                                          horizontal: 5.0,
-                                                          vertical: 2),
-                                                      child: Container(
-                                                        margin: const EdgeInsets
-                                                            .only(left: 9),
-                                                        height: 8,
-                                                        width: 2,
-                                                        color: Colors.black,
-                                                      ),
-                                                    ),
-                                                    const SizedBox(
-                                                      height: 2,
-                                                    ),
-                                                    Padding(
-                                                      padding: const EdgeInsets
-                                                              .symmetric(
-                                                          horizontal: 5.0,
-                                                          vertical: 2),
-                                                      child: Container(
-                                                        margin: const EdgeInsets
-                                                            .only(left: 9),
-                                                        height: 8,
-                                                        width: 2,
-                                                        color: Colors.black,
-                                                      ),
-                                                    ),
-                                                    const SizedBox(
-                                                      height: 2,
-                                                    ),
-                                                    Padding(
-                                                      padding: const EdgeInsets
-                                                              .symmetric(
-                                                          horizontal: 5.0,
-                                                          vertical: 2),
-                                                      child: Row(
-                                                        children: [
-                                                          Icon(
-                                                            Icons.location_on,
-                                                            size: 20,
-                                                            color: Color(
-                                                                0xffADD685),
-                                                          ),
-                                                          SizedBox(
-                                                            width: 10,
-                                                          ),
-                                                          Container(
-                                                            width: Get.width*0.86,
-                                                            child: Text(
-                                                              controllerX.incomingBookingModel?.incomingBooking?.dropAddress??  "Queen Street 73",
-                                                              maxLines: 3,
-                                                              style: TextStyles(
-                                                                      context)
-                                                                  .getDescriptionStyle()
-                                                                  .copyWith(
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold,
-                                                                      fontSize:
-                                                                          13),
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceAround,
-                                                      children: [
-                                                        Column(
-                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets
-                                                                      .symmetric(
-                                                                  horizontal:
-                                                                      5.0,
-                                                                  vertical: 2),
-                                                              child: Row(
-                                                                children: [
-                                                                  SizedBox(
-                                                                    width: 8,
-                                                                  ),
-                                                                  Container(
-                                                                    child: Text(
-                                                                      "PickUp Distance: ",
-                                                                      style: TextStyles(
-                                                                              context)
-                                                                          .getDescriptionStyle()
-                                                                          .copyWith(
-                                                                              fontWeight: FontWeight.bold,
-                                                                              fontSize: 13),
-                                                                    ),
-                                                                  ),
-                                                                  SizedBox(
-                                                                    width: 5,
-                                                                  ),
-                                                                  Text(
-                                                                   controllerX.pickUpDist?? "4.0 K.M.",
-                                                                    style: TextStyles(
-                                                                            context)
-                                                                        .getBoldStyle()
-                                                                        .copyWith(
-                                                                            fontWeight:
-                                                                                FontWeight.bold,
-                                                                            fontSize: 15),
-                                                                  )
-                                                                ],
-                                                              ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets
-                                                                      .symmetric(
-                                                                  horizontal:
-                                                                      5.0,
-                                                                  vertical: 2),
-                                                              child: Row(
-                                                                children: [
-                                                                  SizedBox(
-                                                                    width: 8,
-                                                                  ),
-                                                                  Container(
-                                                                    child: Text(
-                                                                      "Travel Distance: ",
-                                                                      style: TextStyles(
-                                                                              context)
-                                                                          .getDescriptionStyle()
-                                                                          .copyWith(
-                                                                              fontWeight: FontWeight.bold,
-                                                                              fontSize: 13),
-                                                                    ),
-                                                                  ),
-                                                                  SizedBox(
-                                                                    width: 5,
-                                                                  ),
-                                                                  Text(
-                                                                   controllerX.travelDist??"40.0 K.M.",
-                                                                    style: TextStyles(
-                                                                            context)
-                                                                        .getBoldStyle()
-                                                                        .copyWith(
-                                                                            fontWeight:
-                                                                                FontWeight.bold,
-                                                                            fontSize: 15),
-                                                                  )
-                                                                ],
-                                                              ),
-                                                            )
-                                                          ],
-                                                        ),
-                                                        InkWell(
-                                                          onTap: () {
-                                                            controllerX.otpDialog(
-                                                                Get.context!,
-                                                                Get.width *
-                                                                    0.85);
-                                                          },
-                                                          child: Column(
+                                              ? RemoveFocuse(
+                                                  onClick: () {
+                                                    FocusScope.of(context)
+                                                        .requestFocus(
+                                                            FocusNode());
+                                                  },
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .symmetric(
+                                                                horizontal: 5.0,
+                                                                vertical: 2),
+                                                        child: Container(
+                                                          color: Colors.white,
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
                                                             children: [
-                                                              lottie.Lottie
-                                                                  .asset(
-                                                                "assets/json/enterotp.json",
-                                                                fit: BoxFit
-                                                                    .contain,
-                                                                height: 40,
-                                                                width: 40,
-                                                                filterQuality:
-                                                                    FilterQuality
-                                                                        .high,
+                                                              Row(
+                                                                children: [
+                                                                  const CircleAvatar(
+                                                                    backgroundColor:
+                                                                        Colors
+                                                                            .transparent,
+                                                                    backgroundImage:
+                                                                        AssetImage(
+                                                                            "assets/images/avatar1.jpg"),
+                                                                    maxRadius:
+                                                                        20,
+                                                                    minRadius:
+                                                                        10,
+                                                                  ),
+                                                                  SizedBox(
+                                                                    width: 10,
+                                                                  ),
+                                                                  CustomeTittleText(
+                                                                    text: controllerX
+                                                                            .incomingBookingModel
+                                                                            ?.incomingBooking
+                                                                            ?.clientName ??
+                                                                        "Amrit Jena",
+                                                                    textsize:
+                                                                        18,
+                                                                  ),
+                                                                ],
                                                               ),
-                                                              Container(
-                                                                child: Text(
-                                                                    "Enter OTP",
-                                                                    style: TextStyles(
-                                                                            context)
-                                                                        .getBoldStyle()
-                                                                        .copyWith(
-                                                                            fontWeight:
-                                                                                FontWeight.bold,
-                                                                            fontSize: 15)),
-                                                              ),
+                                                              InkWell(
+                                                                onTap: () {
+                                                                  controllerX.makingPhoneCall(controllerX
+                                                                      .incomingBookingModel
+                                                                      ?.incomingBooking
+                                                                      ?.clientPhone);
+                                                                  // await FlutterPhoneDirectCaller.callNumber("919178488130");
+                                                                },
+                                                                child: lottie
+                                                                        .Lottie
+                                                                    .asset(
+                                                                  "assets/json/call.json",
+                                                                  fit: BoxFit
+                                                                      .contain,
+                                                                  height: 70,
+                                                                  width: 70,
+                                                                  filterQuality:
+                                                                      FilterQuality
+                                                                          .high,
+                                                                ),
+                                                              )
                                                             ],
                                                           ),
                                                         ),
-                                                      ],
-                                                    ),
-                                                    Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              8.0),
-                                                      child: Row(
-                                                        children: [
-                                                          Expanded(
-                                                            child: CommonButton(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                          .only(
-                                                                      left: 2,
-                                                                      right: 2,
-                                                                      bottom:
-                                                                          1),
-                                                              buttonText:
-                                                                  "Cancel",
-                                                              onTap: () {
-                                                                controllerX.userDetails = "";
-                                                                controllerX.initialChildSize = Rx<double>(0.1);
-                                                                controllerX.maxChildSize = Rx<double>(0.1);
-                                                                controllerX. snapSize = Rx<List<double>>([0.1]);
-                                                                controllerX.incomingBookingModel = null;
-                                                                controllerX.polylineCoordinates = [];
-                                                                controllerX.unsubscribe2();
-                                                                controllerX.update(['drag','map']);
-                                                                controllerX.upDateRideStatus("CANCELLED BY RIDER");
-                                                              },
-                                                              radius: 10,
-                                                              height: 37,
-                                                            ),
-                                                          ),
-                                                          SizedBox(
-                                                            width: 2,
-                                                          ),
-                                                          Expanded(
-                                                            child: CommonButton(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                          .only(
-                                                                      left: 2,
-                                                                      right: 2,
-                                                                      bottom:
-                                                                          1),
-                                                              buttonText:
-                                                                  "Completed",
-                                                              onTap: () {
-                                                                controllerX.userDetails = "";
-                                                                controllerX.initialChildSize = Rx<double>(0.1);
-                                                                controllerX.maxChildSize = Rx<double>(0.1);
-                                                                controllerX. snapSize = Rx<List<double>>([0.1]);
-                                                                controllerX.incomingBookingModel = null;
-                                                                controllerX.polylineCoordinates = [];
-                                                                controllerX.unsubscribe2();
-                                                                controllerX.update(['drag','map']);
-                                                                controllerX.upDateRideStatus("COMPLETED");
-                                                              },
-                                                              radius: 10,
-                                                              height: 37,
-                                                            ),
-                                                          ),
-                                                          SizedBox(
-                                                            width: 2,
-                                                          ),
-                                                          Expanded(
-                                                            child: CommonButton(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                          .only(
-                                                                      left: 2,
-                                                                      right: 2,
-                                                                      bottom:
-                                                                          1),
-                                                              buttonText:
-                                                                  "Delay",
-                                                              onTap: () {},
-                                                              radius: 10,
-                                                              height: 37,
-                                                            ),
-                                                          ),
-                                                        ],
                                                       ),
-                                                    ),
-                                                    Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              8.0),
-                                                      child: Row(
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .symmetric(
+                                                                horizontal: 5.0,
+                                                                vertical: 0),
+                                                        child: Row(
+                                                          children: [
+                                                            Icon(
+                                                              Icons
+                                                                  .location_searching_rounded,
+                                                              size: 20,
+                                                              color:
+                                                                  Colors.black,
+                                                            ),
+                                                            SizedBox(
+                                                              width: 10,
+                                                            ),
+                                                            Container(
+                                                              width: Get.width *
+                                                                  0.86,
+                                                              child: Text(
+                                                                controllerX
+                                                                        .incomingBookingModel
+                                                                        ?.incomingBooking
+                                                                        ?.pickupAddress ??
+                                                                    "Lagos-Abeokuta Expressway KM 748",
+                                                                maxLines: 3,
+                                                                softWrap: true,
+                                                                style: TextStyles(
+                                                                        context)
+                                                                    .getDescriptionStyle()
+                                                                    .copyWith(
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .bold,
+                                                                        fontSize:
+                                                                            13),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      const SizedBox(
+                                                        height: 2,
+                                                      ),
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .symmetric(
+                                                                horizontal: 5.0,
+                                                                vertical: 2),
+                                                        child: Container(
+                                                          margin:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  left: 9),
+                                                          height: 8,
+                                                          width: 2,
+                                                          color: Colors.black,
+                                                        ),
+                                                      ),
+                                                      const SizedBox(
+                                                        height: 2,
+                                                      ),
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .symmetric(
+                                                                horizontal: 5.0,
+                                                                vertical: 2),
+                                                        child: Container(
+                                                          margin:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  left: 9),
+                                                          height: 8,
+                                                          width: 2,
+                                                          color: Colors.black,
+                                                        ),
+                                                      ),
+                                                      const SizedBox(
+                                                        height: 2,
+                                                      ),
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .symmetric(
+                                                                horizontal: 5.0,
+                                                                vertical: 2),
+                                                        child: Row(
+                                                          children: [
+                                                            Icon(
+                                                              Icons.location_on,
+                                                              size: 20,
+                                                              color: Color(
+                                                                  0xffADD685),
+                                                            ),
+                                                            SizedBox(
+                                                              width: 10,
+                                                            ),
+                                                            Container(
+                                                              width: Get.width *
+                                                                  0.86,
+                                                              child: Text(
+                                                                controllerX
+                                                                        .incomingBookingModel
+                                                                        ?.incomingBooking
+                                                                        ?.dropAddress ??
+                                                                    "Queen Street 73",
+                                                                maxLines: 3,
+                                                                style: TextStyles(
+                                                                        context)
+                                                                    .getDescriptionStyle()
+                                                                    .copyWith(
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .bold,
+                                                                        fontSize:
+                                                                            13),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      Row(
                                                         mainAxisAlignment:
                                                             MainAxisAlignment
-                                                                .center,
+                                                                .spaceAround,
                                                         children: [
-                                                          SizedBox(
-                                                            width:
-                                                                Get.width * 0.3,
-                                                            child: CommonButton(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                          .only(
-                                                                      left: 2,
-                                                                      right: 2,
-                                                                      bottom:
-                                                                          1),
-                                                              buttonText: "Map",
-                                                              onTap: () {
-                                                                controllerX.goToMapDialog(
-                                                                    Get
-                                                                        .context!,
-                                                                    Get.width *
-                                                                        0.85);
-                                                              },
-                                                              radius: 10,
-                                                              height: 37,
-                                                              isIcon: true,
+                                                          Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              Padding(
+                                                                padding: const EdgeInsets
+                                                                        .symmetric(
+                                                                    horizontal:
+                                                                        5.0,
+                                                                    vertical:
+                                                                        2),
+                                                                child: Row(
+                                                                  children: [
+                                                                    SizedBox(
+                                                                      width: 8,
+                                                                    ),
+                                                                    Container(
+                                                                      child:
+                                                                          Text(
+                                                                        "PickUp Distance: ",
+                                                                        style: TextStyles(context).getDescriptionStyle().copyWith(
+                                                                            fontWeight:
+                                                                                FontWeight.bold,
+                                                                            fontSize: 13),
+                                                                      ),
+                                                                    ),
+                                                                    SizedBox(
+                                                                      width: 5,
+                                                                    ),
+                                                                    Text(
+                                                                      controllerX
+                                                                              .pickUpDist ??
+                                                                          "4.0 K.M.",
+                                                                      style: TextStyles(
+                                                                              context)
+                                                                          .getBoldStyle()
+                                                                          .copyWith(
+                                                                              fontWeight: FontWeight.bold,
+                                                                              fontSize: 15),
+                                                                    )
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                              Padding(
+                                                                padding: const EdgeInsets
+                                                                        .symmetric(
+                                                                    horizontal:
+                                                                        5.0,
+                                                                    vertical:
+                                                                        2),
+                                                                child: Row(
+                                                                  children: [
+                                                                    SizedBox(
+                                                                      width: 8,
+                                                                    ),
+                                                                    Container(
+                                                                      child:
+                                                                          Text(
+                                                                        "Travel Distance: ",
+                                                                        style: TextStyles(context).getDescriptionStyle().copyWith(
+                                                                            fontWeight:
+                                                                                FontWeight.bold,
+                                                                            fontSize: 13),
+                                                                      ),
+                                                                    ),
+                                                                    SizedBox(
+                                                                      width: 5,
+                                                                    ),
+                                                                    Text(
+                                                                      controllerX
+                                                                              .travelDist ??
+                                                                          "40.0 K.M.",
+                                                                      style: TextStyles(
+                                                                              context)
+                                                                          .getBoldStyle()
+                                                                          .copyWith(
+                                                                              fontWeight: FontWeight.bold,
+                                                                              fontSize: 15),
+                                                                    )
+                                                                  ],
+                                                                ),
+                                                              )
+                                                            ],
+                                                          ),
+                                                          InkWell(
+                                                            onTap: () {
+                                                              controllerX.otpDialog(
+                                                                  Get.context!,
+                                                                  Get.width *
+                                                                      0.85);
+                                                            },
+                                                            child: Column(
+                                                              children: [
+                                                                lottie.Lottie
+                                                                    .asset(
+                                                                  "assets/json/enterotp.json",
+                                                                  fit: BoxFit
+                                                                      .contain,
+                                                                  height: 40,
+                                                                  width: 40,
+                                                                  filterQuality:
+                                                                      FilterQuality
+                                                                          .high,
+                                                                ),
+                                                                Container(
+                                                                  child: Text(
+                                                                      "Enter OTP",
+                                                                      style: TextStyles(
+                                                                              context)
+                                                                          .getBoldStyle()
+                                                                          .copyWith(
+                                                                              fontWeight: FontWeight.bold,
+                                                                              fontSize: 15)),
+                                                                ),
+                                                              ],
                                                             ),
                                                           ),
                                                         ],
                                                       ),
-                                                    ),
-                                                  ],
+                                                      CommonTextFieldView(
+                                                        controller: controllerX
+                                                            .amountEditingController,
+                                                        maxLength: 10,
+                                                        titleText:
+                                                            "Amount Received",
+                                                        contextNew: context,
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .only(
+                                                                left: 24,
+                                                                right: 24,
+                                                                bottom: 16),
+                                                        hintText:
+                                                            "enter amount you have received",
+                                                        keyboardType:
+                                                            TextInputType
+                                                                .number,
+                                                        onChanged:
+                                                            (String txt) {},
+                                                      ),
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(8.0),
+                                                        child: Row(
+                                                          children: [
+                                                            Expanded(
+                                                              child:
+                                                                  CommonButton(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                            .only(
+                                                                        left: 2,
+                                                                        right:
+                                                                            2,
+                                                                        bottom:
+                                                                            1),
+                                                                buttonText:
+                                                                    "Cancel",
+                                                                onTap: () {
+                                                                  controllerX
+                                                                      .userDetails = "";
+                                                                  controllerX
+                                                                          .initialChildSize =
+                                                                      Rx<double>(
+                                                                          0.1);
+                                                                  controllerX
+                                                                          .maxChildSize =
+                                                                      Rx<double>(
+                                                                          0.1);
+                                                                  controllerX
+                                                                      .snapSize = Rx<
+                                                                          List<
+                                                                              double>>(
+                                                                      [0.1]);
+                                                                  controllerX
+                                                                          .incomingBookingModel =
+                                                                      null;
+                                                                  controllerX
+                                                                      .polylineCoordinates = [];
+                                                                  controllerX.unsubscribe2();
+                                                                  controllerX
+                                                                      .update([
+                                                                    'drag',
+                                                                    'map'
+                                                                  ]);
+                                                                  controllerX
+                                                                      .upDateRideStatus(
+                                                                          "CANCELLED BY RIDER");
+                                                                },
+                                                                radius: 10,
+                                                                height: 37,
+                                                              ),
+                                                            ),
+                                                            SizedBox(
+                                                              width: 2,
+                                                            ),
+                                                            Expanded(
+                                                              child:
+                                                                  CommonButton(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                            .only(
+                                                                        left: 2,
+                                                                        right:
+                                                                            2,
+                                                                        bottom:
+                                                                            1),
+                                                                buttonText:
+                                                                    "Completed",
+                                                                onTap: () {
+                                                                  controllerX
+                                                                      .userDetails = "";
+                                                                  controllerX
+                                                                          .initialChildSize =
+                                                                      Rx<double>(
+                                                                          0.1);
+                                                                  controllerX
+                                                                          .maxChildSize =
+                                                                      Rx<double>(
+                                                                          0.1);
+                                                                  controllerX
+                                                                      .snapSize = Rx<
+                                                                          List<
+                                                                              double>>(
+                                                                      [0.1]);
+                                                                  controllerX
+                                                                          .incomingBookingModel =
+                                                                      null;
+                                                                  controllerX
+                                                                      .polylineCoordinates = [];
+                                                                  controllerX
+                                                                      .unsubscribe2();
+                                                                  controllerX
+                                                                      .update([
+                                                                    'drag',
+                                                                    'map'
+                                                                  ]);
+                                                                  controllerX
+                                                                      .upDateRideStatus(
+                                                                          "COMPLETED");
+                                                                },
+                                                                radius: 10,
+                                                                height: 37,
+                                                              ),
+                                                            ),
+                                                            SizedBox(
+                                                              width: 2,
+                                                            ),
+                                                            Expanded(
+                                                              child:
+                                                                  CommonButton(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                            .only(
+                                                                        left: 2,
+                                                                        right:
+                                                                            2,
+                                                                        bottom:
+                                                                            1),
+                                                                buttonText:
+                                                                    "Delay",
+                                                                onTap: () {},
+                                                                radius: 10,
+                                                                height: 37,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(8.0),
+                                                        child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          children: [
+                                                            SizedBox(
+                                                              width: Get.width *
+                                                                  0.3,
+                                                              child:
+                                                                  CommonButton(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                            .only(
+                                                                        left: 2,
+                                                                        right:
+                                                                            2,
+                                                                        bottom:
+                                                                            1),
+                                                                buttonText:
+                                                                    "Map",
+                                                                onTap: () {
+                                                                  controllerX.goToMapDialog(
+                                                                      Get
+                                                                          .context!,
+                                                                      Get.width *
+                                                                          0.85);
+                                                                },
+                                                                radius: 10,
+                                                                height: 37,
+                                                                isIcon: true,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
                                                 )
                                               : Container(),
                                         ],
