@@ -153,12 +153,28 @@ class OtpscreenController extends GetxController with CodeAutoFill,Helper {
         service.startService();
       }
       // FlutterBackgroundService().invoke("setAsForeground");
-      FlutterBackgroundService().invoke("setAsBackground");
+      // FlutterBackgroundService().invoke("setAsBackground");
     }catch(e){
       print(">>>>>>>>>>>"+e.toString());
     }
 
   }
+  calForegroundServices() async {
+    try{
+      final service = FlutterBackgroundService();
+      bool isRunning = await service.isRunning();
+      if(isRunning == false){
+        service.startService();
+      }
+      FlutterBackgroundService().invoke("setAsForeground");
+      // FlutterBackgroundService().invoke("setAsBackground");
+    }catch(e){
+      print(">>>>>>>>>>>"+e.toString());
+    }
+
+  }
+
+
 
   void showUnderProcess(Map map) async {
     bool isOk = await showCommonPopupNew2(
@@ -168,7 +184,7 @@ class OtpscreenController extends GetxController with CodeAutoFill,Helper {
       isYesOrNoPopup: false,
     );
     if (isOk) {
-      calBackgroundServices();
+      // calBackgroundServices();
       Get.delete<OtpscreenController>();
       Get.offAllNamed(Routes.DRIVER_DASHBOARD);
 

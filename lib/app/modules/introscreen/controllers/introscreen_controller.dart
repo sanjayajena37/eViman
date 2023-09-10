@@ -60,12 +60,12 @@ class IntroscreenController extends GetxController with GetTickerProviderStateMi
   @override
   Future<void> onReady() async {
     WidgetsFlutterBinding.ensureInitialized();
-    callServices();
+    callOrStopServices();
 
     super.onReady();
   }
 
-  callServices() async {
+  callOrStopServices() async {
     WidgetsFlutterBinding.ensureInitialized();
     DartPluginRegistrant.ensureInitialized();
     try{

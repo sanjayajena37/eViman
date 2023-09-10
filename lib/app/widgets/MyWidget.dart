@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import '../data/app_data.dart';
@@ -998,7 +999,17 @@ class MyWidgets {
     Get.dialog(
       WillPopScope(
         onWillPop: () async => true,
-        child: Column(
+        child:
+        SpinKitFadingCircle(
+          itemBuilder: (BuildContext context, int index) {
+            return DecoratedBox(
+              decoration: BoxDecoration(
+                color: index.isEven ? Colors.red : Colors.green,
+              ),
+            );
+          },
+        )
+      /*  Column(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -1006,7 +1017,7 @@ class MyWidgets {
               color: Colors.red,
             ),
           ],
-        ),
+        ),*/
       ),
       barrierDismissible: false,
     );

@@ -16,7 +16,7 @@ class _MapPopupState extends State<MapPopup> {
   String location = "Location Name:";
   Placemark ?locationDetails;
   Future<void> getCurrentLocation() async {
-    lo.Location location = new lo.Location();
+    lo.Location location = lo.Location();
     location.getLocation().then((value) async {
       selectedLatLng = LatLng(value.latitude??0, value.longitude??0);
       List<Placemark> placeMarks = await placemarkFromCoordinates(

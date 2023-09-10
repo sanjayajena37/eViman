@@ -78,7 +78,7 @@ class SpalshscreenView extends GetView<SpalshscreenController> {
                       left: 48, right: 48, bottom: 8, top: 8),
                   buttonText: "Get Started",
                   onTap: () {
-                    Get.toNamed(Routes.INTROSCREEN);
+                    controllerX.getLoginDetails();
                     // NavigationServices(context).gotoIntroductionScreen();
                   },
                 ),

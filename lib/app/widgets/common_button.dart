@@ -12,6 +12,9 @@ class CommonButton extends StatelessWidget {
   final Color? textColor, backgroundColor;
   final bool? isClickable;
   final double radius;
+  final double? height;
+  final bool isIcon;
+  final IconData? icon;
   const CommonButton({
     Key? key,
     this.onTap,
@@ -22,6 +25,9 @@ class CommonButton extends StatelessWidget {
     this.padding,
     this.isClickable = true,
     this.radius = 24,
+    this.height = 48,
+    this.icon = Icons.arrow_forward,
+    this.isIcon = false
   }) : super(key: key);
 
   @override
@@ -32,7 +38,7 @@ class CommonButton extends StatelessWidget {
         isClickable: isClickable!,
         onClick: onTap ?? () {},
         child: SizedBox(
-          height: 48,
+          height: height??48,
           child: Card(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(radius),
@@ -41,7 +47,21 @@ class CommonButton extends StatelessWidget {
             shadowColor: Colors.black12.withOpacity(
               Theme.of(context).brightness == Brightness.dark ? 0.6 : 0.2,
             ),
-            child: Center(
+            child: (isIcon)?Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                buttonTextWidget ??
+                    Text(
+                      buttonText ?? "",
+                      style: TextStyles(context).getRegularStyle().copyWith(
+                          color: textColor,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold
+                      ),
+                    ),
+                Icon(icon,color: Colors.white,)
+              ],
+            ): Center(
               child: buttonTextWidget ??
                   Text(
                     buttonText ?? "",

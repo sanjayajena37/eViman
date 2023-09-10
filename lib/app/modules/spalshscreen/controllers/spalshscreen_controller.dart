@@ -1,6 +1,13 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:permission_handler/permission_handler.dart';
+
+import '../../../constants/shared_preferences_keys.dart';
+import '../../../routes/app_pages.dart';
 
 class SpalshscreenController extends GetxController {
   //TODO: Implement SpalshscreenController
@@ -9,10 +16,18 @@ class SpalshscreenController extends GetxController {
   @override
   void onInit() {
     WidgetsFlutterBinding.ensureInitialized();
-    _handleLocationPermission();
+    handleLocationPermission();
+    requestForNotification();
     super.onInit();
   }
 
+  requestForNotification() async {
+    await Permission.notification.isDenied.then((value) {
+      if(value){
+        Permission.notification.request();
+      }
+    }) ;
+  }
   @override
   void onReady() {
     super.onReady();
@@ -25,7 +40,7 @@ class SpalshscreenController extends GetxController {
 
   void increment() => count.value++;
 
-  Future<bool> _handleLocationPermission() async {
+  Future<bool> handleLocationPermission() async {
     bool serviceEnabled;
     LocationPermission permission;
 
@@ -52,6 +67,45 @@ class SpalshscreenController extends GetxController {
       return false;
     }
     return true;
+  }
+  Future<void> callOrStopServices() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    DartPluginRegistrant.ensureInitialized();
+    try {
+      final service = FlutterBackgroundService();
+      bool isRunning = await service.isRunning();
+      if (isRunning) {
+        service.invoke("stopService");
+      }
+      return;
+    } catch (e) {
+      print(">>>>>>\n\n" + e.toString());
+      return;
+    }
+  }
+
+  void calBackgroundServices() async {
+    try{
+      final service = FlutterBackgroundService();
+      bool isRunning = await service.isRunning();
+      if(isRunning == false){
+        service.startService();
+      }
+      // FlutterBackgroundService().invoke("setAsForeground");
+      // FlutterBackgroundService().invoke("setAsBackground");
+    }catch(e){
+      print(">>>>>>>>>>>"+e.toString());
+    }
+
+  }
+  getLoginDetails() async {
+    callOrStopServices();
+    String? isLogin = await SharedPreferencesKeys().getStringData(key: 'isLogin');
+    if(isLogin == "true"){
+      Get.offAndToNamed(Routes.DRIVER_DASHBOARD);
+    }else{
+      Get.toNamed(Routes.INTROSCREEN);
+    }
   }
 
 }

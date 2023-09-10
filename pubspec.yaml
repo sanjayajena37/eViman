@@ -54,13 +54,16 @@ dependencies:
   shake: ^2.2.0
   # device_info_plus: ^8.1.0
 
-  flutter_background_service_android:
+  flutter_background_service_android: 5.0.0
   flutter_background_service_ios:
   flutter_local_notifications:
   telephony:
   fluttertoast:
   geolocator:
   http:
+#  background_location:
+  flutter_spinkit:
+#  flutter_phone_direct_caller:
 
 #  simple_animations:
 

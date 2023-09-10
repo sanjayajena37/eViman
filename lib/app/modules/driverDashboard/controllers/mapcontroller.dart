@@ -1,9 +1,10 @@
 part of 'driver_dashboard_controller.dart'; // Refer to the main controller file
 
 extension MapHelper on DriverDashboardController {
-  void callTest(){
+  void callTest() {
     print(">>>>>>>>>>>>>>>>>Jatin");
   }
+
   Future<void> fetchDirections() async {
     routeCoordinates.clear();
     List<String> travelModes = ["driving"]; // Add more modes as needed
@@ -31,7 +32,7 @@ extension MapHelper on DriverDashboardController {
               for (var route in routes) {
                 final overviewPolyline = route["overview_polyline"]["points"];
                 final List<LatLng> decodedRoute =
-                decodeEncodedPolyline(overviewPolyline);
+                    decodeEncodedPolyline(overviewPolyline);
                 routeCoordinates.add(decodedRoute);
                 Color color = routeColors[colorIndex % routeColors.length];
                 routeColorsMap[decodedRoute] = color;
@@ -45,40 +46,47 @@ extension MapHelper on DriverDashboardController {
     }
   }
 
-  Future<String> calculateDistanceUsingAPI({double? desLat,double? desLong}) async {
+  Future<String> calculateDistanceUsingAPI(
+      {double? desLat,
+      double? desLong,
+      double? originLat,
+      double? originLong}) async {
     List<String> travelModes = ["driving"]; //
     String apiKey = "AIzaSyDwVSaWuD9KLlbKhJWj9tgKZN_QDDrvmpQ";
     String origin =
-        "${currentLocation?.latitude},${currentLocation?.longitude}"; // Replace with actual values
+        "${originLat ?? 0},${originLong ?? 0}"; // Replace with actual values
     String destination =
-        "${desLat??0},${desLong??0}"; // Replace with actual values
+        "${desLat ?? 0},${desLong ?? 0}"; // Replace with actual values
     String travelMode =
         "driving"; // Replace with the desired travel mode ("driving", "walking", "transit", "bicycling")
 
-    String url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=$origin&destinations=$destination&mode=$travelMode&key=$apiKey";
-
+    String url =
+        "https://maps.googleapis.com/maps/api/distancematrix/json?origins=$origin&destinations=$destination&mode=$travelMode&key=$apiKey";
+    print(">>>>>>>>>url" + url);
     final response = await http.get(Uri.parse(url));
 
-    if(response.statusCode == 200){
+    if (response.statusCode == 200) {
       final data = json.decode(response.body);
-
-      if (data["status"] == "OK") {
-        String distanceText = data["rows"][0]["elements"][0]["distance"]["text"];
+      print(">>>>>>>>>>>" + data.toString());
+      if (data["status"] == "OK" &&
+          data["rows"] != null &&
+          data["rows"].length > 0 &&
+          data["rows"][0]["elements"][0]["distance"] != null) {
+        String? distanceText =
+            data["rows"][0]["elements"][0]["distance"]["text"];
         int distanceValue = data["rows"][0]["elements"][0]["distance"]["value"];
 
         print(
             "Distance: $distanceText"); // Distance in text format (e.g., "5.4 km")
         print("Distance Value: $distanceValue meters"); // Distance in meters
-        return distanceText;
+        return distanceText ?? "";
       } else {
         return "0.00";
         print("Error calculating distance");
       }
-    }else{
+    } else {
       return "0.00";
     }
-
-
   }
 
   double calculateDistance(List<LatLng> route) {
@@ -114,7 +122,7 @@ extension MapHelper on DriverDashboardController {
   }
 
   Future<void> getCurrentLocation() async {
-    Location location = new Location();
+    Location location = Location();
     location.getLocation().then((value) {
       currentLocation = LatLng(value.latitude!, value.longitude!);
       sourceLocation = LatLng(value.latitude!, value.longitude!);
@@ -134,33 +142,28 @@ extension MapHelper on DriverDashboardController {
     });
   }
 
-
-  Future<geoc.Placemark?> getDetailsByLatLong(double? lat,double? lon) async {
+  Future<geoc.Placemark?> getDetailsByLatLong(double? lat, double? lon) async {
     geoc.Placemark? locationDetailsUser;
-    if(lat != null && lon != null && lat != 0 && lon != 0){
-      try{
-        List<geoc.Placemark> placeMarks = await geoc.placemarkFromCoordinates(
-            lat,
-            lon);
-        if(placeMarks.isNotEmpty){
+    if (lat != null && lon != null && lat != 0 && lon != 0) {
+      try {
+        List<geoc.Placemark> placeMarks =
+            await geoc.placemarkFromCoordinates(lat, lon);
+        if (placeMarks.isNotEmpty) {
           locationDetailsUser = placeMarks.first;
         }
         return locationDetailsUser;
-      }catch(e){
+      } catch (e) {
         return locationDetailsUser;
       }
-
-    }else{
+    } else {
       return locationDetailsUser;
     }
-
   }
 
-
-
-
-  Future<String> getCityName(double latitude, double longitude, String apiKey) async {
-    final url = Uri.parse('https://maps.googleapis.com/maps/api/geocode/json?latlng=$latitude,$longitude&key=$apiKey');
+  Future<String> getCityName(
+      double latitude, double longitude, String apiKey) async {
+    final url = Uri.parse(
+        'https://maps.googleapis.com/maps/api/geocode/json?latlng=$latitude,$longitude&key=$apiKey');
 
     final response = await http.get(url);
 
@@ -172,7 +175,8 @@ extension MapHelper on DriverDashboardController {
         if (results.isNotEmpty) {
           for (final component in results[0]['address_components']) {
             final types = component['types'];
-            if (types.contains('locality') || types.contains('administrative_area_level_2')) {
+            if (types.contains('locality') ||
+                types.contains('administrative_area_level_2')) {
               return component['long_name'];
             }
           }
@@ -223,13 +227,13 @@ extension MapHelper on DriverDashboardController {
 
   void setCustomMarkerIcon() {
     BitmapDescriptor.fromAssetImage(
-        ImageConfiguration.empty, "assets/images/car.png")
+            ImageConfiguration.empty, "assets/images/location.png")
         .then((value) => sourceIcon = value);
     BitmapDescriptor.fromAssetImage(
-        ImageConfiguration.empty, "assets/images/location.png")
+            ImageConfiguration.empty, "assets/images/location.png")
         .then((value) => destinationIcon = value);
     BitmapDescriptor.fromAssetImage(
-        ImageConfiguration.empty, "assets/images/motorbike.png")
+            ImageConfiguration.empty, "assets/images/motorbike.png")
         .then((value) => currentLocationIcon = value);
     update(['map']);
   }
