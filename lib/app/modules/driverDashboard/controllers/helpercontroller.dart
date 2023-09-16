@@ -526,6 +526,9 @@ extension HelperController on DriverDashboardController {
 
                               // fetchDirections();
                             }
+                            else{
+                              Get.back();
+                            }
 
 
                           },

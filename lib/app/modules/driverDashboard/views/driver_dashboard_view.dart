@@ -406,8 +406,6 @@ class DriverDashboardView extends StatelessWidget {
                           ),
                           InkWell(
                             onTap: () {
-                              controllerX.showRideAcceptDialog(
-                                  context, Get.width * 0.9);
                             },
                             child: Card(
                                 elevation: 5,

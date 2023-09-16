@@ -185,8 +185,8 @@ class OtpscreenController extends GetxController with CodeAutoFill,Helper {
     );
     if (isOk) {
       // calBackgroundServices();
-      Get.delete<OtpscreenController>();
-      Get.offAllNamed(Routes.DRIVER_DASHBOARD);
+      Get.back();
+      Get.back();
 
       /*Navigator.push(
         Get.context!,
