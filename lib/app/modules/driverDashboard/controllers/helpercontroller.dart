@@ -651,7 +651,7 @@ extension HelperController on DriverDashboardController {
                                       .toString()
                                       .trim() ==
                                   otpEditingController.text.toString().trim()) {
-                                upDateRideStatus("OTP VERIFIED");
+                                upDateRideStatus("OTP VERIFIED",bookingId: subscribeBookingDetailsModel?.subscribeBookingDetails?.bookingId??"");
                                 Get.back();
                               } else {
                                 Snack.callError("Please enter a valid otp");

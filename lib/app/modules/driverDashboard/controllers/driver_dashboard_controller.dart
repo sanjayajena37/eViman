@@ -91,72 +91,111 @@ class DriverDashboardController extends GetxController
 
   geoc.Placemark? locationDetailsUser;
   IncomingBooikingModel? incomingBookingModel;
-  CheckStatusModel ?checkStatusModel;
+  CheckStatusModel? checkStatusModel;
 
-  checkStatus(){
+  checkStatus() {
     MyWidgets.showLoading3();
     Get.find<ConnectorController>().GETMETHODCALL(
-        api: "http://65.1.169.159:3000/api/riders/v1/online-status/${riderIdNew??""}",
+        api:
+            "http://65.1.169.159:3000/api/riders/v1/online-status/${riderIdNew ?? ""}",
         fun: (map) {
-          print(">>>>>>>>>>>>>online-status"+map.toString());
+          print(">>>>>>>>>>>>>online-status" + map.toString());
           Get.back();
-          if (map != null && map is Map &&
+          if (map != null &&
+              map is Map &&
               map.containsKey('success') &&
               map['success'] == true) {
-            checkStatusModel = CheckStatusModel.fromJson(map as Map<String,dynamic>);
-            if(checkStatusModel != null && checkStatusModel?.riderStatus != null &&
-                checkStatusModel?.riderStatus?.activeRide != null){
-              if(checkStatusModel?.riderStatus?.activeRide?.rideStatus.toString().trim() == "CONFIRMED" ||
-                  checkStatusModel?.riderStatus?.activeRide?.rideStatus.toString().trim() == "OTP VERIFIED"
-              ){
-                incomingBookingModel = IncomingBooikingModel(incomingBooking:  IncomingBooking(
-                  bookingId:checkStatusModel?.riderStatus?.activeRide?.bookingId??"",
-                  clientLat:checkStatusModel?.riderStatus?.activeRide?.pickupLat??"",
-                  clientLng:checkStatusModel?.riderStatus?.activeRide?.pickupLng??"",
-                  destinationLng:checkStatusModel?.riderStatus?.activeRide?.dropLng??"",
-                  destinationLat:checkStatusModel?.riderStatus?.activeRide?.dropLat??"",
-                  dropAddress:checkStatusModel?.riderStatus?.activeRide?.dropAddress??"",
-                  pickupAddress:checkStatusModel?.riderStatus?.activeRide?.pickupAddress??"",
-                  clientId: checkStatusModel?.riderStatus?.activeRide?.clientId??0,
+            checkStatusModel =
+                CheckStatusModel.fromJson(map as Map<String, dynamic>);
+            if (checkStatusModel != null &&
+                checkStatusModel?.riderStatus != null &&
+                checkStatusModel?.riderStatus?.activeRide != null) {
+              if (checkStatusModel?.riderStatus?.activeRide?.rideStatus
+                          .toString()
+                          .trim() ==
+                      "CONFIRMED" ||
+                  checkStatusModel?.riderStatus?.activeRide?.rideStatus
+                          .toString()
+                          .trim() ==
+                      "OTP VERIFIED") {
+                incomingBookingModel = IncomingBooikingModel(
+                    incomingBooking: IncomingBooking(
+                  bookingId:
+                      checkStatusModel?.riderStatus?.activeRide?.bookingId ??
+                          "",
+                  clientLat:
+                      checkStatusModel?.riderStatus?.activeRide?.pickupLat ??
+                          "",
+                  clientLng:
+                      checkStatusModel?.riderStatus?.activeRide?.pickupLng ??
+                          "",
+                  destinationLng:
+                      checkStatusModel?.riderStatus?.activeRide?.dropLng ?? "",
+                  destinationLat:
+                      checkStatusModel?.riderStatus?.activeRide?.dropLat ?? "",
+                  dropAddress:
+                      checkStatusModel?.riderStatus?.activeRide?.dropAddress ??
+                          "",
+                  pickupAddress: checkStatusModel
+                          ?.riderStatus?.activeRide?.pickupAddress ??
+                      "",
+                  clientId:
+                      checkStatusModel?.riderStatus?.activeRide?.clientId ?? 0,
                   // clientName: "",
-                  clientName: checkStatusModel?.riderStatus?.activeRide?.clientName??"JKS",
-                  clientPhone:checkStatusModel?.riderStatus?.clientPhone??"",
-                  fareInfo: checkStatusModel?.riderStatus?.activeRide?.fareInfo??0,
-                  status:  checkStatusModel?.riderStatus?.activeRide?.rideStatus??"",
-                  rider: int.tryParse(checkStatusModel?.riderStatus?.activeRide?.riderAssigned??"0"),
-                ) );
+                  clientName:
+                      checkStatusModel?.riderStatus?.activeRide?.clientName ??
+                          "JKS",
+                  clientPhone: checkStatusModel?.riderStatus?.clientPhone ?? "",
+                  fareInfo:
+                      checkStatusModel?.riderStatus?.activeRide?.fareInfo ?? 0,
+                  status:
+                      checkStatusModel?.riderStatus?.activeRide?.rideStatus ??
+                          "",
+                  rider: int.tryParse(checkStatusModel
+                          ?.riderStatus?.activeRide?.riderAssigned ??
+                      "0"),
+                ));
                 subscribeBookingDetailsModel = SubscribeBookingDetailsModel(
-                    subscribeBookingDetails:SubscribeBookingDetails(
-                        bookingId:checkStatusModel?.riderStatus?.activeRide?.bookingId??"",
-                        bookingStatus: checkStatusModel?.riderStatus?.activeRide?.rideStatus??"",
-                      otp: checkStatusModel?.riderStatus?.activeRide?.otp??0000,
-                      riderId: int.tryParse(checkStatusModel?.riderStatus?.activeRide?.riderAssigned??"0"),
-                      updatedById: int.tryParse(riderIdNew??"0") ,
-                      vehicleId: int.tryParse(vehicleIdNew??"0"),
-                    ) );
-                travelDist = checkStatusModel?.riderStatus?.activeRide?.distance??"0";
+                    subscribeBookingDetails: SubscribeBookingDetails(
+                  bookingId:
+                      checkStatusModel?.riderStatus?.activeRide?.bookingId ??
+                          "",
+                  bookingStatus:
+                      checkStatusModel?.riderStatus?.activeRide?.rideStatus ??
+                          "",
+                  otp: checkStatusModel?.riderStatus?.activeRide?.otp ?? 0000,
+                  riderId: int.tryParse(checkStatusModel
+                          ?.riderStatus?.activeRide?.riderAssigned ??
+                      "0"),
+                  updatedById: int.tryParse(riderIdNew ?? "0"),
+                  vehicleId: int.tryParse(vehicleIdNew ?? "0"),
+                ));
+                travelDist =
+                    checkStatusModel?.riderStatus?.activeRide?.distance ?? "0";
                 maxChildSize = Rx<double>(0.7);
                 initialChildSize = Rx<double>(0.5);
-                snapSize = Rx<List<double>>([0.1, 0.2, 0.25, 0.3, 0.35, 0.4, 0.5, 0.6]);
-                subscribeBookingDetails( checkStatusModel?.riderStatus?.activeRide?.bookingId??"");
+                snapSize = Rx<List<double>>(
+                    [0.1, 0.2, 0.25, 0.3, 0.35, 0.4, 0.5, 0.6]);
+                subscribeBookingDetails(
+                    checkStatusModel?.riderStatus?.activeRide?.bookingId ?? "");
                 getPolyPoints();
                 setCustomMarkerIcon();
                 update(['top']);
               }
             }
 
-            if(checkStatusModel != null &&  checkStatusModel?.riderStatus?.isOnline != null){
-              if(checkStatusModel?.riderStatus?.isOnline??false ){
+            if (checkStatusModel != null &&
+                checkStatusModel?.riderStatus?.isOnline != null) {
+              if (checkStatusModel?.riderStatus?.isOnline ?? false) {
                 isDisappear = Rx<bool>(true);
                 calBackgroundServices("true");
                 subscribeIncomingBooking();
-              }else{
+              } else {
                 isDisappear = Rx<bool>(false);
                 callOrStopServices();
               }
             }
             update(['top']);
-
           } else {
             Snack.callError((map ?? "Something went wrong").toString());
           }
@@ -171,7 +210,6 @@ class DriverDashboardController extends GetxController
     configureAmplify().then((value) {
       checkStatus();
     });
-
   }
 
   Future<void> configureAmplify() async {
@@ -340,10 +378,19 @@ class DriverDashboardController extends GetxController
       (event) {
         if (event.data != null) {
           Map? receiveDataNew = jsonDecode(event.data as String) ?? {};
-          if(receiveDataNew != null && ((receiveDataNew['subscribeBookingDetails']['bookingStatus'].toString().
-          trim() == "Booking Timeout")  ||  (receiveDataNew['subscribeBookingDetails']['bookingStatus'].toString().
-          trim() == "CANCELLED BY CUSTOMER" )||  (receiveDataNew['subscribeBookingDetails']['bookingStatus'].toString().
-          trim() == "CANCELLED BY RIDER" ) )){
+          if (receiveDataNew != null &&
+              ((receiveDataNew['subscribeBookingDetails']['bookingStatus']
+                          .toString()
+                          .trim() ==
+                      "Booking Timeout") ||
+                  (receiveDataNew['subscribeBookingDetails']['bookingStatus']
+                          .toString()
+                          .trim() ==
+                      "CANCELLED BY CUSTOMER") ||
+                  (receiveDataNew['subscribeBookingDetails']['bookingStatus']
+                          .toString()
+                          .trim() ==
+                      "CANCELLED BY RIDER"))) {
             userDetails = "";
             initialChildSize = Rx<double>(0.1);
             maxChildSize = Rx<double>(0.1);
@@ -353,10 +400,11 @@ class DriverDashboardController extends GetxController
             polylineCoordinates = [];
             unsubscribe2();
             update(['top']);
-          }else{
+          } else {
             Map? receiveData = jsonDecode(event.data as String) ?? {};
-            subscribeBookingDetailsModel = SubscribeBookingDetailsModel.fromJson(
-                receiveData as Map<String, dynamic>);
+            subscribeBookingDetailsModel =
+                SubscribeBookingDetailsModel.fromJson(
+                    receiveData as Map<String, dynamic>);
           }
         }
         safePrint('Subscription event data received2: ${event.data}');
@@ -365,17 +413,18 @@ class DriverDashboardController extends GetxController
     );
   }
 
-  upDateRideStatus(String? sta) {
+  Future<void> upDateRideStatus(String? sta,{String? bookingId}) async {
+    print(">>>>>>>>>>>>>>>>subscribeBookingDetailsModel"+(subscribeBookingDetailsModel?.subscribeBookingDetails?.bookingId??"").toString());
     MyWidgets.showLoading3();
     Map<String, dynamic> postData = {
-      "bookingId":
-      subscribeBookingDetailsModel?.subscribeBookingDetails?.bookingId ?? "EVIMAN_1",
-      "bookingStatus": sta ?? "COMPLETED",
-      "updatedById": riderIdNew ?? "41",
+      "bookingId": bookingId ?? "",
+      "bookingStatus": sta ?? "",
+      "updatedById": riderIdNew ?? "",
       "updatedByUserType": "Rider",
-      "amountReceived":double.tryParse(amountEditingController.text?? "950")??950 //Pass when bookingStatus is COMPLETED
+      "amountReceived": double.tryParse(amountEditingController.text ?? "0") ??
+          0 //Pass when bookingStatus is COMPLETED
     };
-    print(">>>>>>>>>>>>>>>" + jsonEncode(postData).toString());
+    print(">>>>>>>>>>>>>>>" + (postData).toString());
     Get.find<ConnectorController>().PATCH_METHOD1_POST_TOKEN(
         api: "http://65.1.169.159:3000/api/rides/v1/update-ride-status",
         token: authToken ?? "token",

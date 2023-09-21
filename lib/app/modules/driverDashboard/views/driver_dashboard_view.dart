@@ -450,7 +450,7 @@ class DriverDashboardView extends StatelessWidget {
                   GetBuilder<DriverDashboardController>(
                     assignId: true,
                     id: 'drag',
-                    builder: (logic) {
+                    builder: (controllerX) {
                       return Obx(
                         () => (controllerX.isDisappear.value == true)
                             ? DraggableScrollableSheet(
@@ -471,6 +471,7 @@ class DriverDashboardView extends StatelessWidget {
                                         padding: EdgeInsets.zero,
                                         physics: ClampingScrollPhysics(),
                                         children: [
+                                          // Text(controllerX.subscribeBookingDetailsModel?.subscribeBookingDetails?.bookingId??""),
                                           SizedBox(
                                             height: Get.height * 0.05,
                                             child: Row(
@@ -896,15 +897,14 @@ class DriverDashboardView extends StatelessWidget {
                                                                       null;
                                                                   controllerX
                                                                       .polylineCoordinates = [];
-                                                                  controllerX.unsubscribe2();
-                                                                  controllerX
-                                                                      .update([
-                                                                    'drag',
-                                                                    'map'
-                                                                  ]);
+
+                                                                  controllerX.update(['drag', 'map']);
                                                                   controllerX
                                                                       .upDateRideStatus(
-                                                                          "CANCELLED BY RIDER");
+                                                                          "CANCELLED BY RIDER",bookingId: controllerX.subscribeBookingDetailsModel?.subscribeBookingDetails?.bookingId??"").
+                                                                  then((value) {
+                                                                    controllerX.unsubscribe2();
+                                                                  });
                                                                 },
                                                                 radius: 10,
                                                                 height: 37,
@@ -947,8 +947,7 @@ class DriverDashboardView extends StatelessWidget {
                                                                       null;
                                                                   controllerX
                                                                       .polylineCoordinates = [];
-                                                                  controllerX
-                                                                      .unsubscribe2();
+
                                                                   controllerX
                                                                       .update([
                                                                     'drag',
@@ -956,7 +955,12 @@ class DriverDashboardView extends StatelessWidget {
                                                                   ]);
                                                                   controllerX
                                                                       .upDateRideStatus(
-                                                                          "COMPLETED");
+                                                                          "COMPLETED",
+                                                                      bookingId: controllerX.subscribeBookingDetailsModel?.subscribeBookingDetails?.bookingId??"").
+                                                                  then((value) {
+                                                                    controllerX
+                                                                        .unsubscribe2();
+                                                                  });
                                                                 },
                                                                 radius: 10,
                                                                 height: 37,

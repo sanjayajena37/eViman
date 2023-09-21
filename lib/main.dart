@@ -144,15 +144,13 @@ Future<void> onStart(ServiceInstance service) async {
               locationDetails = placeMarks.first;
             }
             Map<String, dynamic> postData = {
-              "currentCity":locationDetails?.locality?? "BBSR",
-              "currentLocality":locationDetails?.subLocality?? "Nyapalli1",
+              "currentCity":locationDetails?.locality?? "",
+              "currentLocality":locationDetails?.subLocality?? "",
               "lat": (position.latitude ?? 0).toString(),
               "lng": (position.longitude ?? 0).toString()
             };
-            print(">>>>>postData" + postData.toString());
-            print(">>>>>>>>api" +
-                "http://65.1.169.159:3000/api/vehicles/v1/update/location/" +
-                (vehicleId ?? 0).toString());
+            // print(">>>>>postData" + postData.toString());
+            // print(">>>>>>>>api" + "http://65.1.169.159:3000/api/vehicles/v1/update/location/" + (vehicleId ?? 0).toString());
 
             ShakeDetector.autoStart(
                 shakeThresholdGravity: 7,
@@ -188,7 +186,7 @@ Future<void> onStart(ServiceInstance service) async {
               );
               if (response.statusCode == 200 || response.statusCode == 201) {
                 try {
-                  print(">>>>>>>>>>>>response" + response.data.toString());
+                  // print(">>>>>>>>>>>>response" + response.data.toString());
                   /*flutterLocalNotificationsPlugin.show(
                     888,
                     "Eviman App",

@@ -29,6 +29,7 @@ class RiderStatus {
   int? riderId;
   int? vehicleId;
   String ? clientPhone;
+  String ? clientName;
   ActiveRide? activeRide;
 
   RiderStatus({this.isOnline, this.riderId, this.vehicleId, this.activeRide});
@@ -38,6 +39,7 @@ class RiderStatus {
     riderId = json['riderId'];
     vehicleId = json['vehicleId'];
     clientPhone = json['clientPhone'];
+    clientName = json['clientName'];
     activeRide = json['activeRide'] != null
         ? new ActiveRide.fromJson(json['activeRide'])
         : null;
@@ -48,6 +50,7 @@ class RiderStatus {
     data['isOnline'] = this.isOnline;
     data['riderId'] = this.riderId;
     data['clientPhone'] = this.clientPhone;
+    data['clientName'] = this.clientName;
     data['vehicleId'] = this.vehicleId;
     if (this.activeRide != null) {
       data['activeRide'] = this.activeRide!.toJson();
