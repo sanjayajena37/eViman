@@ -600,8 +600,9 @@ class DriverDashboardController extends GetxController
     bool isOk = await showCommonPopupNew3(
       "Are you sure you want to cancel it?",
       "If yes, please press ok.",
-      barrierDismissible: true,
+      barrierDismissible: false,
       isYesOrNoPopup: true,
+      filePath: "assets/json/angrey.json"
     );
     if (isOk) {
         userDetails = "";

@@ -41,6 +41,7 @@ class KycscreenController extends GetxController with Helper{
   final TextEditingController pinController = TextEditingController();
 
   final TextEditingController regNumberController = TextEditingController();
+  final TextEditingController vehicleNameController = TextEditingController();
   final TextEditingController chasisNumberController = TextEditingController();
   final TextEditingController engineNumberController = TextEditingController();
   final TextEditingController ownerNumberController = TextEditingController();
@@ -88,6 +89,7 @@ class KycscreenController extends GetxController with Helper{
   String errorRegNo = '';
   String errorChassis = '';
   String errorEngineNum = '';
+  String errorVehicleName = '';
   String errorOwnerName = '';
   String errorVehicleType = '';
   String errorVehicleSubType = '';
@@ -333,7 +335,25 @@ class KycscreenController extends GetxController with Helper{
       errorVehiclePin = '';
       errorVehicleCurrentCity = '';
       isValid = false;
-    } else if (image4 == null) {
+    }else if (vehicleNameController.text.trim().isEmpty) {
+      errorChassis = '';
+      errorRegNo = '';
+      errorChassis = '';
+      errorEngineNum = '';
+      errorOwnerName = '';
+      errorVehicleName = "Please enter vehicle name";
+      errorVehicleType = '';
+      errorVehicleSubType = '';
+      errorVehicleAddress1 = '';
+      errorVehicleAddress2 = '';
+      errorVehicleCity = '';
+      errorVehicleState = '';
+      errorVehicleCountry = '';
+      errorVehiclePin = '';
+      errorVehicleCurrentCity = '';
+      isValid = false;
+    }
+    else if (image4 == null) {
       isValid = false;
       Snack.callError("Please upload your RC");
     } else if (image5 == null) {
@@ -592,6 +612,7 @@ class KycscreenController extends GetxController with Helper{
       "chasisNumber": chasisNumberController.text??"",
       "engineNumber": engineNumberController.text??"",
       "ownerName": ownerNumberController.text??"",
+      "vehicleName":vehicleNameController.text,
       "rcImage": image4,
       "vehicleImage": image5,
       "insuranceImage": image6,

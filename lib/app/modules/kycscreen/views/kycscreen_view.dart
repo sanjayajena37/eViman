@@ -578,6 +578,18 @@ class KycscreenView extends GetView<KycscreenController> {
                               pad: 16,
                             ),
                             CommonTextFieldView(
+                              titleText: "Vehicle Name",
+                              contextNew: context,
+                              errorText: controller.errorVehicleName,
+                              controller: controller.vehicleNameController,
+                              padding: const EdgeInsets.only(
+                                  left: 0, right: 0, bottom: 2, top: 0),
+                              hintText: "enter your vehicle name",
+                              keyboardType: TextInputType.text,
+                              onChanged: (String txt) {},
+                              pad: 16,
+                            ),
+                            CommonTextFieldView(
                               titleText: "ownerName",
                               contextNew: context,
                               errorText: controller.errorOwnerName,
