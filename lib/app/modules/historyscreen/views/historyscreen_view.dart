@@ -8,7 +8,12 @@ import '../../../widgets/remove_focuse.dart';
 import '../controllers/historyscreen_controller.dart';
 
 class HistoryscreenView extends GetView<HistoryscreenController> {
-  const HistoryscreenView({Key? key}) : super(key: key);
+  HistoryscreenView({Key? key}) : super(key: key);
+
+  @override
+  HistoryscreenController controller =
+  Get.put<HistoryscreenController>(HistoryscreenController());
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,16 +33,32 @@ class HistoryscreenView extends GetView<HistoryscreenController> {
               titleText: "History",
             ),
             Expanded(
-              child: ListView.builder(
-                  itemCount: 30,
-                  physics: BouncingScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    return const Padding(
-                      padding: EdgeInsets.only(left: 12.0,right: 12,bottom: 5,top: 2),
-                      child: CommonHistoryWidget(amount: "123",date: "Today, 10:30 AM",
-                          destination: "Nyapalli,BeheraSahi BBSR",source: "Korua, L.N. College",driverName: "JKS"),
-                    );
-                  }),
+              child: GetBuilder<HistoryscreenController>(
+                assignId: true,
+                id: "his",
+                builder: (logic) {
+                  return ListView.builder(
+                      itemCount: controller.rideHistoryModel?.rides?.length,
+                      physics: BouncingScrollPhysics(),
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: EdgeInsets.only(left: 12.0,
+                              right: 12,
+                              bottom: 5,
+                              top: 2),
+                          child: CommonHistoryWidget(amount: (controller
+                              .rideHistoryModel?.rides?[index].totalAmount ??
+                              123).toString(),
+                              date: "Today, 10:30 AM",
+                              destination:controller
+                                  .rideHistoryModel?.rides?[index].dropAddress ?? "Nyapalli,BeheraSahi BBSR",
+                              source:controller
+                                  .rideHistoryModel?.rides?[index].pickupAddress ?? "Korua, L.N. College",
+                              driverName: "eVIMAN"),
+                        );
+                      });
+                },
+              ),
             )
           ],
         ),

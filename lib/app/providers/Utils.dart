@@ -574,4 +574,14 @@ class Utils {
     }
     return data;
   }
+
+  static String convertDateFormat(String? date){
+    if(date != null && date.trim() != ""){
+      String formattedDate = DateFormat("EEEE, hh:mm a dd/MM/yyyy").format(DateTime.parse(date));
+      return formattedDate;
+    }
+
+    return "";
+  }
+
 }

@@ -63,6 +63,7 @@ dependencies:
   http:
 #  background_location:
   flutter_spinkit:
+  linear_timer:
 #  flutter_phone_direct_caller:
 
 #  simple_animations:

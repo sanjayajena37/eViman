@@ -7,6 +7,7 @@ import 'dart:ui';
 import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
 
 import 'package:dateplan/app/routes/app_pages.dart';
 import 'package:flutter/cupertino.dart';
@@ -18,6 +19,7 @@ import 'package:flutter_polyline_points_plus/flutter_polyline_points_plus.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:linear_timer/linear_timer.dart';
 import 'package:location/location.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -36,6 +38,7 @@ import '../../../widgets/Snack.dart';
 import '../../../widgets/common_button.dart';
 import '../../ConnectorController.dart';
 import '../../loginscreen/controllers/loginscreen_controller.dart';
+import '../../profilescreen/ProfileViewModel.dart';
 import '../CheckStatusModel.dart';
 import '../IncomingBooikingModel.dart';
 import '../IncomingBooking.dart';
@@ -51,7 +54,7 @@ part 'appsyncController.dart';
 part 'helpercontroller.dart';
 
 class DriverDashboardController extends GetxController
-    with Helper, WidgetsBindingObserver {
+    with Helper, WidgetsBindingObserver,GetSingleTickerProviderStateMixin    {
   //TODO: Implement DriverDashboardController
   final advancedDrawerController = AdvancedDrawerController();
   final count = 0.obs;
@@ -92,6 +95,29 @@ class DriverDashboardController extends GetxController
   geoc.Placemark? locationDetailsUser;
   IncomingBooikingModel? incomingBookingModel;
   CheckStatusModel? checkStatusModel;
+  LinearTimerController ? timerController ;
+  ProfileViewModel? profileViewModel;
+  getProfileDetails() {
+    MyWidgets.showLoading3();
+    Get.find<ConnectorController>().GETMETHODCALL_TOKEN(
+        api: "http://65.1.169.159:3000/api/riders/v1/profile/${riderIdNew ?? 0}",
+        token: authToken ?? "",
+        fun: (map) {
+          print(">>>>" + map.toString());
+          Get.back();
+          if (map is Map &&
+              map.containsKey("success") &&
+              map['success'] == true) {
+            profileViewModel =
+                ProfileViewModel.fromJson(map as Map<String, dynamic>);
+            update(['prof']);
+          } else {
+            profileViewModel = null;
+            Get.back();
+            // Snack.callError("Something went wrong");
+          }
+        });
+  }
 
   checkStatus() {
     MyWidgets.showLoading3();
@@ -207,6 +233,7 @@ class DriverDashboardController extends GetxController
     vehicleIdNew =
         await SharedPreferencesKeys().getStringData(key: 'vehicleId');
     authToken = await SharedPreferencesKeys().getStringData(key: 'authToken');
+    getProfileDetails();
     configureAmplify().then((value) {
       checkStatus();
     });
@@ -332,10 +359,10 @@ class DriverDashboardController extends GetxController
 
               safePrint(">>>>>>>>>>>mapData" + receiveData.toString());
             } else {
-              Snack.callSuccess("Please take action quick");
+              // Snack.callSuccess("Please take action quick");
             }
           } else {
-            Snack.callSuccess("Please take action quick");
+            // Snack.callSuccess("Please take action quick");
           }
         }
         safePrint('Subscription event data received: ${event.data}');
@@ -520,6 +547,7 @@ class DriverDashboardController extends GetxController
     // showModalbottomSheet();
     getCurrentLocation();
     getRiderId();
+    // timerController  =LinearTimerController(this);
 
     super.onReady();
   }
@@ -540,7 +568,7 @@ class DriverDashboardController extends GetxController
     WidgetsBinding.instance.removeObserver(this);
     // advancedDrawerController.dispose();
     mapControl = Completer<GoogleMapController>();
-
+    // timerController?.dispose();
     unsubscribe();
     // locationUpdateTimer?.cancel();
     // locationService.stopLocationUpdates();

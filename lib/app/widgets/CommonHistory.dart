@@ -129,14 +129,18 @@ class CommonHistoryWidget extends StatelessWidget {
                         children: <Widget>[
                           Opacity(
                             opacity: 0.64,
-                            child:  Text(source??"",style: TextStyles(context).getBoldStyle()),
+                            child:  SizedBox(
+                                width: Get.width*0.6,
+                                child: Text(source??"",style: TextStyles(context).getBoldStyle(),maxLines: 2)),
                           ),
                           SizedBox(
                             height: 21,
                           ),
                           Opacity(
                             opacity: 0.64,
-                            child:  Text(destination??"",style: TextStyles(context).getBoldStyle(),),
+                            child:  SizedBox(
+                                width: Get.width*0.6,
+                                child: Text(destination??"",style: TextStyles(context).getBoldStyle(),maxLines: 2)),
                           ),
                         ],
                       ),

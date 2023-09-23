@@ -235,9 +235,10 @@ extension HelperController on DriverDashboardController {
         AlertDialog(
           content: Stack(children: [
             Container(
-              height: Get.height * 0.44,
+              height: Get.height * 0.46,
               width: screenSizeWidth,
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.only(
+                  left: 16, right: 16, top: 16, bottom: 16),
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(15),
                   color: const Color(0xff16192C),
@@ -251,6 +252,80 @@ extension HelperController on DriverDashboardController {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  SizedBox(
+                    height: Get.height * 0.03,
+                    child: Row(
+                      mainAxisAlignment:
+                      MainAxisAlignment.center,
+                      children: [
+                        DefaultTextStyle(
+                          style: Theme.of(context)
+                              .textTheme
+                              .headline3!
+                              .copyWith(
+                            fontSize: 15.0,
+                            fontWeight:
+                            FontWeight.bold,color: Colors.white
+                          ),
+                          child: AnimatedTextKit(
+                            animatedTexts: [
+                              FadeAnimatedText(
+                                  'You have only 40 second',duration: const Duration(seconds: 4)),
+                              FadeAnimatedText(
+                                  'You have only 35 second',duration: const Duration(seconds: 4)),
+                              FadeAnimatedText(
+                                  'You have only 30 second',duration: const Duration(seconds: 4)),
+                              FadeAnimatedText(
+                                  'You have only 25 second',duration: const Duration(seconds: 4)),
+                              FadeAnimatedText(
+                                  'You have only 20 second',duration: const Duration(seconds: 4)),
+                              FadeAnimatedText(
+                                  'You have only 15 second',duration: const Duration(seconds: 4)),
+                              FadeAnimatedText(
+                                  'You have only 10 second',duration: const Duration(seconds: 4)),
+                              FadeAnimatedText(
+                                  'You have only 5 second'),
+                              FadeAnimatedText(
+                                  'Please take quick action'),
+                            ],
+                            repeatForever: false,
+                            isRepeatingAnimation: true,
+                            onTap: () {
+                              print("Tap Event");
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 2,
+                  ),
+                  LinearTimer(
+                    duration: const Duration(seconds: 40),
+                    onTimerEnd: () {
+                      if (Get.isDialogOpen == true) {
+                        print("timer ended");
+                        userDetails = "";
+                        maxChildSize = Rx<double>(0.2);
+                        snapSize = Rx<List<double>>([0.1, 0.2]);
+                        pickUpDistance = null;
+                        pickUpDistance = null;
+                        maxChildSize = Rx<double>(0.2);
+                        initialChildSize = Rx<double>(0.1);
+                        snapSize = Rx<List<double>>([0.1, 0.2]);
+                        update(['drag']);
+                        unsubscribe2();
+                        snapSize.refresh();
+                        maxChildSize.refresh();
+                        Get.back();
+                      }
+                    },
+                    // controller: timerController,
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
                   Text(
                     "There’s a new trip around you",
                     style: TextStyles(context)
@@ -525,12 +600,9 @@ extension HelperController on DriverDashboardController {
                               }
 
                               // fetchDirections();
-                            }
-                            else{
+                            } else {
                               Get.back();
                             }
-
-
                           },
                         ),
                       ),
@@ -651,7 +723,11 @@ extension HelperController on DriverDashboardController {
                                       .toString()
                                       .trim() ==
                                   otpEditingController.text.toString().trim()) {
-                                upDateRideStatus("OTP VERIFIED",bookingId: subscribeBookingDetailsModel?.subscribeBookingDetails?.bookingId??"");
+                                upDateRideStatus("OTP VERIFIED",
+                                    bookingId: subscribeBookingDetailsModel
+                                            ?.subscribeBookingDetails
+                                            ?.bookingId ??
+                                        "");
                                 Get.back();
                               } else {
                                 Snack.callError("Please enter a valid otp");
