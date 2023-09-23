@@ -102,7 +102,7 @@ class SpalshscreenController extends GetxController {
     callOrStopServices();
     String? isLogin = await SharedPreferencesKeys().getStringData(key: 'isLogin');
     if(isLogin == "true"){
-      Get.offAndToNamed(Routes.DRIVER_DASHBOARD);
+      Get.offAllNamed(Routes.DRIVER_DASHBOARD);
     }else{
       Get.toNamed(Routes.INTROSCREEN);
     }

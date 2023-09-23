@@ -130,7 +130,7 @@ class OtpscreenController extends GetxController with CodeAutoFill,Helper {
                 await SharedPreferencesKeys().setStringData(key: "riderId", text: (map['riderId']??0).toString());
                 await SharedPreferencesKeys().setStringData(key: "vehicleId", text: (map['vehicleId']??0).toString());
                 Get.delete<OtpscreenController>();
-                Get.offAndToNamed(Routes.DRIVER_DASHBOARD);
+                Get.offAllNamed(Routes.DRIVER_DASHBOARD);
               }else{
                 Snack.callError((map['message']??"Something went wrong"));
               }
