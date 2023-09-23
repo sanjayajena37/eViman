@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:html' as html;
 
 // import 'package:bms_programming/app/providers/ApiFactory.dart';
 import 'package:flutter/services.dart';
@@ -40,14 +39,4 @@ class HomeController extends GetxController {
     update(["transButtons"]);
   }
 
-  clearPage1() {
-    String extractName = (html.window.location.href.split("?")[0])
-        .split("")[1];
-    print("Extract name>>>>" + extractName);
-    var uri = Uri.dataFromString(
-        html.window.location.href); //converts string to a uri
-    Map<String, String> params = uri.queryParameters;
-    print("Params are>>>>" + params.toString());
-
-  }
 }

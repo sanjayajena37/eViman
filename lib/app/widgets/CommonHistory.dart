@@ -128,18 +128,18 @@ class CommonHistoryWidget extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Opacity(
-                            opacity: 0.64,
+                            opacity: 0.6,
                             child:  SizedBox(
-                                width: Get.width*0.6,
+                                width: Get.width*0.5,
                                 child: Text(source??"",style: TextStyles(context).getBoldStyle(),maxLines: 2)),
                           ),
                           SizedBox(
                             height: 21,
                           ),
                           Opacity(
-                            opacity: 0.64,
+                            opacity: 0.6,
                             child:  SizedBox(
-                                width: Get.width*0.6,
+                                width: Get.width*0.5,
                                 child: Text(destination??"",style: TextStyles(context).getBoldStyle(),maxLines: 2)),
                           ),
                         ],
@@ -147,7 +147,13 @@ class CommonHistoryWidget extends StatelessWidget {
                     )
                   ],
                 ),
-                Text("\$${amount??0}",style:  TextStyles(context).getBoldStyle().copyWith(color: Colors.blue,fontSize: 18),)
+                SizedBox(
+                  width: Get.width*0.2,
+                    child: FittedBox(
+                      fit: BoxFit.contain,
+                      child: Text("₹ ${amount??0}",style:
+                      TextStyles(context).getBoldStyle().copyWith(color: Colors.blue,fontSize: 18),),
+                    ))
               ],
             ),
           /*  Text(source??"",style: TextStyles(context).getBoldStyle()),

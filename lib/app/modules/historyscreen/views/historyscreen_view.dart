@@ -1,3 +1,4 @@
+import 'package:dateplan/app/providers/Utils.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -49,7 +50,8 @@ class HistoryscreenView extends GetView<HistoryscreenController> {
                           child: CommonHistoryWidget(amount: (controller
                               .rideHistoryModel?.rides?[index].totalAmount ??
                               123).toString(),
-                              date: "Today, 10:30 AM",
+                              date:Utils.convertDateFormat(controller
+                                  .rideHistoryModel?.rides?[index].rideEndTime)?? "Today, 10:30 AM",
                               destination:controller
                                   .rideHistoryModel?.rides?[index].dropAddress ?? "Nyapalli,BeheraSahi BBSR",
                               source:controller

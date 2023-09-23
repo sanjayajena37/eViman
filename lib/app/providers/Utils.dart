@@ -11,8 +11,7 @@ import 'package:intl/intl.dart';
 import '../controller/HomeController.dart';
 
 import '../data/PermissionModel.dart';
-import "dart:js" as js;
-import "dart:html" as html;
+
 
 class Utils {
   static String twoDigits(int n) => n.toString().padLeft(2, "0");
@@ -579,9 +578,9 @@ class Utils {
     if(date != null && date.trim() != ""){
       String formattedDate = DateFormat("EEEE, hh:mm a dd/MM/yyyy").format(DateTime.parse(date));
       return formattedDate;
+    }else{
+      return DateFormat("EEEE, hh:mm a dd/MM/yyyy").format(DateTime.now());
     }
-
-    return "";
   }
 
 }
