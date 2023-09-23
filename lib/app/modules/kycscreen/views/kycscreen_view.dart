@@ -255,7 +255,7 @@ class KycscreenView extends GetView<KycscreenController> {
                                                           .profileImage ==
                                                           null
                                                           ? Image.asset(
-                                                        'assets/images/avatar1.jpg',
+                                                        'assets/images/man.jpg',
                                                         fit: BoxFit.cover,
                                                       )
                                                           : Image.file(

@@ -1,4 +1,5 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:dateplan/app/providers/Utils.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -9,6 +10,7 @@ import '../../../constants/text_styles.dart';
 import '../../../constants/themes.dart';
 import '../../../logic/controllers/theme_provider.dart';
 import '../../../routes/app_pages.dart';
+import '../../../widgets/Snack.dart';
 import '../../../widgets/common_button.dart';
 import '../controllers/spalshscreen_controller.dart';
 
@@ -78,7 +80,14 @@ class SpalshscreenView extends GetView<SpalshscreenController> {
                       left: 48, right: 48, bottom: 8, top: 8),
                   buttonText: "Get Started",
                   onTap: () {
-                    controllerX.getLoginDetails();
+                    Utils.checkInternetConnectivity().then((value) {
+                      if(value){
+                        controllerX.getLoginDetails();
+                      }else{
+                        Snack.callError("Please turn on your internet");
+                      }
+                    });
+
                     // NavigationServices(context).gotoIntroductionScreen();
                   },
                 ),

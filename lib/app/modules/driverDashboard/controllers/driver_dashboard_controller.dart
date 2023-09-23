@@ -54,7 +54,7 @@ part 'appsyncController.dart';
 part 'helpercontroller.dart';
 
 class DriverDashboardController extends GetxController
-    with Helper, WidgetsBindingObserver,GetSingleTickerProviderStateMixin    {
+    with Helper, WidgetsBindingObserver, GetSingleTickerProviderStateMixin {
   //TODO: Implement DriverDashboardController
   final advancedDrawerController = AdvancedDrawerController();
   final count = 0.obs;
@@ -95,12 +95,14 @@ class DriverDashboardController extends GetxController
   geoc.Placemark? locationDetailsUser;
   IncomingBooikingModel? incomingBookingModel;
   CheckStatusModel? checkStatusModel;
-  LinearTimerController ? timerController ;
+  LinearTimerController? timerController;
   ProfileViewModel? profileViewModel;
+  bool otpVerifiedStatus = false;
   getProfileDetails() {
     MyWidgets.showLoading3();
     Get.find<ConnectorController>().GETMETHODCALL_TOKEN(
-        api: "http://65.1.169.159:3000/api/riders/v1/profile/${riderIdNew ?? 0}",
+        api:
+            "http://65.1.169.159:3000/api/riders/v1/profile/${riderIdNew ?? 0}",
         token: authToken ?? "",
         fun: (map) {
           print(">>>>" + map.toString());
@@ -144,6 +146,7 @@ class DriverDashboardController extends GetxController
                           .toString()
                           .trim() ==
                       "OTP VERIFIED") {
+
                 incomingBookingModel = IncomingBooikingModel(
                     incomingBooking: IncomingBooking(
                   bookingId:
@@ -204,6 +207,12 @@ class DriverDashboardController extends GetxController
                     [0.1, 0.2, 0.25, 0.3, 0.35, 0.4, 0.5, 0.6]);
                 subscribeBookingDetails(
                     checkStatusModel?.riderStatus?.activeRide?.bookingId ?? "");
+                if(checkStatusModel?.riderStatus?.activeRide?.rideStatus
+                    .toString()
+                    .trim() ==
+                    "OTP VERIFIED"){
+                  otpVerifiedStatus = true;
+                }
                 getPolyPoints();
                 setCustomMarkerIcon();
                 update(['top']);
@@ -440,8 +449,10 @@ class DriverDashboardController extends GetxController
     );
   }
 
-  Future<void> upDateRideStatus(String? sta,{String? bookingId}) async {
-    print(">>>>>>>>>>>>>>>>subscribeBookingDetailsModel"+(subscribeBookingDetailsModel?.subscribeBookingDetails?.bookingId??"").toString());
+  Future<void> upDateRideStatus(String? sta, {String? bookingId}) async {
+    print(">>>>>>>>>>>>>>>>subscribeBookingDetailsModel" +
+        (subscribeBookingDetailsModel?.subscribeBookingDetails?.bookingId ?? "")
+            .toString());
     MyWidgets.showLoading3();
     Map<String, dynamic> postData = {
       "bookingId": bookingId ?? "",
@@ -458,6 +469,62 @@ class DriverDashboardController extends GetxController
         json: postData,
         fun: (map) {
           Get.back();
+          print(">>>>>>>>>>mapSta" + map.toString());
+        });
+  }
+
+  Future<void> upDateRideStatusOtpVeryFy(String? sta, {String? bookingId}) async {
+    print(">>>>>>>>>>>>>>>>subscribeBookingDetailsModel" +
+        (subscribeBookingDetailsModel?.subscribeBookingDetails?.bookingId ?? "")
+            .toString());
+    MyWidgets.showLoading3();
+    Map<String, dynamic> postData = {
+      "bookingId": bookingId ?? "",
+      "bookingStatus": sta ?? "",
+      "updatedById": riderIdNew ?? "",
+      "updatedByUserType": "Rider",
+      "amountReceived": double.tryParse(amountEditingController.text ?? "0") ??
+          0 //Pass when bookingStatus is COMPLETED
+    };
+    print(">>>>>>>>>>>>>>>" + (postData).toString());
+    Get.find<ConnectorController>().PATCH_METHOD1_POST_TOKEN(
+        api: "http://65.1.169.159:3000/api/rides/v1/update-ride-status",
+        token: authToken ?? "token",
+        json: postData,
+        fun: (map) {
+          Get.back();
+          if(map is Map && map.containsKey('success') && (map['success'] == "true" || map['success'] == true)){
+            otpVerifiedStatus = true;
+            update(['drag']);
+
+          }else{
+            Snack.callError((map??"Something went wrong").toString());
+          }
+          print(">>>>>>>>>>mapSta" + map.toString());
+        });
+  }
+
+  Future<void> upDateRideStatusComplete(String? sta, {String? bookingId}) async {
+    print(">>>>>>>>>>>>>>>>subscribeBookingDetailsModel" +
+        (subscribeBookingDetailsModel?.subscribeBookingDetails?.bookingId ?? "")
+            .toString());
+    MyWidgets.showLoading3();
+    Map<String, dynamic> postData = {
+      "bookingId": bookingId ?? "",
+      "bookingStatus": sta ?? "",
+      "updatedById": riderIdNew ?? "",
+      "updatedByUserType": "Rider",
+      "amountReceived": double.tryParse(amountEditingController.text ?? "0") ??
+          0 //Pass when bookingStatus is COMPLETED
+    };
+    print(">>>>>>>>>>>>>>>" + (postData).toString());
+    Get.find<ConnectorController>().PATCH_METHOD1_POST_TOKEN(
+        api: "http://65.1.169.159:3000/api/rides/v1/update-ride-status",
+        token: authToken ?? "token",
+        json: postData,
+        fun: (map) {
+          Get.back();
+          completeRide();
           print(">>>>>>>>>>mapSta" + map.toString());
         });
   }
@@ -529,11 +596,55 @@ class DriverDashboardController extends GetxController
     );
   }
 
+  void cancelRide() async {
+    bool isOk = await showCommonPopupNew3(
+      "Are you sure you want to cancel it?",
+      "If yes, please press ok.",
+      barrierDismissible: true,
+      isYesOrNoPopup: true,
+    );
+    if (isOk) {
+        userDetails = "";
+        initialChildSize = Rx<double>(0.1);
+        maxChildSize = Rx<double>(0.1);
+        snapSize = Rx<List<double>>([0.1]);
+        incomingBookingModel = null;
+        polylineCoordinates = [];
+
+        update(['drag', 'map']);
+        upDateRideStatus("CANCELLED BY RIDER",
+                bookingId: subscribeBookingDetailsModel
+                        ?.subscribeBookingDetails?.bookingId ??
+                    "")
+            .then((value) {
+          unsubscribe2();
+        });
+    }
+  }
+
+  void completeRide() async {
+    bool isOk = await showCommonPopupNew3(
+      "Congratulation",
+      "You have successfully completed this ride",
+      barrierDismissible: true,
+      isYesOrNoPopup: false,
+      filePath: "assets/json/done.json"
+    );
+    if (isOk) {
+
+    }
+  }
+
+
   Rx<List<double>> snapSize = Rx<List<double>>([0.1, 0.2]);
   Rx<double> maxChildSize = Rx<double>(0.2);
   Rx<double> initialChildSize = Rx<double>(0.1);
   TextEditingController otpEditingController = TextEditingController();
   TextEditingController amountEditingController = TextEditingController();
+
+
+
+
   @override
   void onInit() {
     WidgetsBinding.instance.addObserver(this);

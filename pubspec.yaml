@@ -16,7 +16,6 @@ dependencies:
   rflutter_alert:
   encrypt:
   flutter_file_saver:
-  rxdart:
   url_launcher:
   animated_text_kit:
   google_fonts:
@@ -64,6 +63,7 @@ dependencies:
 #  background_location:
   flutter_spinkit:
   linear_timer:
+  connectivity_plus:
 #  flutter_phone_direct_caller:
 
 #  simple_animations:

@@ -52,6 +52,60 @@ extension HelperController on DriverDashboardController {
         });
   }
 
+ Future<String> goOnline1(bool val) async {
+    Completer<String> completer = Completer();
+    Map sendData = {
+      "status": (val) ? 1 : 0,
+    };
+    // print(">>>>>update-online-status" + sendData.toString());
+    Get.find<ConnectorController>().PATCH_METHOD_TOKEN(
+        api: "http://65.1.169.159:3000/api/riders/v1/update-online-status/$riderIdNew",
+        json: sendData,
+        token: authToken ?? "",
+        fun: (map) {
+          print(">>>>>>" + map.toString());
+          if (map is Map &&
+              map.containsKey("success") &&
+              map['success'] == true) {
+            if (val == false) {
+              callOrStopServices().then((value) {
+                userDetails = "";
+                incomingBookingModel = null;
+                unsubscribe();
+                unsubscribe2();
+              });
+              isDisappear = Rx<bool>(false);
+              userDetails = "";
+              initialChildSize = Rx<double>(0.1);
+              maxChildSize = Rx<double>(0.1);
+              snapSize = Rx<List<double>>([0.1]);
+              incomingBookingModel = null;
+              polylineCoordinates = [];
+              isDisappear.refresh();
+              update(['top']);
+              completer.complete("");
+              // stopBackgroundService();
+            } else {
+              // callBackgroundService();
+              calBackgroundServices("true");
+              userDetails = "";
+              subscribeIncomingBooking();
+              isDisappear = Rx<bool>(true);
+              isDisappear.refresh();
+              userDetails = "";
+              initialChildSize = Rx<double>(0.1);
+              maxChildSize = Rx<double>(0.1);
+              snapSize = Rx<List<double>>([0.1]);
+              incomingBookingModel = null;
+              polylineCoordinates = [];
+              update(['top']);
+              completer.complete("");
+            }
+          } else {}
+        });
+    return completer.future;
+  }
+
   showModalbottomSheet() {
     showModalBottomSheet(
       context: Get.context!,
@@ -536,6 +590,8 @@ extension HelperController on DriverDashboardController {
                               left: 2, right: 2, bottom: 4),
                           buttonText: "Accept",
                           onTap: () {
+                            amountEditingController.text="";
+                            otpVerifiedStatus = false;
                             // userDetails = "";
                             print(">>>>>>>>>>" + receiveData.toString());
                             if (receiveData != null) {
@@ -723,7 +779,7 @@ extension HelperController on DriverDashboardController {
                                       .toString()
                                       .trim() ==
                                   otpEditingController.text.toString().trim()) {
-                                upDateRideStatus("OTP VERIFIED",
+                                upDateRideStatusOtpVeryFy("OTP VERIFIED",
                                     bookingId: subscribeBookingDetailsModel
                                             ?.subscribeBookingDetails
                                             ?.bookingId ??
