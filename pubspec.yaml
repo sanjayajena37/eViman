@@ -59,6 +59,7 @@ dependencies:
   telephony:
   fluttertoast:
   geolocator:
+  flutter_isolate:
   http:
 #  background_location:
   flutter_spinkit:

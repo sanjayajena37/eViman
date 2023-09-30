@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:ui';
 
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -29,6 +30,7 @@ import 'app/routes/app_pages.dart';
 import 'package:google_maps_flutter_android/google_maps_flutter_android.dart';
 import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
 import 'package:dio/dio.dart' as service1;
+import 'package:geolocator/geolocator.dart' as geoLoc;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -61,15 +63,12 @@ Future<void> main() async {
           [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown])
       .then((_) => runApp(MainClass()));
 
-
-
   final GoogleMapsFlutterPlatform mapsImplementation =
       GoogleMapsFlutterPlatform.instance;
   if (mapsImplementation is GoogleMapsFlutterAndroid) {
     WidgetsFlutterBinding.ensureInitialized();
     mapsImplementation.useAndroidViewSurface = true;
-    mapsImplementation
-        .initializeWithRenderer(AndroidMapRenderer.latest);
+    mapsImplementation.initializeWithRenderer(AndroidMapRenderer.latest);
   }
 }
 
@@ -82,46 +81,113 @@ Future<void> onStart(ServiceInstance service) async {
   DartPluginRegistrant.ensureInitialized();
   // handleLocationPermission();
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-  FlutterLocalNotificationsPlugin();
+      FlutterLocalNotificationsPlugin();
+
+  String sta = "false";
+  StreamSubscription<geoLoc.Position>? positionStream;
+  geoLoc.GeolocatorPlatform geolocator = geoLoc.GeolocatorPlatform.instance;
+  List<Map<String, double>> locationData = [];
+  geoLoc.LocationSettings locationSettings = geoLoc.AndroidSettings(
+      accuracy: geoLoc.LocationAccuracy.high,
+      distanceFilter: 0,
+      forceLocationManager: true);
 
   if (service is AndroidServiceInstance) {
     service.on('setAsBackground').listen((event) {
-      print(">>>>>>>>>>>>>eventsetAsBackground" + event.toString());
+      if (event != null && event.isNotEmpty) {
+        print(">>>>>>>>>>>>>eventsetAsBackground" + event.toString());
+        sta = event['jks'];
+        print(">>>>>>>>>>>>>eventsetAsBackground sta " + sta.toString());
+      }
       service.setAsBackgroundService();
     });
 
     service.on('setAsForeground').listen((event) {
-      print(">>>>>>>>>>>>>eventsetAsForeground" + event.toString());
       service.setAsForegroundService();
     });
-
-
-   /* service.on('isForeGround').listen((event) async {
-      print(">>>>>>>>>>>>>eventJKsBCg$event");
-      var sta = event?.values??"";
-      if(sta == "true"){
-        service.setAsForegroundService();
-      }else{
-        service.setAsBackgroundService();
-      }
-    });*/
-
   }
   service.on('stopService').listen((event) {
     service.stopSelf();
   });
 
-
-
-
-
   String? vehicleId =
-  await SharedPreferencesKeys().getStringData(key: 'vehicleId');
+      await SharedPreferencesKeys().getStringData(key: 'vehicleId');
   String? authToken =
-  await SharedPreferencesKeys().getStringData(key: 'authToken');
-  // print(">>>>>>>>>>>authToken????\n " + authToken.toString());
+      await SharedPreferencesKeys().getStringData(key: 'authToken');
 
-  Timer.periodic(Duration(seconds: 10), (timer) async {
+  positionStream =
+      geolocator.getPositionStream(locationSettings: locationSettings).listen(
+    (geoLoc.Position position) async {
+      // sendPort.send(position.toJson());
+      final data = {
+        "latitude": position.latitude,
+        "longitude": position.longitude,
+      };
+
+      locationData.add(data);
+      print(">>>>>>>>>message from isolate JKS3" + locationData.toString());
+
+      checkInternetConnectivity().then((value) async {
+        if(value){
+
+          String ? isInternetError = await SharedPreferencesKeys().getStringData(key: 'isInternetError');
+          if(isInternetError == "yes"){
+            flutterLocalNotificationsPlugin.show(
+              888,
+              "Eviman App",
+              "Currently I am testing(balanced)",
+              const NotificationDetails(
+                  android: AndroidNotificationDetails(
+                    "eViman-rider",
+                    "MY FOREGROUND SERVICE",
+                    icon: 'ic_bg_service_small',
+                    ongoing: true,
+                  )),
+            );
+          }else{
+            flutterLocalNotificationsPlugin.show(
+              888,
+              "Eviman App",
+              "Currently I am testing(normal)",
+              const NotificationDetails(
+                  android: AndroidNotificationDetails(
+                    "eViman-rider",
+                    "MY FOREGROUND SERVICE",
+                    icon: 'ic_bg_service_small',
+                    ongoing: true,
+                  )),
+            );
+          }
+
+          await SharedPreferencesKeys().setStringData(key: "isInternetError", text: "no");
+        }else{
+          await SharedPreferencesKeys().setStringData(key: "isInternetError", text: "yes");
+          await SharedPreferencesKeys().setStringData(key: "latLngForDst", text: locationData.toString());
+          flutterLocalNotificationsPlugin.show(
+            888,
+            "Eviman App",
+            "Currently I am testing with offline(pending)",
+            const NotificationDetails(
+                android: AndroidNotificationDetails(
+                  "eViman-rider",
+                  "MY FOREGROUND SERVICE",
+                  icon: 'ic_bg_service_small',
+                  ongoing: true,
+                )),
+          );
+        }
+      });
+
+
+    },
+    onError: (e) {
+      print(">>>>>>>>>>exception" + e.toString());
+      // sendPort.send("Error: $e");
+    },
+    cancelOnError: true,
+  );
+
+  Timer.periodic(const Duration(seconds: 10), (timer) async {
     Position? curentPosition;
     vehicleId = await SharedPreferencesKeys().getStringData(key: 'vehicleId');
     authToken = await SharedPreferencesKeys().getStringData(key: 'authToken');
@@ -130,28 +196,27 @@ Future<void> onStart(ServiceInstance service) async {
       if (service is AndroidServiceInstance) {
         if (await service.isForegroundService()) {
           await Geolocator.getCurrentPosition(
-              desiredAccuracy: LocationAccuracy.high,
-              forceAndroidLocationManager: true)
+                  desiredAccuracy: LocationAccuracy.high,
+                  forceAndroidLocationManager: true)
               .then((Position position) async {
             curentPosition = position;
             print("bg location ${position.latitude}");
-            Placemark? locationDetails ;
+            Placemark? locationDetails;
             List<Placemark> placeMarks = await placemarkFromCoordinates(
-                position.latitude,
-                position.longitude);
-            if(placeMarks.isNotEmpty){
+                position.latitude, position.longitude);
+            if (placeMarks.isNotEmpty) {
               locationDetails = placeMarks.first;
             }
             Map<String, dynamic> postData = {
-              "currentCity":locationDetails?.locality?? "",
-              "currentLocality":locationDetails?.subLocality?? "",
+              "currentCity": locationDetails?.locality ?? "",
+              "currentLocality": locationDetails?.subLocality ?? "",
               "lat": (position.latitude ?? 0).toString(),
               "lng": (position.longitude ?? 0).toString()
             };
             // print(">>>>>postData" + postData.toString());
             // print(">>>>>>>>api" + "http://65.1.169.159:3000/api/vehicles/v1/update/location/" + (vehicleId ?? 0).toString());
 
-            ShakeDetector.autoStart(
+           /* ShakeDetector.autoStart(
                 shakeThresholdGravity: 7,
                 shakeSlopTimeMS: 500,
                 shakeCountResetTime: 3000,
@@ -170,38 +235,20 @@ Future<void> onStart(ServiceInstance service) async {
                     }
                     print("Test 5");
                   }
-                });
+                });*/
 
             try {
               var dio = Dio();
               service1.Response response = await dio.patch(
                 "http://65.1.169.159:3000/api/vehicles/v1/update/location/${vehicleId ?? 0}",
-                options: Options(
-                    headers: {
-                      "Authorization":
+                options: Options(headers: {
+                  "Authorization":
                       "Bearer " + ((authToken != null) ? authToken ?? '' : "")
-                    }),
+                }),
                 data: (postData != null) ? jsonEncode(postData) : null,
               );
               if (response.statusCode == 200 || response.statusCode == 201) {
-                try {
-                  // print(">>>>>>>>>>>>response" + response.data.toString());
-                  /*flutterLocalNotificationsPlugin.show(
-                    888,
-                    "Eviman App",
-                    "Currently we are starting our background service for updating you current location"+response.data.toString(),
-                    NotificationDetails(
-                        android: AndroidNotificationDetails(
-                          "eViman-rider",
-                          "foregrounf service",
-                          icon: 'ic_bg_service_small',
-                          ongoing: true,
-                          enableVibration: true,
-                          color: Colors.green,
-                          importance: Importance.high
-                        )),
-                  );*/
-                } catch (e) {
+                try {} catch (e) {
                   print("Message is: " + e.toString());
                 }
               } else if (response.statusCode == 417) {
@@ -227,13 +274,12 @@ Future<void> onStart(ServiceInstance service) async {
           });
         }
       }
-    }
-    else {
+    } else {
       if (service is AndroidServiceInstance) {
         if (await service.isForegroundService()) {
           await Geolocator.getCurrentPosition(
-              desiredAccuracy: LocationAccuracy.high,
-              forceAndroidLocationManager: true)
+                  desiredAccuracy: LocationAccuracy.high,
+                  forceAndroidLocationManager: true)
               .then((Position position) {
             curentPosition = position;
             print("bg location ${position.latitude}");
@@ -243,11 +289,11 @@ Future<void> onStart(ServiceInstance service) async {
               "Currently we are starting our background service for updating you current location",
               const NotificationDetails(
                   android: AndroidNotificationDetails(
-                    "eViman-rider",
-                    "MY FOREGROUND SERVICE",
-                    icon: 'ic_bg_service_small',
-                    ongoing: true,
-                  )),
+                "eViman-rider",
+                "MY FOREGROUND SERVICE",
+                icon: 'ic_bg_service_small',
+                ongoing: true,
+              )),
             );
           }).catchError((e) {
             Fluttertoast.showToast(msg: e.toString());
@@ -257,6 +303,7 @@ Future<void> onStart(ServiceInstance service) async {
     }
   });
 
+  // print(">>>>>>>>>>>authToken????\n " + authToken.toString());
 }
 
 @pragma("vm:entry-point")
@@ -267,18 +314,20 @@ Future<void> onStart(ServiceInstance service) async {
 Future<void> initializeService() async {
   final service = FlutterBackgroundService();
   AndroidNotificationChannel channel = const AndroidNotificationChannel(
-    "eViman-rider",
-    "initializing eViman background service",
-    enableLights: true,
-    sound: RawResourceAndroidNotificationSound('excuseme_boss'),
-    description: "Background service for location fetching",
-    importance: Importance.high,playSound: true,enableVibration: true,ledColor: Colors.green,showBadge: true
-  );
+      "eViman-rider", "initializing eViman background service",
+      enableLights: true,
+      sound: RawResourceAndroidNotificationSound('excuseme_boss'),
+      description: "Background service for location fetching",
+      importance: Importance.high,
+      playSound: true,
+      enableVibration: true,
+      ledColor: Colors.green,
+      showBadge: true);
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-  FlutterLocalNotificationsPlugin();
+      FlutterLocalNotificationsPlugin();
   await flutterLocalNotificationsPlugin
       .resolvePlatformSpecificImplementation<
-      AndroidFlutterLocalNotificationsPlugin>()
+          AndroidFlutterLocalNotificationsPlugin>()
       ?.createNotificationChannel(channel);
 
   await service.configure(
@@ -291,13 +340,28 @@ Future<void> initializeService() async {
         initialNotificationTitle: "Location service enable",
         initialNotificationContent: "initializing eViman background service",
         foregroundServiceNotificationId: 888,
-        autoStartOnBoot: true
-    ),);
-  service.startService();
+        autoStartOnBoot: true),
+  );
+  await service.startService();
 }
 
-
-
-
-
-
+@pragma("vm:entry-point")
+@pragma("vm:entry-point", true)
+@pragma("vm:entry-point", !bool.fromEnvironment("dart.vm.product"))
+@pragma("vm:entry-point", "get")
+@pragma("vm:entry-point", "call")
+Future<bool> checkInternetConnectivity() async {
+  final connectivityResult = await (Connectivity().checkConnectivity());
+  if (connectivityResult == ConnectivityResult.mobile) {
+// I am connected to a mobile network.
+    return true;
+  } else if (connectivityResult == ConnectivityResult.wifi) {
+// I am connected to a wifi network.
+    return true;
+  } else if (connectivityResult == ConnectivityResult.ethernet) {
+// I am connected to a ethernet network.
+    return true;
+  } else {
+    return false;
+  }
+}

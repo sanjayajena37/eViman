@@ -1012,4 +1012,165 @@ extension HelperController on DriverDashboardController {
     // _advancedDrawerController.value = AdvancedDrawerValue.visible();
     advancedDrawerController.showDrawer();
   }
+
+
+  void startIsolate() async {
+    ReceivePort? receivePort = ReceivePort();
+     isolateField = await FlutterIsolate.spawn(startIsolateFun,receivePort.sendPort);
+    receivePort.listen((message) {
+      print("????????????????>>>>>>>>>>>>>isolate"+message);
+      // isolateField?.kill();
+    });
+
+  /*  final receivePort = ReceivePort();
+    final isolate = await Isolate.spawn(startIsolateFun2, receivePort.sendPort);
+
+    receivePort.listen((data) {
+      if (data is Map<String, double>) {
+        print("Received location data: ${data['latitude']}, ${data['longitude']}");
+      } else {
+        print("Received message from isolate: $data");
+      }
+    });*/
+
+
+  }
+
+
+
+}
+
+
+@pragma("vm:entry-point")
+@pragma("vm:entry-point", true)
+@pragma("vm:entry-point", !bool.fromEnvironment("dart.vm.product"))
+@pragma("vm:entry-point", "get")
+@pragma("vm:entry-point", "call")
+Future<void> startIsolateFun(SendPort sendPort) async {
+  DartPluginRegistrant.ensureInitialized();
+  // BackgroundIsolateBinaryMessenger.ensureInitialized(args[1]);
+  // SendPort sendPort = args[0] as SendPort;
+  geoLoc.GeolocatorPlatform geolocator =   geoLoc.GeolocatorPlatform.instance;
+  List<Map<String, double>> locationData = [];
+  // sendPort.send("Isolate started");
+  print(">>>>>>>>>>>>>isolate run");
+  await SharedPreferencesKeys().setStringData(key: "latlong", text: locationData.toString());
+
+   geoLoc.LocationSettings locationSettings = geoLoc.AndroidSettings(
+    accuracy: geoLoc.LocationAccuracy.high,
+    distanceFilter: 0,forceLocationManager: true,
+       foregroundNotificationConfig: const geoLoc.ForegroundNotificationConfig(
+         notificationText:
+         "Example app will continue to receive your location even when you aren't using it",
+         notificationTitle: "Running in Background",
+         enableWakeLock: true,
+       )
+  );
+
+    final position = await determinePosition();
+    print(">>>>>>>>>position${position.longitude}");
+  StreamSubscription<geoLoc.Position>? positionStream = geolocator.getPositionStream(locationSettings:locationSettings).listen(
+        (geoLoc.Position position) async {
+      // sendPort.send(position.toJson());
+      final data = {
+        "latitude": position.latitude,
+        "longitude": position.longitude,
+      };
+
+      locationData.add(data);
+      await SharedPreferencesKeys().setStringData(key: "latlong", text: locationData.toString());
+      sendPort.send(locationData.toString());
+      print(">>>>>>>>>message from isolate JKS2"+locationData.toString());
+    },
+    onError: (e) {
+          print(">>>>>>>>>>exception"+e.toString());
+      // sendPort.send("Error: $e");
+    },
+    cancelOnError: true,
+  );
+  Future.delayed(Duration(seconds: 500),() {
+    positionStream.cancel();
+  },);
+
+  print(">>>>>>>>>message from isolate JKS");
+}
+
+
+@pragma("vm:entry-point")
+@pragma("vm:entry-point", true)
+@pragma("vm:entry-point", !bool.fromEnvironment("dart.vm.product"))
+@pragma("vm:entry-point", "get")
+@pragma("vm:entry-point", "call")
+void startIsolateFun2(SendPort sendPort) async {
+  DartPluginRegistrant.ensureInitialized();
+  geoLoc.LocationSettings locationSettings = const geoLoc.LocationSettings(
+    accuracy: geoLoc.LocationAccuracy.high,
+    distanceFilter: 0,
+  );
+
+  StreamSubscription<geoLoc.Position> positionStream;
+
+  // Listen for location updates
+  positionStream = geoLoc.Geolocator.getPositionStream(
+    locationSettings: locationSettings,
+  ).listen(
+        (geoLoc.Position position) {
+      final data = {
+        "latitude": position.latitude,
+        "longitude": position.longitude,
+      };
+      sendPort.send(data);
+    },
+    onError: (e) {
+      print("Error: $e");
+      sendPort.send("Error: $e");
+    },
+    cancelOnError: true,
+  );
+
+  // Keep the isolate running
+  await Future.delayed(Duration(days: 365)); // You can adjust the duration as needed
+}
+
+
+@pragma("vm:entry-point")
+@pragma("vm:entry-point", true)
+@pragma("vm:entry-point", !bool.fromEnvironment("dart.vm.product"))
+@pragma("vm:entry-point", "get")
+@pragma("vm:entry-point", "call")
+Future<geoLoc.Position> determinePosition() async {
+  bool serviceEnabled;
+  geoLoc.LocationPermission permission;
+
+  // Test if location services are enabled.
+  serviceEnabled = await geoLoc.Geolocator.isLocationServiceEnabled();
+  if (!serviceEnabled) {
+    // Location services are not enabled don't continue
+    // accessing the position and request users of the
+    // App to enable the location services.
+    return Future.error('Location services are disabled.');
+  }
+
+  permission = await geoLoc.Geolocator.checkPermission();
+  if (permission == geoLoc.LocationPermission.denied) {
+    permission = await geoLoc.Geolocator.requestPermission();
+    if (permission == geoLoc.LocationPermission.denied) {
+      // Permissions are denied, next time you could try
+      // requesting permissions again (this is also where
+      // Android's shouldShowRequestPermissionRationale
+      // returned true. According to Android guidelines
+      // your App should show an explanatory UI now.
+      return Future.error('Location permissions are denied');
+    }
+  }
+
+  if (permission == geoLoc.LocationPermission.deniedForever) {
+    // Permissions are denied forever, handle appropriately.
+    return Future.error(
+        'Location permissions are permanently denied, we cannot request permissions.');
+  }
+
+  // When we reach here, permissions are granted and we can
+  // continue accessing the position of the device.
+  return await geoLoc.Geolocator.getCurrentPosition();
 }

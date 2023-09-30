@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:isolate';
 
 import 'dart:math';
 import 'dart:ui';
@@ -8,14 +9,18 @@ import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 
 import 'package:dateplan/app/routes/app_pages.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
+import 'package:flutter_isolate/flutter_isolate.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_polyline_points_plus/flutter_polyline_points_plus.dart';
+import 'package:geolocator/geolocator.dart' as geoLoc;
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:iconsax/iconsax.dart';
@@ -24,6 +29,7 @@ import 'package:location/location.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:vibration/vibration.dart';
+import 'package:workmanager/workmanager.dart';
 
 import '../../../../amplifyconfiguration.dart';
 
@@ -49,13 +55,33 @@ import '../SubscribeBookingDetailsModel.dart';
 import 'AmplifyApiName.dart';
 import 'package:geocoding/geocoding.dart' as geoc;
 import 'package:http/http.dart' as http;
+
+import 'location_isolate.dart';
 part 'mapcontroller.dart';
 part 'appsyncController.dart';
 part 'helpercontroller.dart';
 
+@pragma("vm:entry-point")
+@pragma("vm:entry-point", true)
+@pragma("vm:entry-point", !bool.fromEnvironment("dart.vm.product"))
+@pragma("vm:entry-point", "get")
+@pragma("vm:entry-point", "call") // Mandatory if the App is obfuscated or using Flutter 3.1+
+void callbackDispatcher() {
+  DartPluginRegistrant.ensureInitialized();
+  Workmanager().executeTask((task, inputData) async {
+    print("Native called background task: $task");
+    final position = await determinePosition();
+    print(">>>>>>>>>position jks jks${position.longitude}");
+    return Future.value(true);
+  });
+}
+
 class DriverDashboardController extends GetxController
     with Helper, WidgetsBindingObserver, GetSingleTickerProviderStateMixin {
-  //TODO: Implement DriverDashboardController
+
+  List<Map<String, double>> locationDataFromIsolate = [];
+
+  FlutterIsolate? isolateField;
   final advancedDrawerController = AdvancedDrawerController();
   final count = 0.obs;
   LatLng sourceLocation = LatLng(20.288187, 85.817814);
@@ -645,10 +671,12 @@ class DriverDashboardController extends GetxController
 
 
 
-
+  Stream<ConnectivityResult>? connectivitySubscription;
+  Connectivity connectivity = Connectivity();
   @override
   void onInit() {
     WidgetsBinding.instance.addObserver(this);
+    connectivitySubscription = connectivity.onConnectivityChanged;
     // getRiderId();
     super.onInit();
   }
