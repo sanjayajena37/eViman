@@ -61,6 +61,7 @@ dependencies:
   geolocator:
   flutter_isolate:
   http:
+  sensors:
 #  background_location:
   flutter_spinkit:
   linear_timer:

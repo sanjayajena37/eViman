@@ -94,11 +94,6 @@ Future<void> onStart(ServiceInstance service) async {
 
   if (service is AndroidServiceInstance) {
     service.on('setAsBackground').listen((event) {
-      if (event != null && event.isNotEmpty) {
-        print(">>>>>>>>>>>>>eventsetAsBackground" + event.toString());
-        sta = event['jks'];
-        print(">>>>>>>>>>>>>eventsetAsBackground sta " + sta.toString());
-      }
       service.setAsBackgroundService();
     });
 
@@ -132,7 +127,7 @@ Future<void> onStart(ServiceInstance service) async {
 
           String ? isInternetError = await SharedPreferencesKeys().getStringData(key: 'isInternetError');
           if(isInternetError == "yes"){
-            flutterLocalNotificationsPlugin.show(
+           /* flutterLocalNotificationsPlugin.show(
               888,
               "Eviman App",
               "Currently I am testing(balanced)",
@@ -143,9 +138,9 @@ Future<void> onStart(ServiceInstance service) async {
                     icon: 'ic_bg_service_small',
                     ongoing: true,
                   )),
-            );
+            );*/
           }else{
-            flutterLocalNotificationsPlugin.show(
+           /* flutterLocalNotificationsPlugin.show(
               888,
               "Eviman App",
               "Currently I am testing(normal)",
@@ -156,14 +151,14 @@ Future<void> onStart(ServiceInstance service) async {
                     icon: 'ic_bg_service_small',
                     ongoing: true,
                   )),
-            );
+            );*/
           }
 
           await SharedPreferencesKeys().setStringData(key: "isInternetError", text: "no");
         }else{
           await SharedPreferencesKeys().setStringData(key: "isInternetError", text: "yes");
           await SharedPreferencesKeys().setStringData(key: "latLngForDst", text: locationData.toString());
-          flutterLocalNotificationsPlugin.show(
+          /*flutterLocalNotificationsPlugin.show(
             888,
             "Eviman App",
             "Currently I am testing with offline(pending)",
@@ -174,7 +169,7 @@ Future<void> onStart(ServiceInstance service) async {
                   icon: 'ic_bg_service_small',
                   ongoing: true,
                 )),
-          );
+          );*/
         }
       });
 

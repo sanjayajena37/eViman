@@ -10,6 +10,8 @@ import '../modules/driverDashboard/bindings/driver_dashboard_binding.dart';
 import '../modules/driverDashboard/views/driver_dashboard_view.dart';
 import '../modules/driverprofile/bindings/driverprofile_binding.dart';
 import '../modules/driverprofile/views/driverprofile_view.dart';
+import '../modules/earningpage/bindings/earningpage_binding.dart';
+import '../modules/earningpage/views/earningpage_view.dart';
 import '../modules/historyscreen/bindings/historyscreen_binding.dart';
 import '../modules/historyscreen/views/historyscreen_view.dart';
 import '../modules/home/bindings/home_binding.dart';
@@ -165,8 +167,15 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.VEHICLE_DETAILS,
-      page: () =>  VehicleDetailsView(),
+      page: () => VehicleDetailsView(),
       binding: VehicleDetailsBinding(),
+    ),
+    GetPage(
+      name: _Paths.EARNINGPAGE,
+      transition: Transition.fadeIn,
+      transitionDuration: const Duration(milliseconds: 1000),
+      page: () =>  EarningpageView(),
+      binding: EarningpageBinding(),
     ),
   ];
 }
