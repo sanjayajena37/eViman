@@ -71,7 +71,7 @@ class OtpscreenView extends GetView<OtpscreenController> {
                               fontSize: 12,
                             ),
                           ),
-                          Text((controllerX.mapData['otp']??"").toString()),
+                          // Text((controllerX.mapData['otp']??"").toString()),
                           SizedBox(
                             height: MediaQuery.of(context).size.height * 0.07,
                           ),

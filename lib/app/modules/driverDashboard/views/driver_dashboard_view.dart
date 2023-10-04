@@ -41,111 +41,132 @@ class DriverDashboardView extends StatelessWidget {
   DriverDashboardView({Key? key}) : super(key: key);
 
   DriverDashboardController controllerX =
-      Get.put<DriverDashboardController>(DriverDashboardController());
+  Get.put<DriverDashboardController>(DriverDashboardController());
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
 
-      onWillPop: () async {
-        bool isOk = await controllerX.showCommonPopupNew4(
-            "What you want?",
-            "Online or Offline",
-            barrierDismissible: true,
-            isYesOrNoPopup: true,
-            filePath: "assets/json/question.json"
-        );
-        bool sta= false;
-        if (isOk) {
-         await controllerX.goOnline1(true).then((value) {
-            sta = true;
-          });
-          Get.back();
-          return sta;
-        }else{
-          await controllerX.goOnline1(false).then((value) {
-            sta = true;
-          });
-          Get.back();
-          return sta;
-        }
-
-      },
-      child: StreamBuilder<ConnectivityResult>(
-        stream: controllerX.connectivitySubscription,
-        builder: (context, snapshot)  {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            try{
+        onWillPop: () async {
+          bool isOk = await controllerX.showCommonPopupNew4(
+              "What you want?",
+              "Online or Offline",
+              barrierDismissible: true,
+              isYesOrNoPopup: true,
+              filePath: "assets/json/question.json"
+          );
+          bool sta = false;
+          if (isOk) {
+            await controllerX.goOnline1(true).then((value) {
+              sta = true;
+            });
+            Get.back();
+            return sta;
+          } else {
+            await controllerX.goOnline1(false).then((value) {
+              sta = true;
+            });
+            Get.back();
+            return sta;
+          }
+        },
+        child: StreamBuilder<ConnectivityResult>(
+          stream: controllerX.connectivitySubscription,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              try {
+                Utils.checkInternetConnectivity().then((value) {
+                  if (value) {
+                    controllerX = Get.put<DriverDashboardController>(
+                        DriverDashboardController());
+                    return maiWidgetFun(context);
+                  } else {
+                    return const Scaffold(
+                        body: Center(child: CircularProgressIndicator()));
+                  }
+                });
+              } catch (e) {
+                return const Scaffold(
+                    body: Center(child: CircularProgressIndicator()));
+              }
+            }
+            if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}');
+            }
+            final connectivityResult = snapshot.data;
+            String statusText = 'Unknown';
+            if (connectivityResult == ConnectivityResult.mobile ||
+                connectivityResult == ConnectivityResult.wifi ||
+                connectivityResult == ConnectivityResult.ethernet) {
+              statusText = 'Mobile Data';
+              controllerX = Get.put<DriverDashboardController>(
+                  DriverDashboardController());
+              return maiWidgetFun(context);
+            }
+            else if (connectivityResult == ConnectivityResult.none) {
+              statusText = 'No Connection';
+              return Scaffold(body: Center(child: Container(
+                foregroundDecoration: !Get
+                    .find<ThemeController>()
+                    .isLightMode
+                    ? BoxDecoration(
+                    color: Theme
+                        .of(context)
+                        .backgroundColor
+                        .withOpacity(0.4))
+                    : null,
+                width: MediaQuery
+                    .of(context)
+                    .size
+                    .width,
+                height: MediaQuery
+                    .of(context)
+                    .size
+                    .height,
+                child: lottie.Lottie.asset(
+                  'assets/json/offline.json', fit: BoxFit.contain,),
+              ),));
+            } else {
               Utils.checkInternetConnectivity().then((value) {
-                if(value){
-                  controllerX = Get.put<DriverDashboardController>(DriverDashboardController());
+                if (value) {
+                  controllerX = Get.put<DriverDashboardController>(
+                      DriverDashboardController());
                   return maiWidgetFun(context);
-                }else{
-                  return const Scaffold(body: Center(child: CircularProgressIndicator()));
+                } else {
+                  return Scaffold(body: Center(child: Container(
+                    foregroundDecoration: !Get
+                        .find<ThemeController>()
+                        .isLightMode
+                        ? BoxDecoration(
+                        color: Theme
+                            .of(context)
+                            .backgroundColor
+                            .withOpacity(0.4))
+                        : null,
+                    width: MediaQuery
+                        .of(context)
+                        .size
+                        .width,
+                    height: MediaQuery
+                        .of(context)
+                        .size
+                        .height,
+                    child: lottie.Lottie.asset(
+                      'assets/json/offline.json', fit: BoxFit.contain,),
+                  ),));
                 }
               });
-            }catch(e){
-              return const Scaffold(body: Center(child: CircularProgressIndicator()));
             }
-
-
-          }
-          if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}');
-          }
-          final connectivityResult = snapshot.data;
-           String statusText = 'Unknown';
-          if (connectivityResult == ConnectivityResult.mobile ||
-              connectivityResult == ConnectivityResult.wifi ||
-              connectivityResult == ConnectivityResult.ethernet) {
-            statusText = 'Mobile Data';
-            controllerX = Get.put<DriverDashboardController>(DriverDashboardController());
-            return  maiWidgetFun(context);
-          }
-          else if (connectivityResult == ConnectivityResult.none) {
-            statusText = 'No Connection';
-            return Scaffold(body: Center(child:  Container(
-              foregroundDecoration: !Get.find<ThemeController>().isLightMode
-                  ? BoxDecoration(
-                  color: Theme.of(context).backgroundColor.withOpacity(0.4))
-                  : null,
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height,
-              child:  lottie.Lottie.asset('assets/json/offline.json',fit: BoxFit.contain,),
-            ),));
-          }else{
-            Utils.checkInternetConnectivity().then((value) {
-              if(value){
-                controllerX = Get.put<DriverDashboardController>(DriverDashboardController());
-                return maiWidgetFun(context);
-              }else{
-                return Scaffold(body: Center(child:  Container(
-                  foregroundDecoration: !Get.find<ThemeController>().isLightMode
-                      ? BoxDecoration(
-                      color: Theme.of(context).backgroundColor.withOpacity(0.4))
-                      : null,
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height,
-                  child:  lottie.Lottie.asset('assets/json/offline.json',fit: BoxFit.contain,),
-                ),));
-              }
-            });
-          }
-          return maiWidgetFun(context);
-
-        },
-      )
-
-
-
-
+            return maiWidgetFun(context);
+          },
+        )
 
 
     );
   }
 
-  Widget maiWidgetFun(BuildContext context){
-    try{
+  Widget maiWidgetFun(BuildContext context) {
+    try {
       return AdvancedDrawer(
         backdrop: Container(
           width: double.infinity,
@@ -172,7 +193,10 @@ class DriverDashboardView extends StatelessWidget {
                 padding: EdgeInsets.zero,
                 children: [
                   SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.27,
+                    height: MediaQuery
+                        .of(context)
+                        .size
+                        .height * 0.27,
                     child: DrawerHeader(
                       // decoration: const BoxDecoration(color: Colors.),
                       child: Column(
@@ -183,16 +207,21 @@ class DriverDashboardView extends StatelessWidget {
                             id: "prof",
                             builder: (controllerX) {
                               return Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment
+                                    .spaceBetween,
                                 children: [
                                   Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment
+                                        .start,
                                     children: [
                                       Container(
                                         width: Get.width * 0.5,
                                         child: Text(
-                                          "${controllerX.profileViewModel?.riderData?.firstName ?? ""} ${controllerX.profileViewModel?.riderData?.lastName ?? ""}",
+                                          "${controllerX.profileViewModel
+                                              ?.riderData?.firstName ??
+                                              ""} ${controllerX.profileViewModel
+                                              ?.riderData?.lastName ?? ""}",
                                           style: TextStyles(context)
                                               .getBoldStyle()
                                               .copyWith(fontSize: 18),
@@ -205,7 +234,8 @@ class DriverDashboardView extends StatelessWidget {
                                       Container(
                                         width: Get.width * 0.5,
                                         child: Text(
-                                          controllerX.profileViewModel?.riderData
+                                          controllerX.profileViewModel
+                                              ?.riderData
                                               ?.email ??
                                               "",
                                           style: TextStyles(context)
@@ -264,15 +294,25 @@ class DriverDashboardView extends StatelessWidget {
                           const SizedBox(
                             height: 25,
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              // driverINfoWidget("assets/icon/time.png", "10.2", "Hours online"),
-                              driverINfoWidget("assets/icon/meter.png", "30 kM",
-                                  "Total Distance"),
-                              driverINfoWidget(
-                                  "assets/icon/jobs.png", "20", "Total Jobs"),
-                            ],
+                          GetBuilder<DriverDashboardController>(
+                            assignId: true,
+                            id: "analytics",
+                            builder: (controllerX) {
+                              return Row(
+                                mainAxisAlignment: MainAxisAlignment
+                                    .spaceBetween,
+                                children: [
+                                  // driverINfoWidget("assets/icon/time.png", "10.2", "Hours online"),
+                                  driverINfoWidget("assets/icon/meter.png",
+                                      controllerX.totalDistanceNew ?? "30 kM",
+                                      "Total Distance"),
+                                  driverINfoWidget(
+                                      "assets/icon/jobs.png",
+                                      controllerX.totalRides ?? "0",
+                                      "Total Jobs"),
+                                ],
+                              );
+                            },
                           )
                         ],
                       ),
@@ -283,7 +323,9 @@ class DriverDashboardView extends StatelessWidget {
                       controllerX.advancedDrawerController.hideDrawer();
                     },
                     leading:
-                    Icon(Icons.home, color: Theme.of(context).primaryColor),
+                    Icon(Icons.home, color: Theme
+                        .of(context)
+                        .primaryColor),
                     title: Text(
                       'Home',
                       style: TextStyles(context)
@@ -296,7 +338,9 @@ class DriverDashboardView extends StatelessWidget {
                       Get.toNamed(Routes.PROFILESCREEN);
                     },
                     leading: Icon(Icons.account_circle_rounded,
-                        color: Theme.of(context).primaryColor),
+                        color: Theme
+                            .of(context)
+                            .primaryColor),
                     title: Text(
                       'Profile',
                       style: TextStyles(context)
@@ -309,7 +353,9 @@ class DriverDashboardView extends StatelessWidget {
                       Get.toNamed(Routes.VEHICLE_DETAILS);
                     },
                     leading: Icon(Icons.electric_car,
-                        color: Theme.of(context).primaryColor),
+                        color: Theme
+                            .of(context)
+                            .primaryColor),
                     title: Text(
                       'Vehicle Details',
                       style: TextStyles(context)
@@ -322,7 +368,9 @@ class DriverDashboardView extends StatelessWidget {
                       Get.toNamed(Routes.EARNINGPAGE);
                     },
                     leading:
-                    Icon(Icons.money, color: Theme.of(context).primaryColor),
+                    Icon(Icons.money, color: Theme
+                        .of(context)
+                        .primaryColor),
                     title: Text(
                       'My Earning',
                       style: TextStyles(context)
@@ -335,7 +383,9 @@ class DriverDashboardView extends StatelessWidget {
                       Get.toNamed(Routes.WALETSCREEN);
                     },
                     leading:
-                    Icon(Icons.wallet, color: Theme.of(context).primaryColor),
+                    Icon(Icons.wallet, color: Theme
+                        .of(context)
+                        .primaryColor),
                     title: Text(
                       'My Wallet',
                       style: TextStyles(context)
@@ -348,7 +398,9 @@ class DriverDashboardView extends StatelessWidget {
                       Get.toNamed(Routes.HISTORYSCREEN);
                     },
                     leading: Icon(Icons.history,
-                        color: Theme.of(context).primaryColor),
+                        color: Theme
+                            .of(context)
+                            .primaryColor),
                     title: Text(
                       'History',
                       style: TextStyles(context)
@@ -400,7 +452,9 @@ class DriverDashboardView extends StatelessWidget {
                       controllerX.gotoSplashScreen();
                     },
                     leading:
-                    Icon(Icons.logout, color: Theme.of(context).primaryColor),
+                    Icon(Icons.logout, color: Theme
+                        .of(context)
+                        .primaryColor),
                     title: Text(
                       'Logout',
                       style: TextStyles(context)
@@ -524,7 +578,10 @@ class DriverDashboardView extends StatelessWidget {
                       );
                     }),
                     Positioned(
-                      top: MediaQuery.of(context).padding.top + 25,
+                      top: MediaQuery
+                          .of(context)
+                          .padding
+                          .top + 25,
                       left: 0,
                       right: 0,
                       child: Padding(
@@ -544,14 +601,16 @@ class DriverDashboardView extends StatelessWidget {
                                 padding: EdgeInsets.all(2),
                                 visualDensity:
                                 VisualDensity(horizontal: -4, vertical: -4),
-                                icon: ValueListenableBuilder<AdvancedDrawerValue>(
+                                icon: ValueListenableBuilder<
+                                    AdvancedDrawerValue>(
                                   valueListenable:
                                   controllerX.advancedDrawerController,
                                   builder: (_, value, __) {
                                     return AnimatedSwitcher(
                                       duration: Duration(milliseconds: 250),
                                       child: Icon(
-                                        value.visible ? Icons.clear : Icons.menu,
+                                        value.visible ? Icons.clear : Icons
+                                            .menu,
                                         key: ValueKey<bool>(value.visible),
                                       ),
                                     );
@@ -561,23 +620,34 @@ class DriverDashboardView extends StatelessWidget {
                             ),
                             InkWell(
                               onTap: () {},
-                              child: Card(
-                                  elevation: 5,
-                                  color: Theme.of(context).cardColor,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8.0),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text(
-                                      "₹0.00",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headline5!
-                                          .copyWith(
-                                          fontSize: 25, color: Colors.white),
-                                    ),
-                                  )),
+                              child: GetBuilder<DriverDashboardController>(
+                                assignId: true,
+                                id: "amt",
+                                builder: (controllerX) {
+                                  return Card(
+                                      elevation: 5,
+                                      color: Theme
+                                          .of(context)
+                                          .cardColor,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(
+                                            8.0),
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text(
+                                          "₹${controllerX.totalAmount}",
+                                          style: Theme
+                                              .of(context)
+                                              .textTheme
+                                              .headline5!
+                                              .copyWith(
+                                              fontSize: 25,
+                                              color: Colors.white),
+                                        ),
+                                      ));
+                                },
+                              ),
                             ),
                             Obx(() {
                               return (controllerX.isDisappear.value)
@@ -595,7 +665,8 @@ class DriverDashboardView extends StatelessWidget {
                       ),
                     ),
                     Obx(
-                          () => (controllerX.isDisappear.value == false)
+                          () =>
+                      (controllerX.isDisappear.value == false)
                           ? MovableContainer(onTap: () {
                         controllerX.goOnline(true);
                       })
@@ -606,7 +677,8 @@ class DriverDashboardView extends StatelessWidget {
                       id: 'drag',
                       builder: (controllerX) {
                         return Obx(
-                              () => (controllerX.isDisappear.value == true)
+                              () =>
+                          (controllerX.isDisappear.value == true)
                               ? DraggableScrollableSheet(
                               initialChildSize:
                               controllerX.initialChildSize.value,
@@ -662,7 +734,8 @@ class DriverDashboardView extends StatelessWidget {
                                                     height: 4,
                                                     width: 60,
                                                     decoration: BoxDecoration(
-                                                      borderRadius: BorderRadius.circular(15.0),
+                                                      borderRadius: BorderRadius
+                                                          .circular(15.0),
                                                       color: Colors.grey,
                                                     ),
                                                   ),
@@ -712,10 +785,12 @@ class DriverDashboardView extends StatelessWidget {
                                                       ),
                                                       InkWell(
                                                         onTap: () {
-                                                          controllerX.makingPhoneCall(controllerX
-                                                              .incomingBookingModel
-                                                              ?.incomingBooking
-                                                              ?.clientPhone);
+                                                          controllerX
+                                                              .makingPhoneCall(
+                                                              controllerX
+                                                                  .incomingBookingModel
+                                                                  ?.incomingBooking
+                                                                  ?.clientPhone);
                                                           // await FlutterPhoneDirectCaller.callNumber("919178488130");
                                                         },
                                                         child: lottie
@@ -886,9 +961,13 @@ class DriverDashboardView extends StatelessWidget {
                                                               child:
                                                               Text(
                                                                 "PickUp Distance: ",
-                                                                style: TextStyles(context).getDescriptionStyle().copyWith(
+                                                                style: TextStyles(
+                                                                    context)
+                                                                    .getDescriptionStyle()
+                                                                    .copyWith(
                                                                     fontWeight:
-                                                                    FontWeight.bold,
+                                                                    FontWeight
+                                                                        .bold,
                                                                     fontSize: 13),
                                                               ),
                                                             ),
@@ -903,7 +982,8 @@ class DriverDashboardView extends StatelessWidget {
                                                                   context)
                                                                   .getBoldStyle()
                                                                   .copyWith(
-                                                                  fontWeight: FontWeight.bold,
+                                                                  fontWeight: FontWeight
+                                                                      .bold,
                                                                   fontSize: 15),
                                                             )
                                                           ],
@@ -925,9 +1005,13 @@ class DriverDashboardView extends StatelessWidget {
                                                               child:
                                                               Text(
                                                                 "Travel Distance: ",
-                                                                style: TextStyles(context).getDescriptionStyle().copyWith(
+                                                                style: TextStyles(
+                                                                    context)
+                                                                    .getDescriptionStyle()
+                                                                    .copyWith(
                                                                     fontWeight:
-                                                                    FontWeight.bold,
+                                                                    FontWeight
+                                                                        .bold,
                                                                     fontSize: 13),
                                                               ),
                                                             ),
@@ -942,7 +1026,8 @@ class DriverDashboardView extends StatelessWidget {
                                                                   context)
                                                                   .getBoldStyle()
                                                                   .copyWith(
-                                                                  fontWeight: FontWeight.bold,
+                                                                  fontWeight: FontWeight
+                                                                      .bold,
                                                                   fontSize: 15),
                                                             )
                                                           ],
@@ -950,7 +1035,9 @@ class DriverDashboardView extends StatelessWidget {
                                                       )
                                                     ],
                                                   ),
-                                                  (controllerX.otpVerifiedStatus)? Column(
+                                                  (controllerX
+                                                      .otpVerifiedStatus)
+                                                      ? Column(
                                                     children: [
                                                       lottie.Lottie
                                                           .asset(
@@ -970,11 +1057,13 @@ class DriverDashboardView extends StatelessWidget {
                                                                 context)
                                                                 .getBoldStyle()
                                                                 .copyWith(
-                                                                fontWeight: FontWeight.bold,
+                                                                fontWeight: FontWeight
+                                                                    .bold,
                                                                 fontSize: 15)),
                                                       ),
                                                     ],
-                                                  ) :InkWell(
+                                                  )
+                                                      : InkWell(
                                                     onTap: () {
                                                       controllerX.otpDialog(
                                                           Get.context!,
@@ -1001,7 +1090,8 @@ class DriverDashboardView extends StatelessWidget {
                                                                   context)
                                                                   .getBoldStyle()
                                                                   .copyWith(
-                                                                  fontWeight: FontWeight.bold,
+                                                                  fontWeight: FontWeight
+                                                                      .bold,
                                                                   fontSize: 15)),
                                                         ),
                                                       ],
@@ -1009,7 +1099,7 @@ class DriverDashboardView extends StatelessWidget {
                                                   ),
                                                 ],
                                               ),
-                                              InkWell(
+                                              /*   InkWell(
                                                 onTap: () async {
                                                   String?  data = await SharedPreferencesKeys().getStringData(key: 'latlong');
                                                   log(">>>>>>>>val"+data.toString());
@@ -1035,6 +1125,9 @@ class DriverDashboardView extends StatelessWidget {
                                                   onChanged:
                                                       (String txt) {},
                                                 ),
+                                              ),*/
+                                              SizedBox(
+                                                height: 25,
                                               ),
                                               Padding(
                                                 padding:
@@ -1066,7 +1159,9 @@ class DriverDashboardView extends StatelessWidget {
                                                     SizedBox(
                                                       width: 2,
                                                     ),
-                                                    (controllerX.otpVerifiedStatus)? Expanded(
+                                                    (controllerX
+                                                        .otpVerifiedStatus)
+                                                        ? Expanded(
                                                       child:
                                                       CommonButton(
                                                         padding:
@@ -1080,55 +1175,15 @@ class DriverDashboardView extends StatelessWidget {
                                                         buttonText:
                                                         "Completed",
                                                         onTap: () {
-                                                          if (controllerX
-                                                              .amountEditingController
-                                                              .text
-                                                              .trim() ==
-                                                              "") {
-                                                            Snack.callError(
-                                                                "Please enter receive amount");
-                                                          } else {
-                                                            controllerX
-                                                                .userDetails = "";
-                                                            controllerX
-                                                                .initialChildSize =
-                                                                Rx<double>(
-                                                                    0.1);
-                                                            controllerX
-                                                                .maxChildSize =
-                                                                Rx<double>(
-                                                                    0.1);
-                                                            controllerX
-                                                                .snapSize =
-                                                                Rx<List<double>>([
-                                                                  0.1
-                                                                ]);
-                                                            controllerX
-                                                                .incomingBookingModel =
-                                                            null;
-                                                            controllerX
-                                                                .polylineCoordinates = [];
-
-                                                            controllerX
-                                                                .update([
-                                                              'drag',
-                                                              'map'
-                                                            ]);
-                                                            controllerX
-                                                                .upDateRideStatusComplete(
-                                                                "COMPLETED",
-                                                                bookingId: controllerX.subscribeBookingDetailsModel?.subscribeBookingDetails?.bookingId ??
-                                                                    "")
-                                                                .then(
-                                                                    (value) {
-                                                                  controllerX.unsubscribe2();
-                                                                });
-                                                          }
+                                                          // controllerX.completeRide1("20","200");
+                                                          controllerX
+                                                              .getLatLngList();
                                                         },
                                                         radius: 10,
                                                         height: 37,
                                                       ),
-                                                    ):Container(),
+                                                    )
+                                                        : Container(),
                                                     SizedBox(
                                                       width: 2,
                                                     ),
@@ -1146,7 +1201,8 @@ class DriverDashboardView extends StatelessWidget {
                                                         buttonText:
                                                         "Map",
                                                         onTap: () {
-                                                          controllerX.goToMapDialog(
+                                                          controllerX
+                                                              .goToMapDialog(
                                                               Get
                                                                   .context!,
                                                               Get.width *
@@ -1161,7 +1217,8 @@ class DriverDashboardView extends StatelessWidget {
                                                 ),
                                               ),
                                               Padding(
-                                                padding: const EdgeInsets.all(8.0),
+                                                padding: const EdgeInsets.all(
+                                                    8.0),
                                                 child: CommonButton(
                                                   padding:
                                                   const EdgeInsets
@@ -1206,7 +1263,8 @@ class DriverDashboardView extends StatelessWidget {
                                                 .center,
                                             children: [
                                               DefaultTextStyle(
-                                                style: Theme.of(context)
+                                                style: Theme
+                                                    .of(context)
                                                     .textTheme
                                                     .headline3!
                                                     .copyWith(
@@ -1251,10 +1309,9 @@ class DriverDashboardView extends StatelessWidget {
               }),
         ),
       );
-    }catch(e){
+    } catch (e) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
-
   }
 }
 
@@ -1266,7 +1323,9 @@ Widget driverINfoWidget(String img, String tittle, String Subtittle) {
         height: 30,
         width: 30,
         // color: Color(0xFF4FBE9F),
-        color: Theme.of(Get.context!).primaryColor,
+        color: Theme
+            .of(Get.context!)
+            .primaryColor,
       ),
       const SizedBox(
         height: 5,

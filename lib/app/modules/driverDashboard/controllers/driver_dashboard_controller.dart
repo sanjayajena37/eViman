@@ -4,6 +4,7 @@ import 'dart:isolate';
 
 import 'dart:math';
 import 'dart:ui';
+import 'dart:developer' as dev;
 
 import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
@@ -65,7 +66,8 @@ part 'helpercontroller.dart';
 @pragma("vm:entry-point", true)
 @pragma("vm:entry-point", !bool.fromEnvironment("dart.vm.product"))
 @pragma("vm:entry-point", "get")
-@pragma("vm:entry-point", "call") // Mandatory if the App is obfuscated or using Flutter 3.1+
+@pragma("vm:entry-point",
+    "call") // Mandatory if the App is obfuscated or using Flutter 3.1+
 void callbackDispatcher() {
   DartPluginRegistrant.ensureInitialized();
   Workmanager().executeTask((task, inputData) async {
@@ -78,7 +80,6 @@ void callbackDispatcher() {
 
 class DriverDashboardController extends GetxController
     with Helper, WidgetsBindingObserver, GetSingleTickerProviderStateMixin {
-
   List<Map<String, double>> locationDataFromIsolate = [];
 
   FlutterIsolate? isolateField;
@@ -172,7 +173,6 @@ class DriverDashboardController extends GetxController
                           .toString()
                           .trim() ==
                       "OTP VERIFIED") {
-
                 incomingBookingModel = IncomingBooikingModel(
                     incomingBooking: IncomingBooking(
                   bookingId:
@@ -233,10 +233,10 @@ class DriverDashboardController extends GetxController
                     [0.1, 0.2, 0.25, 0.3, 0.35, 0.4, 0.5, 0.6]);
                 subscribeBookingDetails(
                     checkStatusModel?.riderStatus?.activeRide?.bookingId ?? "");
-                if(checkStatusModel?.riderStatus?.activeRide?.rideStatus
-                    .toString()
-                    .trim() ==
-                    "OTP VERIFIED"){
+                if (checkStatusModel?.riderStatus?.activeRide?.rideStatus
+                        .toString()
+                        .trim() ==
+                    "OTP VERIFIED") {
                   otpVerifiedStatus = true;
                 }
                 getPolyPoints();
@@ -269,6 +269,7 @@ class DriverDashboardController extends GetxController
         await SharedPreferencesKeys().getStringData(key: 'vehicleId');
     authToken = await SharedPreferencesKeys().getStringData(key: 'authToken');
     getProfileDetails();
+    getRideAnalytics();
     configureAmplify().then((value) {
       checkStatus();
     });
@@ -499,7 +500,8 @@ class DriverDashboardController extends GetxController
         });
   }
 
-  Future<void> upDateRideStatusOtpVeryFy(String? sta, {String? bookingId}) async {
+  Future<void> upDateRideStatusOtpVeryFy(String? sta,
+      {String? bookingId}) async {
     print(">>>>>>>>>>>>>>>>subscribeBookingDetailsModel" +
         (subscribeBookingDetailsModel?.subscribeBookingDetails?.bookingId ?? "")
             .toString());
@@ -519,22 +521,24 @@ class DriverDashboardController extends GetxController
         json: postData,
         fun: (map) {
           Get.back();
-          if(map is Map && map.containsKey('success') && (map['success'] == "true" || map['success'] == true)){
+          if (map is Map &&
+              map.containsKey('success') &&
+              (map['success'] == "true" || map['success'] == true)) {
             otpVerifiedStatus = true;
             update(['drag']);
-
-          }else{
-            Snack.callError((map??"Something went wrong").toString());
+          } else {
+            Snack.callError((map ?? "Something went wrong").toString());
           }
           print(">>>>>>>>>>mapSta" + map.toString());
         });
   }
 
-  Future<void> upDateRideStatusComplete(String? sta, {String? bookingId}) async {
+  Future<void> upDateRideStatusComplete(String? sta,
+      {String? bookingId}) async {
     print(">>>>>>>>>>>>>>>>subscribeBookingDetailsModel" +
         (subscribeBookingDetailsModel?.subscribeBookingDetails?.bookingId ?? "")
             .toString());
-    MyWidgets.showLoading3();
+    // MyWidgets.showLoading3();
     Map<String, dynamic> postData = {
       "bookingId": bookingId ?? "",
       "bookingStatus": sta ?? "",
@@ -549,7 +553,7 @@ class DriverDashboardController extends GetxController
         token: authToken ?? "token",
         json: postData,
         fun: (map) {
-          Get.back();
+          // Get.back();
           completeRide();
           print(">>>>>>>>>>mapSta" + map.toString());
         });
@@ -624,52 +628,188 @@ class DriverDashboardController extends GetxController
 
   void cancelRide() async {
     bool isOk = await showCommonPopupNew3(
-      "Are you sure you want to cancel it?",
-      "If yes, please press ok.",
-      barrierDismissible: false,
-      isYesOrNoPopup: true,
-      filePath: "assets/json/angrey.json"
-    );
+        "Are you sure you want to cancel it?", "If yes, please press ok.",
+        barrierDismissible: false,
+        isYesOrNoPopup: true,
+        filePath: "assets/json/congratulation.json");
     if (isOk) {
-        userDetails = "";
-        initialChildSize = Rx<double>(0.1);
-        maxChildSize = Rx<double>(0.1);
-        snapSize = Rx<List<double>>([0.1]);
-        incomingBookingModel = null;
-        polylineCoordinates = [];
+      userDetails = "";
+      initialChildSize = Rx<double>(0.1);
+      maxChildSize = Rx<double>(0.1);
+      snapSize = Rx<List<double>>([0.1]);
+      incomingBookingModel = null;
+      polylineCoordinates = [];
 
-        update(['drag', 'map']);
-        upDateRideStatus("CANCELLED BY RIDER",
-                bookingId: subscribeBookingDetailsModel
-                        ?.subscribeBookingDetails?.bookingId ??
-                    "")
-            .then((value) {
-          unsubscribe2();
-        });
+      update(['drag', 'map']);
+      upDateRideStatus("CANCELLED BY RIDER",
+              bookingId: subscribeBookingDetailsModel
+                      ?.subscribeBookingDetails?.bookingId ??
+                  "")
+          .then((value) {
+        unsubscribe2();
+      });
     }
   }
 
   void completeRide() async {
     bool isOk = await showCommonPopupNew3(
-      "Congratulation",
-      "You have successfully completed this ride",
-      barrierDismissible: true,
-      isYesOrNoPopup: false,
-      filePath: "assets/json/done.json"
-    );
-    if (isOk) {
+        "Congratulation", "You have successfully completed this ride",
+        barrierDismissible: true,
+        isYesOrNoPopup: false,
+        filePath: "assets/json/done.json");
+    if (isOk) {}
+  }
 
+  void completeRide1(
+      {double? distance, String? amount, String? durationInMinutes}) async {
+    double distanceInKilometer = distance! / 1000;
+
+    bool isOk = await showCommonPopupNew5(
+        "Travel Distance-${distanceInKilometer ?? ""}K.M.\nTime Taken $durationInMinutes minutes",
+        "You need to collect ₹$amount from customer",
+        barrierDismissible: true,
+        isYesOrNoPopup: true,
+        filePath: "assets/json/done.json");
+    if (isOk) {
+      userDetails = "";
+      initialChildSize = Rx<double>(0.1);
+      maxChildSize = Rx<double>(0.1);
+      snapSize = Rx<List<double>>([0.1]);
+      incomingBookingModel = null;
+      polylineCoordinates = [];
+
+      update(['drag', 'map']);
+      upDateRideStatusComplete("COMPLETED",
+              bookingId: subscribeBookingDetailsModel
+                      ?.subscribeBookingDetails?.bookingId ??
+                  "")
+          .then((value) {
+        unsubscribe2();
+      });
     }
   }
 
+  getLatLngList() {
+    try {
+      Get.find<ConnectorController>().GETMETHODCALL_TOKEN(
+          api: "http://65.1.169.159:3000/api/rider_data/v1/get-rider-data",
+          token: authToken ?? "",
+          fun: (map) {
+            if (map is Map &&
+                map['success'] == true &&
+                map.containsKey("ride") &&
+                map['ride'] != null) {
+              calculateDistance(jsonDecode((map['ride']['data']))['list']);
+            } else {
+              Snack.callError("Something went wrong");
+            }
+            dev.log(">>>>>>>>>>>latlngList" +
+                jsonDecode((map['ride']['data']))['list'].toString());
+          });
+    } catch (e) {
+      Snack.callError("Something went wrong");
+    }
+  }
+
+  String totalDistanceNew = "0.00";
+  String totalAmount = "0.00";
+  String totalRides = "0.00";
+
+  getRideAnalytics() {
+    Get.find<ConnectorController>().POSTMETHOD_TOKEN(
+        api: "http://65.1.169.159:3000/api/rides/v1/get-rides-analytics",
+        token: authToken ?? "",
+        fun: (map) {
+          print(">>>>>>>>>>>rides-analytics"+map.toString());
+          if(map is Map && map.containsKey("result") && map['result'] != null){
+            totalDistanceNew = (map['result']['totalDistance']??"0.00").toString();
+            totalAmount = (map['result']['totalAmount']??"0.00").toString();
+            totalRides = (map['result']['totalRides']??"0.00").toString();
+            update(['analytics','amt']);
+          }else{
+             totalDistanceNew = "0.00";
+             totalAmount = "0.00";
+             totalRides = "0.00";
+             update(['analytics','amt']);
+          }
+        });
+  }
+
+  calculateDistance(List<dynamic> latLngList) async {
+    // calculateDistanceUsingAPI
+    dev.log(">>>>>>>>>>>DISTLIST" + latLngList.toString());
+    double totalDistance = 0;
+    if (latLngList.length > 1) {
+      for (int i = 0; i < (latLngList.length - 1); i++) {
+        calculateDistanceUsingAPIReturnMeter(
+                originLong: latLngList[i]['longitude'],
+                originLat: latLngList[i]['latitude'],
+                desLat: latLngList[i + 1]['latitude'],
+                desLong: latLngList[i + 1]['longitude'])
+            .then((value) {
+          if (value != 0.00 && value != 0) {
+            totalDistance = totalDistance + value;
+          }
+        });
+      }
+    }
+
+    print(">>>>>>>>>>>>>>>>>travel distance$totalDistance");
+    String? startDate =
+        await SharedPreferencesKeys().getStringData(key: 'startDate');
+    DateTime startDate1 = DateTime.parse(startDate!);
+    DateTime endDate = DateTime.now();
+    Duration duration = endDate.difference(startDate1);
+
+    getActualAmount("6", "20").then((value) {
+      if (value.toString().trim() != "") {
+        completeRide1(
+            amount: value ?? "40",
+            distance: 5000,
+            durationInMinutes: duration.inMinutes.toString());
+      } else {
+        Snack.callError("Something went wrong");
+      }
+    });
+    // subscribeBookingDetailsModel?.subscribeBookingDetails?.bookingId ??
+  }
+
+  Future<String> getActualAmount(String distance, String duration) {
+    Completer<String> completer = Completer<String>();
+    Map<String, dynamic> postData = {
+      "rideBookingId":
+          subscribeBookingDetailsModel?.subscribeBookingDetails?.bookingId ??
+              "",
+      "distance": distance,
+      "duration": duration
+    };
+    try {
+      Get.find<ConnectorController>().POSTMETHOD_TOKEN(
+          api: "http://65.1.169.159:3000/api/rides/v1/actual-fare",
+          token: authToken ?? "",
+          json: postData,
+          fun: (map) {
+            print(">>>>>>>>>>>>>>>>amountMap" + map.toString());
+            if (map is Map &&
+                map.containsKey("success") &&
+                map['success'] == true) {
+              completer.complete(map['fare'] ?? "");
+            } else {
+              completer.complete("");
+            }
+          });
+    } catch (e) {
+      completer.complete("");
+    }
+
+    return completer.future;
+  }
 
   Rx<List<double>> snapSize = Rx<List<double>>([0.1, 0.2]);
   Rx<double> maxChildSize = Rx<double>(0.2);
   Rx<double> initialChildSize = Rx<double>(0.1);
   TextEditingController otpEditingController = TextEditingController();
   TextEditingController amountEditingController = TextEditingController();
-
-
 
   Stream<ConnectivityResult>? connectivitySubscription;
   Connectivity connectivity = Connectivity();

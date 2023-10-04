@@ -89,7 +89,7 @@ Future<void> onStart(ServiceInstance service) async {
   List<Map<String, double>> locationData = [];
   geoLoc.LocationSettings locationSettings = geoLoc.AndroidSettings(
       accuracy: geoLoc.LocationAccuracy.high,
-      distanceFilter: 0,
+      distanceFilter: 500,
       forceLocationManager: true);
 
   if (service is AndroidServiceInstance) {
@@ -105,8 +105,8 @@ Future<void> onStart(ServiceInstance service) async {
     service.stopSelf();
   });
 
-  String? vehicleId =
-      await SharedPreferencesKeys().getStringData(key: 'vehicleId');
+  String? vehicleId = await SharedPreferencesKeys().getStringData(key: 'vehicleId');
+  String? riderId = await SharedPreferencesKeys().getStringData(key: 'riderId');
   String? authToken =
       await SharedPreferencesKeys().getStringData(key: 'authToken');
 
@@ -115,8 +115,8 @@ Future<void> onStart(ServiceInstance service) async {
     (geoLoc.Position position) async {
       // sendPort.send(position.toJson());
       final data = {
-        "latitude": position.latitude,
-        "longitude": position.longitude,
+        'latitude': position.latitude,
+        'longitude': position.longitude,
       };
 
       locationData.add(data);
@@ -126,6 +126,7 @@ Future<void> onStart(ServiceInstance service) async {
         if(value){
 
           String ? isInternetError = await SharedPreferencesKeys().getStringData(key: 'isInternetError');
+          String ? listData = await SharedPreferencesKeys().getStringData(key: 'latLngForDst');
           if(isInternetError == "yes"){
            /* flutterLocalNotificationsPlugin.show(
               888,
@@ -139,7 +140,50 @@ Future<void> onStart(ServiceInstance service) async {
                     ongoing: true,
                   )),
             );*/
-          }else{
+
+            Map<String,dynamic> postDataNew = {
+              "data":listData??"" ,
+              "dateTime":"",
+              "rider_id":riderId??""
+            };
+            print(">>>>>>>>>>>>>>>postData"+postDataNew.toString());
+
+            try {
+              var dio = Dio();
+              service1.Response response = await dio.post(
+                "http://65.1.169.159:3000/api/rider_data/v1/create-rider-data",
+                options: Options(headers: {
+                  "Authorization":
+                  "Bearer " + ((authToken != null) ? authToken ?? '' : "")
+                }),
+                data: (postDataNew != null) ? jsonEncode(postDataNew) : null,
+              );
+              if (response.statusCode == 200 || response.statusCode == 201) {
+                try {} catch (e) {
+                  print("Message is: " + e.toString());
+                }
+              }
+              else if (response.statusCode == 417) {
+              } else {
+                print("Message is: >>1");
+              }
+            } on DioError catch (e) {
+              switch (e.type) {
+                case DioErrorType.connectTimeout:
+                case DioErrorType.cancel:
+                case DioErrorType.sendTimeout:
+                case DioErrorType.receiveTimeout:
+                case DioErrorType.other:
+                  print("Message is: >>1" + e.toString());
+                  break;
+                case DioErrorType.response:
+                  print(
+                      "Message is: >>1" + (e.response?.data ?? "").toString());
+              }
+            }
+
+          }
+          else{
            /* flutterLocalNotificationsPlugin.show(
               888,
               "Eviman App",
@@ -152,12 +196,53 @@ Future<void> onStart(ServiceInstance service) async {
                     ongoing: true,
                   )),
             );*/
+
+            Map<String,dynamic> postDataNew = {
+              "data":jsonEncode({'list': locationData}),
+              "dateTime":"",
+              "rider_id":riderId??""
+            };
+            print(">>>>>>>>>>>>>>>postData"+postDataNew.toString());
+            try {
+              var dio = Dio();
+              service1.Response response = await dio.post(
+                "http://65.1.169.159:3000/api/rider_data/v1/create-rider-data",
+                options: Options(headers: {
+                  "Authorization":
+                  "Bearer " + ((authToken != null) ? authToken ?? '' : "")
+                }),
+                data: (postDataNew != null) ? jsonEncode(postDataNew) : null,
+              );
+              if (response.statusCode == 200 || response.statusCode == 201) {
+                try {} catch (e) {
+                  print("Message is: " + e.toString());
+                }
+              }
+              else if (response.statusCode == 417) {
+              } else {
+                print("Message is: >>1");
+              }
+            } on DioError catch (e) {
+              switch (e.type) {
+                case DioErrorType.connectTimeout:
+                case DioErrorType.cancel:
+                case DioErrorType.sendTimeout:
+                case DioErrorType.receiveTimeout:
+                case DioErrorType.other:
+                  print("Message is: >>1" + e.toString());
+                  break;
+                case DioErrorType.response:
+                  print(
+                      "Message is: >>1" + (e.response?.data ?? "").toString());
+              }
+            }
+
           }
 
           await SharedPreferencesKeys().setStringData(key: "isInternetError", text: "no");
         }else{
           await SharedPreferencesKeys().setStringData(key: "isInternetError", text: "yes");
-          await SharedPreferencesKeys().setStringData(key: "latLngForDst", text: locationData.toString());
+          await SharedPreferencesKeys().setStringData(key: "latLngForDst", text: jsonEncode({"list": locationData}));
           /*flutterLocalNotificationsPlugin.show(
             888,
             "Eviman App",
@@ -210,28 +295,6 @@ Future<void> onStart(ServiceInstance service) async {
             };
             // print(">>>>>postData" + postData.toString());
             // print(">>>>>>>>api" + "http://65.1.169.159:3000/api/vehicles/v1/update/location/" + (vehicleId ?? 0).toString());
-
-           /* ShakeDetector.autoStart(
-                shakeThresholdGravity: 7,
-                shakeSlopTimeMS: 500,
-                shakeCountResetTime: 3000,
-                minimumShakeCount: 1,
-                onPhoneShake: () async {
-                  if (await Vibration.hasVibrator() ?? false) {
-                    print("Test 2");
-                    if (await Vibration.hasCustomVibrationsSupport() ?? false) {
-                      print("Test 3");
-                      Vibration.vibrate(duration: 1000);
-                    } else {
-                      print("Test 4");
-                      Vibration.vibrate();
-                      await Future.delayed(Duration(milliseconds: 500));
-                      Vibration.vibrate();
-                    }
-                    print("Test 5");
-                  }
-                });*/
-
             try {
               var dio = Dio();
               service1.Response response = await dio.patch(
@@ -278,7 +341,7 @@ Future<void> onStart(ServiceInstance service) async {
               .then((Position position) {
             curentPosition = position;
             print("bg location ${position.latitude}");
-            flutterLocalNotificationsPlugin.show(
+            /*flutterLocalNotificationsPlugin.show(
               888,
               "Eviman App",
               "Currently we are starting our background service for updating you current location",
@@ -289,7 +352,7 @@ Future<void> onStart(ServiceInstance service) async {
                 icon: 'ic_bg_service_small',
                 ongoing: true,
               )),
-            );
+            );*/
           }).catchError((e) {
             Fluttertoast.showToast(msg: e.toString());
           });

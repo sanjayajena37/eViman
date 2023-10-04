@@ -52,14 +52,15 @@ extension HelperController on DriverDashboardController {
         });
   }
 
- Future<String> goOnline1(bool val) async {
+  Future<String> goOnline1(bool val) async {
     Completer<String> completer = Completer();
     Map sendData = {
       "status": (val) ? 1 : 0,
     };
     // print(">>>>>update-online-status" + sendData.toString());
     Get.find<ConnectorController>().PATCH_METHOD_TOKEN(
-        api: "http://65.1.169.159:3000/api/riders/v1/update-online-status/$riderIdNew",
+        api:
+            "http://65.1.169.159:3000/api/riders/v1/update-online-status/$riderIdNew",
         json: sendData,
         token: authToken ?? "",
         fun: (map) {
@@ -309,38 +310,34 @@ extension HelperController on DriverDashboardController {
                   SizedBox(
                     height: Get.height * 0.03,
                     child: Row(
-                      mainAxisAlignment:
-                      MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         DefaultTextStyle(
                           style: Theme.of(context)
                               .textTheme
                               .headline3!
                               .copyWith(
-                            fontSize: 15.0,
-                            fontWeight:
-                            FontWeight.bold,color: Colors.white
-                          ),
+                                  fontSize: 15.0,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white),
                           child: AnimatedTextKit(
                             animatedTexts: [
-                              FadeAnimatedText(
-                                  'You have only 40 second',duration: const Duration(seconds: 4)),
-                              FadeAnimatedText(
-                                  'You have only 35 second',duration: const Duration(seconds: 4)),
-                              FadeAnimatedText(
-                                  'You have only 30 second',duration: const Duration(seconds: 4)),
-                              FadeAnimatedText(
-                                  'You have only 25 second',duration: const Duration(seconds: 4)),
-                              FadeAnimatedText(
-                                  'You have only 20 second',duration: const Duration(seconds: 4)),
-                              FadeAnimatedText(
-                                  'You have only 15 second',duration: const Duration(seconds: 4)),
-                              FadeAnimatedText(
-                                  'You have only 10 second',duration: const Duration(seconds: 4)),
-                              FadeAnimatedText(
-                                  'You have only 5 second'),
-                              FadeAnimatedText(
-                                  'Please take quick action'),
+                              FadeAnimatedText('You have only 40 second',
+                                  duration: const Duration(seconds: 4)),
+                              FadeAnimatedText('You have only 35 second',
+                                  duration: const Duration(seconds: 4)),
+                              FadeAnimatedText('You have only 30 second',
+                                  duration: const Duration(seconds: 4)),
+                              FadeAnimatedText('You have only 25 second',
+                                  duration: const Duration(seconds: 4)),
+                              FadeAnimatedText('You have only 20 second',
+                                  duration: const Duration(seconds: 4)),
+                              FadeAnimatedText('You have only 15 second',
+                                  duration: const Duration(seconds: 4)),
+                              FadeAnimatedText('You have only 10 second',
+                                  duration: const Duration(seconds: 4)),
+                              FadeAnimatedText('You have only 5 second'),
+                              FadeAnimatedText('Please take quick action'),
                             ],
                             repeatForever: false,
                             isRepeatingAnimation: true,
@@ -590,7 +587,7 @@ extension HelperController on DriverDashboardController {
                               left: 2, right: 2, bottom: 4),
                           buttonText: "Accept",
                           onTap: () {
-                            amountEditingController.text="";
+                            amountEditingController.text = "";
                             otpVerifiedStatus = false;
                             // userDetails = "";
                             print(">>>>>>>>>>" + receiveData.toString());
@@ -780,10 +777,22 @@ extension HelperController on DriverDashboardController {
                                       .trim() ==
                                   otpEditingController.text.toString().trim()) {
                                 upDateRideStatusOtpVeryFy("OTP VERIFIED",
-                                    bookingId: subscribeBookingDetailsModel
-                                            ?.subscribeBookingDetails
-                                            ?.bookingId ??
-                                        "");
+                                        bookingId: subscribeBookingDetailsModel
+                                                ?.subscribeBookingDetails
+                                                ?.bookingId ??
+                                            "")
+                                    .then((value) {
+                                  callOrStopServices().then((value) async {
+                                    await SharedPreferencesKeys().setStringData(key: "startDate",
+                                        text: DateTime.now().toString());
+                                    Future.delayed(
+                                      const Duration(seconds: 10),
+                                      () {
+                                        calBackgroundServices("true");
+                                      },
+                                    );
+                                  });
+                                });
                                 Get.back();
                               } else {
                                 Snack.callError("Please enter a valid otp");
@@ -1013,16 +1022,16 @@ extension HelperController on DriverDashboardController {
     advancedDrawerController.showDrawer();
   }
 
-
   void startIsolate() async {
     ReceivePort? receivePort = ReceivePort();
-     isolateField = await FlutterIsolate.spawn(startIsolateFun,receivePort.sendPort);
+    isolateField =
+        await FlutterIsolate.spawn(startIsolateFun, receivePort.sendPort);
     receivePort.listen((message) {
-      print("????????????????>>>>>>>>>>>>>isolate"+message);
+      print("????????????????>>>>>>>>>>>>>isolate" + message);
       // isolateField?.kill();
     });
 
-  /*  final receivePort = ReceivePort();
+    /*  final receivePort = ReceivePort();
     final isolate = await Isolate.spawn(startIsolateFun2, receivePort.sendPort);
 
     receivePort.listen((data) {
@@ -1032,14 +1041,8 @@ extension HelperController on DriverDashboardController {
         print("Received message from isolate: $data");
       }
     });*/
-
-
   }
-
-
-
 }
-
 
 @pragma("vm:entry-point")
 @pragma("vm:entry-point", true)
@@ -1050,27 +1053,29 @@ Future<void> startIsolateFun(SendPort sendPort) async {
   DartPluginRegistrant.ensureInitialized();
   // BackgroundIsolateBinaryMessenger.ensureInitialized(args[1]);
   // SendPort sendPort = args[0] as SendPort;
-  geoLoc.GeolocatorPlatform geolocator =   geoLoc.GeolocatorPlatform.instance;
+  geoLoc.GeolocatorPlatform geolocator = geoLoc.GeolocatorPlatform.instance;
   List<Map<String, double>> locationData = [];
   // sendPort.send("Isolate started");
   print(">>>>>>>>>>>>>isolate run");
-  await SharedPreferencesKeys().setStringData(key: "latlong", text: locationData.toString());
+  await SharedPreferencesKeys()
+      .setStringData(key: "latlong", text: locationData.toString());
 
-   geoLoc.LocationSettings locationSettings = geoLoc.AndroidSettings(
-    accuracy: geoLoc.LocationAccuracy.high,
-    distanceFilter: 0,forceLocationManager: true,
-       foregroundNotificationConfig: const geoLoc.ForegroundNotificationConfig(
-         notificationText:
-         "Example app will continue to receive your location even when you aren't using it",
-         notificationTitle: "Running in Background",
-         enableWakeLock: true,
-       )
-  );
+  geoLoc.LocationSettings locationSettings = geoLoc.AndroidSettings(
+      accuracy: geoLoc.LocationAccuracy.high,
+      distanceFilter: 0,
+      forceLocationManager: true,
+      foregroundNotificationConfig: const geoLoc.ForegroundNotificationConfig(
+        notificationText:
+            "Example app will continue to receive your location even when you aren't using it",
+        notificationTitle: "Running in Background",
+        enableWakeLock: true,
+      ));
 
-    final position = await determinePosition();
-    print(">>>>>>>>>position${position.longitude}");
-  StreamSubscription<geoLoc.Position>? positionStream = geolocator.getPositionStream(locationSettings:locationSettings).listen(
-        (geoLoc.Position position) async {
+  final position = await determinePosition();
+  print(">>>>>>>>>position${position.longitude}");
+  StreamSubscription<geoLoc.Position>? positionStream =
+      geolocator.getPositionStream(locationSettings: locationSettings).listen(
+    (geoLoc.Position position) async {
       // sendPort.send(position.toJson());
       final data = {
         "latitude": position.latitude,
@@ -1078,23 +1083,26 @@ Future<void> startIsolateFun(SendPort sendPort) async {
       };
 
       locationData.add(data);
-      await SharedPreferencesKeys().setStringData(key: "latlong", text: locationData.toString());
+      await SharedPreferencesKeys()
+          .setStringData(key: "latlong", text: locationData.toString());
       sendPort.send(locationData.toString());
-      print(">>>>>>>>>message from isolate JKS2"+locationData.toString());
+      print(">>>>>>>>>message from isolate JKS2" + locationData.toString());
     },
     onError: (e) {
-          print(">>>>>>>>>>exception"+e.toString());
+      print(">>>>>>>>>>exception" + e.toString());
       // sendPort.send("Error: $e");
     },
     cancelOnError: true,
   );
-  Future.delayed(Duration(seconds: 500),() {
-    positionStream.cancel();
-  },);
+  Future.delayed(
+    Duration(seconds: 500),
+    () {
+      positionStream.cancel();
+    },
+  );
 
   print(">>>>>>>>>message from isolate JKS");
 }
-
 
 @pragma("vm:entry-point")
 @pragma("vm:entry-point", true)
@@ -1114,7 +1122,7 @@ void startIsolateFun2(SendPort sendPort) async {
   positionStream = geoLoc.Geolocator.getPositionStream(
     locationSettings: locationSettings,
   ).listen(
-        (geoLoc.Position position) {
+    (geoLoc.Position position) {
       final data = {
         "latitude": position.latitude,
         "longitude": position.longitude,
@@ -1129,9 +1137,9 @@ void startIsolateFun2(SendPort sendPort) async {
   );
 
   // Keep the isolate running
-  await Future.delayed(Duration(days: 365)); // You can adjust the duration as needed
+  await Future.delayed(
+      Duration(days: 365)); // You can adjust the duration as needed
 }
-
 
 @pragma("vm:entry-point")
 @pragma("vm:entry-point", true)

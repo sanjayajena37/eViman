@@ -187,6 +187,56 @@ mixin Helper {
     });
   }
 
+  Future<bool> showCommonPopupNew5(
+      String title, String descriptionText,
+      {bool isYesOrNoPopup = false, bool barrierDismissible = true,String? filePath}) async {
+    bool isOkClick = false;
+    return await Get.dialog(
+      barrierDismissible: barrierDismissible,
+      CustomDialog(
+        title: title,
+        topWidget:Lottie.asset(
+          filePath??"assets/json/done.json",
+          fit: BoxFit.contain,
+        ),
+        description: descriptionText,
+        onCloseClick: () {
+          Get.back();
+        },
+        actionButtonList: isYesOrNoPopup
+            ?<Widget>[
+          CustomDialogActionButton(
+            buttonText: "NO",
+            color: Colors.red,
+            onPressed: () {
+              Get.back();
+            },
+          ),
+          CustomDialogActionButton(
+            buttonText: "COMPLETE RIDE",
+            color: Colors.green,
+            onPressed: () {
+              isOkClick = true;
+              Get.back();
+            },
+          )
+        ]
+            : <Widget>[
+          CustomDialogActionButton(
+            buttonText: "OK",
+            color: Colors.green,
+            onPressed: () {
+              isOkClick = true;
+              Get.back();
+            },
+          )
+        ],
+      ),
+    ).then((_) {
+      return isOkClick;
+    });
+  }
+
   Future<bool> showCommonPopupNew4(
       String title, String descriptionText,
       {bool isYesOrNoPopup = false, bool barrierDismissible = true,String? filePath}) async {

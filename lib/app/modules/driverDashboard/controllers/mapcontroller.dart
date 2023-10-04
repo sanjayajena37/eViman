@@ -89,6 +89,49 @@ extension MapHelper on DriverDashboardController {
     }
   }
 
+  Future<double> calculateDistanceUsingAPIReturnMeter(
+      {double? desLat,
+        double? desLong,
+        double? originLat,
+        double? originLong}) async {
+    List<String> travelModes = ["driving"]; //
+    String apiKey = "AIzaSyDwVSaWuD9KLlbKhJWj9tgKZN_QDDrvmpQ";
+    String origin =
+        "${originLat ?? 0},${originLong ?? 0}"; // Replace with actual values
+    String destination =
+        "${desLat ?? 0},${desLong ?? 0}"; // Replace with actual values
+    String travelMode =
+        "driving"; // Replace with the desired travel mode ("driving", "walking", "transit", "bicycling")
+
+    String url =
+        "https://maps.googleapis.com/maps/api/distancematrix/json?origins=$origin&destinations=$destination&mode=$travelMode&key=$apiKey";
+    print(">>>>>>>>>url" + url);
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      print(">>>>>>>>>>>" + data.toString());
+      if (data["status"] == "OK" &&
+          data["rows"] != null &&
+          data["rows"].length > 0 &&
+          data["rows"][0]["elements"][0]["distance"] != null) {
+        String? distanceText =
+        data["rows"][0]["elements"][0]["distance"]["text"];
+        double distanceValue = data["rows"][0]["elements"][0]["distance"]["value"];
+
+        print(
+            "Distance: $distanceText"); // Distance in text format (e.g., "5.4 km")
+        print("Distance Value: $distanceValue meters"); // Distance in meters
+        return distanceValue ?? 0;
+      } else {
+        return 0.00;
+        print("Error calculating distance");
+      }
+    } else {
+      return 0.00;
+    }
+  }
+
   double calculateDistance(List<LatLng> route) {
     double distance = 0;
     for (int i = 0; i < route.length - 1; i++) {
