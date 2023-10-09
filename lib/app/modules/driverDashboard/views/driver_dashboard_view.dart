@@ -668,7 +668,7 @@ class DriverDashboardView extends StatelessWidget {
                           () =>
                       (controllerX.isDisappear.value == false)
                           ? MovableContainer(onTap: () {
-                        controllerX.goOnline(true);
+                        controllerX.infoDialog();
                       })
                           : Container(),
                     ),

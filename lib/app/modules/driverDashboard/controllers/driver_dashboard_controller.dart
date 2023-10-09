@@ -660,6 +660,18 @@ class DriverDashboardController extends GetxController
     if (isOk) {}
   }
 
+  void infoDialog() async {
+    bool isOk = await showCommonPopupNew3(
+        "eViman App collect location data to enable identification of nearby driver even when the app is closed or not in use",
+        "No need to worry",
+        barrierDismissible: true,
+        isYesOrNoPopup: false,
+        filePath: "assets/json/done.json");
+    if (isOk) {
+       goOnline(true);
+    }
+  }
+
   void completeRide1(
       {double? distance, String? amount, String? durationInMinutes}) async {
     double distanceInKilometer = distance! / 1000;

@@ -98,7 +98,7 @@ class WaletscreenView extends GetView<WaletscreenController> {
                           elevation: 5,
                           shadowColor: Colors.grey,
                           child: ListTile(
-                            leading: CircleAvatar(child: Image.asset("assets/images/avatar1.jpg")),
+                            leading: CircleAvatar(child: Image.asset("assets/images/logo.png")),
                             title: Text("JKS",style:TextStyles(Get.context!).getTitleStyle().copyWith(fontSize: 15) ),
                             subtitle: Text("Jatin Kumar Sahoo",style:TextStyles(Get.context!).getRegularStyle().copyWith(fontSize: 10) ),
                             trailing: Text("120",style:TextStyles(Get.context!).getBoldStyle().copyWith() ),

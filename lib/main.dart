@@ -354,7 +354,7 @@ Future<void> onStart(ServiceInstance service) async {
               )),
             );*/
           }).catchError((e) {
-            Fluttertoast.showToast(msg: e.toString());
+            Fluttertoast.showToast(msg: "To avail our app functionality it's mandatory to enable your location");
           });
         }
       }

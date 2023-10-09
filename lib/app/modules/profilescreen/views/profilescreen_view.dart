@@ -161,7 +161,7 @@ class ProfilescreenView extends GetView<ProfilescreenController> {
                                                                             .error),
                                                                   )
                                                                 : Image.asset(
-                                                                    'assets/images/avatar2.jpg',
+                                                                    'assets/images/man.jpg',
                                                                     fit: BoxFit
                                                                         .cover,
                                                                   )
