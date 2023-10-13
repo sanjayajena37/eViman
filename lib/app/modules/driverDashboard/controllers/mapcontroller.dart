@@ -91,9 +91,9 @@ extension MapHelper on DriverDashboardController {
 
   Future<double> calculateDistanceUsingAPIReturnMeter(
       {double? desLat,
-        double? desLong,
-        double? originLat,
-        double? originLong}) async {
+      double? desLong,
+      double? originLat,
+      double? originLong}) async {
     List<String> travelModes = ["driving"]; //
     String apiKey = "AIzaSyDwVSaWuD9KLlbKhJWj9tgKZN_QDDrvmpQ";
     String origin =
@@ -116,8 +116,9 @@ extension MapHelper on DriverDashboardController {
           data["rows"].length > 0 &&
           data["rows"][0]["elements"][0]["distance"] != null) {
         String? distanceText =
-        data["rows"][0]["elements"][0]["distance"]["text"];
-        double distanceValue = data["rows"][0]["elements"][0]["distance"]["value"];
+            data["rows"][0]["elements"][0]["distance"]["text"];
+        double distanceValue =
+            data["rows"][0]["elements"][0]["distance"]["value"];
 
         print(
             "Distance: $distanceText"); // Distance in text format (e.g., "5.4 km")
@@ -165,24 +166,39 @@ extension MapHelper on DriverDashboardController {
   }
 
   Future<void> getCurrentLocation() async {
+    // print(">>>>>>>>>>callGetLocation"+currentLocation.toString());
     Location location = Location();
     location.getLocation().then((value) {
       currentLocation = LatLng(value.latitude!, value.longitude!);
       sourceLocation = LatLng(value.latitude!, value.longitude!);
       // currentLocation = LatLng(20.296367,85.8085564);
-      update(['map']);
+      print(">>>>>>>>>>callGetLocation"+currentLocation.toString());
+      update(['top','map']);
     });
     GoogleMapController googleMapController = await mapControl.future;
-    location.onLocationChanged.listen((newLoc) {
-      currentLocation = LatLng(newLoc.latitude!, newLoc.longitude!);
-      sourceLocation = LatLng(newLoc.latitude!, newLoc.longitude!);
-      // currentLocation = LatLng(20.296367,85.8085564);
-      googleMapController.animateCamera(CameraUpdate.newCameraPosition(
-          CameraPosition(
-              zoom: 13.5,
-              target: LatLng(newLoc.latitude!, newLoc.longitude!))));
-      update(['map']);
-    });
+    geoLoc.LocationSettings locationSettings = geoLoc.AndroidSettings(
+        accuracy: geoLoc.LocationAccuracy.high,
+        distanceFilter: 500,
+        forceLocationManager: true);
+    geoLoc.GeolocatorPlatform geolocator = geoLoc.GeolocatorPlatform.instance;
+
+    positionStream =
+        geolocator.getPositionStream(locationSettings: locationSettings).listen(
+      (geoLoc.Position position) async {
+        currentLocation = LatLng(position.latitude, position.longitude);
+        sourceLocation = LatLng(position.latitude, position.longitude);
+        googleMapController.animateCamera(CameraUpdate.newCameraPosition(
+            CameraPosition(
+                zoom: 13.5,
+                target: LatLng(position.latitude, position.longitude))));
+        update(['top','map']);
+      },
+      onError: (e) {
+        print(">>>>>>>>>>exception" + e.toString());
+        // sendPort.send("Error: $e");
+      },
+      cancelOnError: true,
+    );
   }
 
   Future<geoc.Placemark?> getDetailsByLatLong(double? lat, double? lon) async {
@@ -269,7 +285,7 @@ extension MapHelper on DriverDashboardController {
   }
 
   void setCustomMarkerIcon() {
-  /*  BitmapDescriptor.fromAssetImage(
+    /*  BitmapDescriptor.fromAssetImage(
             ImageConfiguration.empty, "assets/images/location.png")
         .then((value) => sourceIcon = value);
     BitmapDescriptor.fromAssetImage(

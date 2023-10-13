@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:dateplan/app/data/ApiFactory.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:get/get.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 
@@ -21,6 +23,7 @@ class LoginscreenController extends GetxController {
   String errorPassword = '';
   final TextEditingController passwordController = TextEditingController();
   // late AnimationController animationController2;
+  Rx<bool> termAndCondition = Rx<bool>(false);
   bool allValidation() {
     bool isValid = true;
     if (mobileController.text.trim().isEmpty) {
@@ -67,9 +70,26 @@ class LoginscreenController extends GetxController {
         });
   }
 
+  Future<void> callOrStopServices() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    DartPluginRegistrant.ensureInitialized();
+    try {
+      final service = FlutterBackgroundService();
+      bool isRunning = await service.isRunning();
+      if (isRunning) {
+        service.invoke("stopService");
+      }
+      return;
+    } catch (e) {
+      print(">>>>>>\n\n" + e.toString());
+      return;
+    }
+  }
+
   @override
   void onReady() {
-
+    WidgetsFlutterBinding.ensureInitialized();
+    callOrStopServices();
     super.onReady();
   }
 

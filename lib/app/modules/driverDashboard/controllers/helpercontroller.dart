@@ -633,7 +633,7 @@ extension HelperController on DriverDashboardController {
                                                 ?.destinationLng ??
                                             "85.817814") ??
                                         85.845584);
-                                getPolyPoints();
+                                // getPolyPoints();
                                 setCustomMarkerIcon();
                                 Get.back();
                               } catch (e) {
@@ -1019,6 +1019,7 @@ extension HelperController on DriverDashboardController {
   void handleMenuButtonPressed() {
     // NOTICE: Manage Advanced Drawer state through the Controller.
     // _advancedDrawerController.value = AdvancedDrawerValue.visible();
+    print(">>>>>>>>>>>>>>>>>>>>advancedDrawerController"+advancedDrawerController.toString());
     advancedDrawerController.showDrawer();
   }
 

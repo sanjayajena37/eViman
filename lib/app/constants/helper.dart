@@ -107,14 +107,14 @@ mixin Helper {
             ?<Widget>[
           CustomDialogActionButton(
             buttonText: "NO",
-            color: Colors.green,
+            color: Colors.red,
             onPressed: () {
               Get.back();
             },
           ),
           CustomDialogActionButton(
             buttonText: "YES",
-            color: Colors.red,
+            color: Colors.green,
             onPressed: () {
               isOkClick = true;
               Get.back();
@@ -157,14 +157,14 @@ mixin Helper {
             ?<Widget>[
           CustomDialogActionButton(
             buttonText: "NO",
-            color: Colors.green,
+            color: Colors.red,
             onPressed: () {
               Get.back();
             },
           ),
           CustomDialogActionButton(
             buttonText: "YES",
-            color: Colors.red,
+            color: Colors.green,
             onPressed: () {
               isOkClick = true;
               Get.back();
@@ -257,14 +257,14 @@ mixin Helper {
             ?<Widget>[
           CustomDialogActionButton(
             buttonText: "Offline",
-            color: Colors.green,
+            color: Colors.red,
             onPressed: () {
               Get.back();
             },
           ),
           CustomDialogActionButton(
             buttonText: "Online",
-            color: Colors.red,
+            color: Colors.green,
             onPressed: () {
               isOkClick = true;
               Get.back();

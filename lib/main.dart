@@ -35,28 +35,9 @@ import 'package:geolocator/geolocator.dart' as geoLoc;
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-/*  await Permission.locationAlways.isDenied.then((value) {
-    if(value){
-      Permission.locationAlways.request();
-    }
-  }) ;
-  await Permission.location.isDenied.then((value) {
-    if(value){
-      Permission.location.request();
-    }
-  }) ;
-  await Permission.notification.isDenied.then((value) {
-    if(value){
-      Permission.notification.request();
-    }
-  }) ;*/
   await Get.putAsync<ThemeController>(() => ThemeController.init(),
       permanent: true);
-  // final int helloAlarmID = 0;
-  // await AndroidAlarmManager.initialize();
-  // await AndroidAlarmManager.periodic(const Duration(seconds: 3), helloAlarmID, BackgroundTask.printHello);
 
-  // initializeWorkManager();
   await initializeService();
 
   await SystemChrome.setPreferredOrientations(
@@ -328,7 +309,7 @@ Future<void> onStart(ServiceInstance service) async {
               }
             }
           }).catchError((e) {
-            Fluttertoast.showToast(msg: e.toString());
+            // Fluttertoast.showToast(msg: e.toString());
           });
         }
       }
@@ -354,7 +335,7 @@ Future<void> onStart(ServiceInstance service) async {
               )),
             );*/
           }).catchError((e) {
-            Fluttertoast.showToast(msg: "To avail our app functionality it's mandatory to enable your location");
+            // Fluttertoast.showToast(msg: "To avail our app functionality it's mandatory to enable your location");
           });
         }
       }
@@ -393,9 +374,9 @@ Future<void> initializeService() async {
     androidConfiguration: AndroidConfiguration(
         onStart: onStart,
         isForegroundMode: true,
-        autoStart: true,
+        autoStart: false,
         notificationChannelId: "eViman-rider",
-        initialNotificationTitle: "Location service enable",
+        initialNotificationTitle: "eViman service enable",
         initialNotificationContent: "initializing eViman background service",
         foregroundServiceNotificationId: 888,
         autoStartOnBoot: true),

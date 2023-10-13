@@ -14,6 +14,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 
 import 'package:dateplan/app/routes/app_pages.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
@@ -22,6 +23,9 @@ import 'package:flutter_isolate/flutter_isolate.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_polyline_points_plus/flutter_polyline_points_plus.dart';
 import 'package:geolocator/geolocator.dart' as geoLoc;
+
+import 'package:permission_handler/permission_handler.dart' as permission;
+
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:iconsax/iconsax.dart';
@@ -83,7 +87,7 @@ class DriverDashboardController extends GetxController
   List<Map<String, double>> locationDataFromIsolate = [];
 
   FlutterIsolate? isolateField;
-  final advancedDrawerController = AdvancedDrawerController();
+  late AdvancedDrawerController advancedDrawerController;
   final count = 0.obs;
   LatLng sourceLocation = LatLng(20.288187, 85.817814);
   LatLng destination = LatLng(20.290983, 85.845584);
@@ -239,9 +243,9 @@ class DriverDashboardController extends GetxController
                     "OTP VERIFIED") {
                   otpVerifiedStatus = true;
                 }
-                getPolyPoints();
+                // getPolyPoints();
                 setCustomMarkerIcon();
-                update(['top']);
+                update(['allPage','top']);
               }
             }
 
@@ -256,7 +260,7 @@ class DriverDashboardController extends GetxController
                 callOrStopServices();
               }
             }
-            update(['top']);
+            update(['allPage','top']);
           } else {
             Snack.callError((map ?? "Something went wrong").toString());
           }
@@ -462,7 +466,7 @@ class DriverDashboardController extends GetxController
             subscribeBookingDetailsModel = null;
             polylineCoordinates = [];
             unsubscribe2();
-            update(['top']);
+            update(['allPage','top']);
           } else {
             Map? receiveData = jsonDecode(event.data as String) ?? {};
             subscribeBookingDetailsModel =
@@ -672,6 +676,30 @@ class DriverDashboardController extends GetxController
     }
   }
 
+  void infoDialog1() async {
+    var status = await permission.Permission.location.status;
+    print(">>>>>>>>>>>>>>status"+status.toString());
+    if (status.isDenied || status.isPermanentlyDenied ) {
+      bool isOk = await showCommonPopupNew3(
+          "eViman App need your location and notification permission.It's required to give smooth less service to you",
+          "No need to worry",
+          barrierDismissible: true,
+          isYesOrNoPopup: true,
+          filePath: "assets/json/done.json");
+      if (isOk) {
+        askPermissions();
+      }
+    }else{
+      permissionAllow = true;
+      getRiderId();
+      getCurrentLocation();
+    }
+  }
+  closeDialogIfOpen() {
+    if (Get.isDialogOpen ?? false) {
+      Get.back();
+    }
+  }
   void completeRide1(
       {double? distance, String? amount, String? durationInMinutes}) async {
     double distanceInKilometer = distance! / 1000;
@@ -773,11 +801,11 @@ class DriverDashboardController extends GetxController
     DateTime endDate = DateTime.now();
     Duration duration = endDate.difference(startDate1);
 
-    getActualAmount("6", "20").then((value) {
+    getActualAmount(totalDistance.toString(), duration.toString()).then((value) {
       if (value.toString().trim() != "") {
         completeRide1(
             amount: value ?? "40",
-            distance: 5000,
+            distance: totalDistance,
             durationInMinutes: duration.inMinutes.toString());
       } else {
         Snack.callError("Something went wrong");
@@ -824,21 +852,74 @@ class DriverDashboardController extends GetxController
   TextEditingController amountEditingController = TextEditingController();
 
   Stream<ConnectivityResult>? connectivitySubscription;
+  StreamSubscription<geoLoc.Position>? positionStream;
   Connectivity connectivity = Connectivity();
   @override
   void onInit() {
     WidgetsBinding.instance.addObserver(this);
+     advancedDrawerController = AdvancedDrawerController();
     connectivitySubscription = connectivity.onConnectivityChanged;
     // getRiderId();
     super.onInit();
+  }
+  Future<bool> handleLocationPermission() async {
+    bool serviceEnabled;
+    geoLoc.LocationPermission permission;
+
+    serviceEnabled = await geoLoc.Geolocator.isLocationServiceEnabled();
+    if(serviceEnabled){
+      return true;
+    }
+    permission = await geoLoc.Geolocator.checkPermission();
+    if (permission == geoLoc.LocationPermission.denied) {
+      permission = await geoLoc.Geolocator.requestPermission();
+      if (permission == geoLoc.LocationPermission.denied) {
+        // ScaffoldMessenger.of(Get.context!).showSnackBar(const SnackBar(content: Text('Location permissions are denied')));
+        return false;
+      }
+    }
+    if (permission == geoLoc.LocationPermission.deniedForever) {
+      // openAppSettings();
+      // ScaffoldMessenger.of(Get.context!).showSnackBar(const SnackBar(content: Text('Location permissions are permanently denied.')));
+      return false;
+    }
+    return true;
+  }
+
+  requestForNotification() async {
+    await permission.Permission.notification.isDenied.then((value) {
+      if(value){
+        permission.Permission.notification.request();
+      }
+    }) ;
+  }
+
+  bool permissionAllow = false;
+  askPermissions() async {
+    Map<permission.Permission, permission.PermissionStatus> statuses = await [
+    permission.Permission.location, permission. Permission.notification,
+    ].request();
+    handleLocationPermission().then((value) {
+      if(value){
+        permissionAllow = true;
+        // update(['allPage']);
+        getRiderId();
+        getCurrentLocation();
+      }else{
+        permissionAllow = false;
+        getRiderId();
+        getCurrentLocation();
+        // update(['allPage']);
+      }
+    });
   }
 
   @override
   void onReady() {
     // Timer.periodic(Duration(seconds: 20), (timer) { showRideAcceptDialog(Get.context!,Get.width*0.9); });
     // showModalbottomSheet();
-    getCurrentLocation();
-    getRiderId();
+    // getCurrentLocation();
+    infoDialog1();
     // timerController  =LinearTimerController(this);
 
     super.onReady();
@@ -860,6 +941,7 @@ class DriverDashboardController extends GetxController
     WidgetsBinding.instance.removeObserver(this);
     // advancedDrawerController.dispose();
     mapControl = Completer<GoogleMapController>();
+    positionStream?.cancel();
     // timerController?.dispose();
     unsubscribe();
     // locationUpdateTimer?.cancel();
