@@ -252,7 +252,7 @@ Future<void> onStart(ServiceInstance service) async {
     Position? curentPosition;
     vehicleId = await SharedPreferencesKeys().getStringData(key: 'vehicleId');
     authToken = await SharedPreferencesKeys().getStringData(key: 'authToken');
-    // print(">>>>>>>>>>>authToken????\n " + authToken.toString());
+    print("background Service call\n ");
     if (vehicleId != null && authToken != null) {
       if (service is AndroidServiceInstance) {
         if (await service.isForegroundService()) {
@@ -263,16 +263,18 @@ Future<void> onStart(ServiceInstance service) async {
             curentPosition = position;
             print("bg location ${position.latitude}");
             Placemark? locationDetails;
-            List<Placemark>? placeMarks = await placemarkFromCoordinates(
+            List<Placemark> placeMarks = await placemarkFromCoordinates(
                 position.latitude, position.longitude);
             if (placeMarks.isNotEmpty) {
               locationDetails = placeMarks.first;
+
               for(int i=0;i<placeMarks.length;i++){
                 if(placeMarks[i].subLocality != null && placeMarks[i].locality != null){
                   locationDetails = placeMarks[i];
                   break;
                 }
               }
+
             }
             Map<String, dynamic> postData = {
               "currentCity": locationDetails?.locality ?? "India",
@@ -289,6 +291,71 @@ Future<void> onStart(ServiceInstance service) async {
                 options: Options(headers: {
                   "Authorization":
                       "Bearer " + ((authToken != null) ? authToken ?? '' : "")
+                }),
+                data: (postData != null) ? jsonEncode(postData) : null,
+              );
+              if (response.statusCode == 200 || response.statusCode == 201) {
+                try {} catch (e) {
+                  print("Message is: " + e.toString());
+                }
+              } else if (response.statusCode == 417) {
+              } else {
+                print("Message is: >>1");
+              }
+            } on DioError catch (e) {
+              switch (e.type) {
+                case DioErrorType.connectTimeout:
+                case DioErrorType.cancel:
+                case DioErrorType.sendTimeout:
+                case DioErrorType.receiveTimeout:
+                case DioErrorType.other:
+                  print("Message is: >>1" + e.toString());
+                  break;
+                case DioErrorType.response:
+                  print(
+                      "Message is: >>1" + (e.response?.data ?? "").toString());
+              }
+            }
+          }).catchError((e) {
+            Fluttertoast.showToast(msg: e.toString());
+          });
+        }
+        else{
+          await Geolocator.getCurrentPosition(
+              desiredAccuracy: LocationAccuracy.high,
+              forceAndroidLocationManager: true)
+              .then((Position position) async {
+            curentPosition = position;
+            print("bg location ${position.latitude}");
+            Placemark? locationDetails;
+            List<Placemark> placeMarks = await placemarkFromCoordinates(
+                position.latitude, position.longitude);
+            if (placeMarks.isNotEmpty) {
+              locationDetails = placeMarks.first;
+
+              for(int i=0;i<placeMarks.length;i++){
+                if(placeMarks[i].subLocality != null && placeMarks[i].locality != null){
+                  locationDetails = placeMarks[i];
+                  break;
+                }
+              }
+
+            }
+            Map<String, dynamic> postData = {
+              "currentCity": locationDetails?.locality ?? "India",
+              "currentLocality": locationDetails?.subLocality ?? locationDetails?.locality ?? "India",
+              "lat": (position.latitude ?? 0).toString(),
+              "lng": (position.longitude ?? 0).toString()
+            };
+            // print(">>>>>postData" + postData.toString());
+            // print(">>>>>>>>api" + "https://backend.eviman.co.in/api/vehicles/v1/update/location/" + (vehicleId ?? 0).toString());
+            try {
+              var dio = Dio();
+              service1.Response response = await dio.patch(
+                "https://backend.eviman.co.in/api/vehicles/v1/update/location/${vehicleId ?? 0}",
+                options: Options(headers: {
+                  "Authorization":
+                  "Bearer " + ((authToken != null) ? authToken ?? '' : "")
                 }),
                 data: (postData != null) ? jsonEncode(postData) : null,
               );

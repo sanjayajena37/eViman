@@ -681,10 +681,11 @@ class DriverDashboardController extends GetxController
 
   void infoDialog1() async {
     var status = await permission.Permission.location.status;
+    var status1 = await permission.Permission.locationAlways.status;
     print(">>>>>>>>>>>>>>status"+status.toString());
-    if (status.isDenied || status.isPermanentlyDenied ) {
+    if (status.isDenied || status.isPermanentlyDenied || status1.isDenied || status1.isPermanentlyDenied ) {
       bool isOk = await showCommonPopupNew3(
-          "eViman App need your location and notification permission.It's required to give smooth less service to you",
+          "eViman App need your location and notification permission(Please select allow all the time).It's required to give smooth less service to you",
           "No need to worry",
           barrierDismissible: true,
           isYesOrNoPopup: true,
@@ -869,21 +870,23 @@ class DriverDashboardController extends GetxController
     bool serviceEnabled;
     geoLoc.LocationPermission permission;
 
-    serviceEnabled = await geoLoc.Geolocator.isLocationServiceEnabled();
-    if(serviceEnabled){
-      return true;
-    }
+
     permission = await geoLoc.Geolocator.checkPermission();
-    if (permission == geoLoc.LocationPermission.denied) {
+    if (permission == geoLoc.LocationPermission.denied || permission == geoLoc.LocationPermission.whileInUse ) {
       permission = await geoLoc.Geolocator.requestPermission();
       if (permission == geoLoc.LocationPermission.denied) {
         // ScaffoldMessenger.of(Get.context!).showSnackBar(const SnackBar(content: Text('Location permissions are denied')));
+        return false;
+      }else if(permission == geoLoc.LocationPermission.whileInUse){
         return false;
       }
     }
     if (permission == geoLoc.LocationPermission.deniedForever) {
       // openAppSettings();
       // ScaffoldMessenger.of(Get.context!).showSnackBar(const SnackBar(content: Text('Location permissions are permanently denied.')));
+      return false;
+    }
+    if(permission == geoLoc.LocationPermission.whileInUse){
       return false;
     }
     return true;
@@ -899,9 +902,11 @@ class DriverDashboardController extends GetxController
 
   bool permissionAllow = false;
   askPermissions() async {
+
     Map<permission.Permission, permission.PermissionStatus> statuses = await [
-    permission.Permission.location, permission. Permission.notification,
+    permission.Permission.locationAlways, permission. Permission.notification
     ].request();
+    var sta =  permission.Permission.locationAlways;
     handleLocationPermission().then((value) {
       if(value){
         permissionAllow = true;
