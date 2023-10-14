@@ -671,8 +671,8 @@ class DriverDashboardView extends StatelessWidget {
                             myLocationButtonEnabled: true,
                             mapToolbarEnabled: true,
                             padding: EdgeInsets.all(25),
-                            polylines:
-                            /*(controllerX
+                        /*    polylines:
+                            (controllerX
                                             .routeCoordinates.isNotEmpty)
                                         ? Set<Polyline>.from(
                                             controllerX.routeCoordinates
@@ -706,7 +706,7 @@ class DriverDashboardView extends StatelessWidget {
                                                   });
                                             }),
                                           )
-                                        : {},*/
+                                        : {},
                             {
                               Polyline(
                                   polylineId: PolylineId('route'),
@@ -717,14 +717,8 @@ class DriverDashboardView extends StatelessWidget {
                                   startCap: Cap.roundCap,
                                   consumeTapEvents: true,
                                   geodesic: true)
-                            },
+                            },*/
                             markers: {
-                              Marker(
-                                  markerId: MarkerId("source"),
-                                  position: controllerX.sourceLocation),
-                              Marker(
-                                  markerId: MarkerId("Destination"),
-                                  position: controllerX.destination),
                               Marker(
                                   markerId:
                                   MarkerId("Current Location"),
@@ -932,7 +926,7 @@ class DriverDashboardView extends StatelessWidget {
                                                       SizedBox(
                                                         width: 10,
                                                       ),
-                                                      CustomeTittleText(
+                                                     /* CustomeTittleText(
                                                         text: controllerX
                                                             .incomingBookingModel
                                                             ?.incomingBooking
@@ -940,7 +934,17 @@ class DriverDashboardView extends StatelessWidget {
                                                             "Amrit Jena",
                                                         textsize:
                                                         18,
-                                                      ),
+                                                      ),*/
+                                                      Container(
+                                                        width: Get.width*0.6,
+                                                        child: Text(controllerX
+                                                            .incomingBookingModel
+                                                            ?.incomingBooking
+                                                            ?.clientName ??
+                                                            "Jatin Sahoo",maxLines: 5, style:
+                                                        TextStyles(context)
+                                                            .getBoldStyle().copyWith(fontSize: 20)),
+                                                      )
                                                     ],
                                                   ),
                                                   InkWell(

@@ -263,14 +263,20 @@ Future<void> onStart(ServiceInstance service) async {
             curentPosition = position;
             print("bg location ${position.latitude}");
             Placemark? locationDetails;
-            List<Placemark> placeMarks = await placemarkFromCoordinates(
+            List<Placemark>? placeMarks = await placemarkFromCoordinates(
                 position.latitude, position.longitude);
             if (placeMarks.isNotEmpty) {
               locationDetails = placeMarks.first;
+              for(int i=0;i<placeMarks.length;i++){
+                if(placeMarks[i].subLocality != null && placeMarks[i].locality != null){
+                  locationDetails = placeMarks[i];
+                  break;
+                }
+              }
             }
             Map<String, dynamic> postData = {
-              "currentCity": locationDetails?.locality ?? "",
-              "currentLocality": locationDetails?.subLocality ?? "",
+              "currentCity": locationDetails?.locality ?? "India",
+              "currentLocality": locationDetails?.subLocality ?? locationDetails?.locality ?? "India",
               "lat": (position.latitude ?? 0).toString(),
               "lng": (position.longitude ?? 0).toString()
             };

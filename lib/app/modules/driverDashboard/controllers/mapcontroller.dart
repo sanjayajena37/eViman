@@ -170,7 +170,7 @@ extension MapHelper on DriverDashboardController {
     Location location = Location();
     location.getLocation().then((value) {
       currentLocation = LatLng(value.latitude!, value.longitude!);
-      sourceLocation = LatLng(value.latitude!, value.longitude!);
+      // sourceLocation = LatLng(value.latitude!, value.longitude!);
       // currentLocation = LatLng(20.296367,85.8085564);
       print(">>>>>>>>>>callGetLocation"+currentLocation.toString());
       update(['top','map']);
@@ -186,7 +186,7 @@ extension MapHelper on DriverDashboardController {
         geolocator.getPositionStream(locationSettings: locationSettings).listen(
       (geoLoc.Position position) async {
         currentLocation = LatLng(position.latitude, position.longitude);
-        sourceLocation = LatLng(position.latitude, position.longitude);
+        // sourceLocation = LatLng(position.latitude, position.longitude);
         googleMapController.animateCamera(CameraUpdate.newCameraPosition(
             CameraPosition(
                 zoom: 13.5,

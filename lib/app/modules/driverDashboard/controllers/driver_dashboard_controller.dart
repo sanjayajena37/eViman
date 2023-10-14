@@ -158,6 +158,7 @@ class DriverDashboardController extends GetxController
         api:
             "https://backend.eviman.co.in/api/riders/v1/online-status/${riderIdNew ?? ""}",
         fun: (map) {
+          incomingBookingModel = null;
           print(">>>>>>>>>>>>>online-status" + map.toString());
           Get.back();
           if (map != null &&
@@ -202,7 +203,7 @@ class DriverDashboardController extends GetxController
                       checkStatusModel?.riderStatus?.activeRide?.clientId ?? 0,
                   // clientName: "",
                   clientName:
-                      checkStatusModel?.riderStatus?.activeRide?.clientName ??
+                      checkStatusModel?.riderStatus?.clientName ??
                           "JKS",
                   clientPhone: checkStatusModel?.riderStatus?.clientPhone ?? "",
                   fareInfo:
@@ -261,7 +262,9 @@ class DriverDashboardController extends GetxController
               }
             }
             update(['allPage','top']);
-          } else {
+          }
+          else {
+            incomingBookingModel = null;
             Snack.callError((map ?? "Something went wrong").toString());
           }
         });
@@ -333,7 +336,7 @@ class DriverDashboardController extends GetxController
     subscription = operation.listen(
       (event) {
         if (event.data != null) {
-          if (userDetails == "") {
+          if (userDetails == "" && incomingBookingModel == null) {
             Map? receiveDataNew = jsonDecode(event.data as String) ?? {};
             if (receiveDataNew != null &&
                 receiveDataNew['incomingBooking']['status'].toString().trim() ==

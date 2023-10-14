@@ -390,7 +390,7 @@ class KycscreenView extends GetView<KycscreenController> {
                                               child: controller.imageData2 ==
                                                   null
                                                   ? Image.asset(
-                                                'assets/images/mapImage.png',
+                                                'assets/images/id-card.png',
                                                 fit: BoxFit.cover,
                                               )
                                                   : Image.file(
@@ -456,7 +456,7 @@ class KycscreenView extends GetView<KycscreenController> {
                                               child: controller.imageData3 ==
                                                   null
                                                   ? Image.asset(
-                                                'assets/images/mapImage.png',
+                                                'assets/images/id-card.png',
                                                 fit: BoxFit.cover,
                                               )
                                                   : Image.file(
@@ -639,7 +639,7 @@ class KycscreenView extends GetView<KycscreenController> {
                                               child: controller.imageDataRc ==
                                                   null
                                                   ? Image.asset(
-                                                'assets/images/mapImage.png',
+                                                'assets/images/id-card.png',
                                                 fit: BoxFit.cover,
                                               )
                                                   : Image.file(
@@ -706,7 +706,7 @@ class KycscreenView extends GetView<KycscreenController> {
                                               controller.imageDataVehicle ==
                                                   null
                                                   ? Image.asset(
-                                                'assets/images/mapImage.png',
+                                                'assets/images/id-card.png',
                                                 fit: BoxFit.cover,
                                               )
                                                   : Image.file(
@@ -774,7 +774,7 @@ class KycscreenView extends GetView<KycscreenController> {
                                                   .imageDataInsurance ==
                                                   null
                                                   ? Image.asset(
-                                                'assets/images/mapImage.png',
+                                                'assets/images/id-card.png',
                                                 fit: BoxFit.cover,
                                               )
                                                   : Image.file(
@@ -842,7 +842,7 @@ class KycscreenView extends GetView<KycscreenController> {
                                                   .imageDataPollution ==
                                                   null
                                                   ? Image.asset(
-                                                'assets/images/mapImage.png',
+                                                'assets/images/id-card.png',
                                                 fit: BoxFit.cover,
                                               )
                                                   : Image.file(

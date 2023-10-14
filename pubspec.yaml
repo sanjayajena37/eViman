@@ -51,6 +51,7 @@ dependencies:
   android_alarm_manager_plus:
   permission_handler:
   shake: ^2.2.0
+  upgrader:
   # device_info_plus: ^8.1.0
 
   flutter_background_service_android: 5.0.0
