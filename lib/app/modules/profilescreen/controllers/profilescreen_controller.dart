@@ -64,7 +64,7 @@ class ProfilescreenController extends GetxController
   getProfileDetails() {
     MyWidgets.showLoading3();
     Get.find<ConnectorController>().GETMETHODCALL_TOKEN(
-        api: "http://65.1.169.159:3000/api/riders/v1/profile/${riderId ?? 0}",
+        api: "https://backend.eviman.co.in/api/riders/v1/profile/${riderId ?? 0}",
         token: authToken ?? "",
         fun: (map) {
           print(">>>>" + map.toString());
@@ -181,7 +181,7 @@ class ProfilescreenController extends GetxController
     try {
       service.Response response;
       response = await dioIns.post(
-        "http://65.1.169.159:3000/api/uploads/v1/file",
+        "https://backend.eviman.co.in/api/uploads/v1/file",
         data: await getFormData(image),
         onSendProgress: (received, total) {
           if (total != -1) {
@@ -308,7 +308,7 @@ class ProfilescreenController extends GetxController
     MyWidgets.showLoading3();
     Get.find<ConnectorController>().PATCH_METHOD_POST_TOKEN(
         api:
-            "http://65.1.169.159:3000/api/riders/v1/update-profile/${riderId ?? ""}",
+            "https://backend.eviman.co.in/api/riders/v1/update-profile/${riderId ?? ""}",
         json: postData,
         token: authToken ?? "",
         fun: (map) {

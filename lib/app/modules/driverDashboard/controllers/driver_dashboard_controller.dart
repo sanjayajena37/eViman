@@ -133,7 +133,7 @@ class DriverDashboardController extends GetxController
     MyWidgets.showLoading3();
     Get.find<ConnectorController>().GETMETHODCALL_TOKEN(
         api:
-            "http://65.1.169.159:3000/api/riders/v1/profile/${riderIdNew ?? 0}",
+            "https://backend.eviman.co.in/api/riders/v1/profile/${riderIdNew ?? 0}",
         token: authToken ?? "",
         fun: (map) {
           print(">>>>" + map.toString());
@@ -156,7 +156,7 @@ class DriverDashboardController extends GetxController
     MyWidgets.showLoading3();
     Get.find<ConnectorController>().GETMETHODCALL(
         api:
-            "http://65.1.169.159:3000/api/riders/v1/online-status/${riderIdNew ?? ""}",
+            "https://backend.eviman.co.in/api/riders/v1/online-status/${riderIdNew ?? ""}",
         fun: (map) {
           print(">>>>>>>>>>>>>online-status" + map.toString());
           Get.back();
@@ -495,7 +495,7 @@ class DriverDashboardController extends GetxController
     };
     print(">>>>>>>>>>>>>>>" + (postData).toString());
     Get.find<ConnectorController>().PATCH_METHOD1_POST_TOKEN(
-        api: "http://65.1.169.159:3000/api/rides/v1/update-ride-status",
+        api: "https://backend.eviman.co.in/api/rides/v1/update-ride-status",
         token: authToken ?? "token",
         json: postData,
         fun: (map) {
@@ -520,7 +520,7 @@ class DriverDashboardController extends GetxController
     };
     print(">>>>>>>>>>>>>>>" + (postData).toString());
     Get.find<ConnectorController>().PATCH_METHOD1_POST_TOKEN(
-        api: "http://65.1.169.159:3000/api/rides/v1/update-ride-status",
+        api: "https://backend.eviman.co.in/api/rides/v1/update-ride-status",
         token: authToken ?? "token",
         json: postData,
         fun: (map) {
@@ -553,7 +553,7 @@ class DriverDashboardController extends GetxController
     };
     print(">>>>>>>>>>>>>>>" + (postData).toString());
     Get.find<ConnectorController>().PATCH_METHOD1_POST_TOKEN(
-        api: "http://65.1.169.159:3000/api/rides/v1/update-ride-status",
+        api: "https://backend.eviman.co.in/api/rides/v1/update-ride-status",
         token: authToken ?? "token",
         json: postData,
         fun: (map) {
@@ -603,7 +603,7 @@ class DriverDashboardController extends GetxController
       print(">>>>>>>>>" + postData.toString());
       MyWidgets.showLoading3();
       Get.find<ConnectorController>().POSTMETHOD_TOKEN(
-          api: "http://65.1.169.159:3000/api/rides/v1/create-ride",
+          api: "https://backend.eviman.co.in/api/rides/v1/create-ride",
           json: postData,
           token: authToken ?? "",
           fun: (map) {
@@ -732,7 +732,7 @@ class DriverDashboardController extends GetxController
   getLatLngList() {
     try {
       Get.find<ConnectorController>().GETMETHODCALL_TOKEN(
-          api: "http://65.1.169.159:3000/api/rider_data/v1/get-rider-data",
+          api: "https://backend.eviman.co.in/api/rider_data/v1/get-rider-data",
           token: authToken ?? "",
           fun: (map) {
             if (map is Map &&
@@ -757,7 +757,7 @@ class DriverDashboardController extends GetxController
 
   getRideAnalytics() {
     Get.find<ConnectorController>().POSTMETHOD_TOKEN(
-        api: "http://65.1.169.159:3000/api/rides/v1/get-rides-analytics",
+        api: "https://backend.eviman.co.in/api/rides/v1/get-rides-analytics",
         token: authToken ?? "",
         fun: (map) {
           print(">>>>>>>>>>>rides-analytics"+map.toString());
@@ -825,7 +825,7 @@ class DriverDashboardController extends GetxController
     };
     try {
       Get.find<ConnectorController>().POSTMETHOD_TOKEN(
-          api: "http://65.1.169.159:3000/api/rides/v1/actual-fare",
+          api: "https://backend.eviman.co.in/api/rides/v1/actual-fare",
           token: authToken ?? "",
           json: postData,
           fun: (map) {

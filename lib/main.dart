@@ -132,7 +132,7 @@ Future<void> onStart(ServiceInstance service) async {
             try {
               var dio = Dio();
               service1.Response response = await dio.post(
-                "http://65.1.169.159:3000/api/rider_data/v1/create-rider-data",
+                "https://backend.eviman.co.in/api/rider_data/v1/create-rider-data",
                 options: Options(headers: {
                   "Authorization":
                   "Bearer " + ((authToken != null) ? authToken ?? '' : "")
@@ -187,7 +187,7 @@ Future<void> onStart(ServiceInstance service) async {
             try {
               var dio = Dio();
               service1.Response response = await dio.post(
-                "http://65.1.169.159:3000/api/rider_data/v1/create-rider-data",
+                "https://backend.eviman.co.in/api/rider_data/v1/create-rider-data",
                 options: Options(headers: {
                   "Authorization":
                   "Bearer " + ((authToken != null) ? authToken ?? '' : "")
@@ -275,11 +275,11 @@ Future<void> onStart(ServiceInstance service) async {
               "lng": (position.longitude ?? 0).toString()
             };
             // print(">>>>>postData" + postData.toString());
-            // print(">>>>>>>>api" + "http://65.1.169.159:3000/api/vehicles/v1/update/location/" + (vehicleId ?? 0).toString());
+            // print(">>>>>>>>api" + "https://backend.eviman.co.in/api/vehicles/v1/update/location/" + (vehicleId ?? 0).toString());
             try {
               var dio = Dio();
               service1.Response response = await dio.patch(
-                "http://65.1.169.159:3000/api/vehicles/v1/update/location/${vehicleId ?? 0}",
+                "https://backend.eviman.co.in/api/vehicles/v1/update/location/${vehicleId ?? 0}",
                 options: Options(headers: {
                   "Authorization":
                       "Bearer " + ((authToken != null) ? authToken ?? '' : "")

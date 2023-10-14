@@ -41,7 +41,7 @@ class EarningpageController extends GetxController {
     MyWidgets.showLoading3();
     Get.find<ConnectorController>().GETMETHODCALL_TOKEN(
         api:
-        "http://65.1.169.159:3000/api/rides/v1/get-earning-history",
+        "https://backend.eviman.co.in/api/rides/v1/get-earning-history",
         token: authToken ?? "",
         fun: (map) {
           log(">>>>${jsonEncode(map)}");

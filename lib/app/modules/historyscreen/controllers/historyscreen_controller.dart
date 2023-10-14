@@ -42,7 +42,7 @@ class HistoryscreenController extends GetxController {
     MyWidgets.showLoading3();
     Get.find<ConnectorController>().GETMETHODCALL_TOKEN(
         api:
-            "http://65.1.169.159:3000/api/rides/v1/get-rider-rides",
+            "https://backend.eviman.co.in/api/rides/v1/get-rider-rides",
         token: authToken ?? "",
         fun: (map) {
           log(">>>>${jsonEncode(map)}");

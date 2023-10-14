@@ -632,7 +632,7 @@ class KycscreenController extends GetxController with Helper{
     print(">>>>>> add vehicle" + jsonEncode(sendData).toString());
     MyWidgets.showLoading3();
     Get.find<ConnectorController>().POSTMETHOD_TOKEN(
-        api: "http://65.1.169.159:3000/api/vehicles/v1/create",
+        api: "https://backend.eviman.co.in/api/vehicles/v1/create",
         json: sendData,
         fun: (map) {
           Get.back();
@@ -837,7 +837,7 @@ class KycscreenController extends GetxController with Helper{
     try {
       service.Response response;
       response = await dioIns.post(
-        "http://65.1.169.159:3000/api/uploads/v1/file",
+        "https://backend.eviman.co.in/api/uploads/v1/file",
         data: await getFormData(image),
         onSendProgress: (received, total) {
           if (total != -1) {
@@ -970,7 +970,7 @@ class KycscreenController extends GetxController with Helper{
   getFareInfo(){
     MyWidgets.showLoading3();
     Get.find<ConnectorController>().GETMETHODCALL(
-        api: "http://65.1.169.159:3000/api/fareinfo/v1/get-fare-list",
+        api: "https://backend.eviman.co.in/api/fareinfo/v1/get-fare-list",
         fun: (map) {
           Get.back();
           print(">>>>>>>>>" + map.toString());

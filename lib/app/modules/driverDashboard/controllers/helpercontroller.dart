@@ -7,7 +7,7 @@ extension HelperController on DriverDashboardController {
     };
     print(">>>>>update-online-status" + sendData.toString());
     Get.find<ConnectorController>().PATCH_METHOD_TOKEN(
-        api: "http://65.1.169.159:3000/api/riders/v1/update-online-status/" +
+        api: "https://backend.eviman.co.in/api/riders/v1/update-online-status/" +
             riderIdNew.toString(),
         json: sendData,
         token: authToken ?? "",
@@ -60,7 +60,7 @@ extension HelperController on DriverDashboardController {
     // print(">>>>>update-online-status" + sendData.toString());
     Get.find<ConnectorController>().PATCH_METHOD_TOKEN(
         api:
-            "http://65.1.169.159:3000/api/riders/v1/update-online-status/$riderIdNew",
+            "https://backend.eviman.co.in/api/riders/v1/update-online-status/$riderIdNew",
         json: sendData,
         token: authToken ?? "",
         fun: (map) {
