@@ -96,7 +96,7 @@ class DriverDashboardController extends GetxController
   List<LatLng> polylineCoordinates = [];
   GoogleMapController? mapController;
 
-  LatLng? currentLocation;
+  LatLng? currentLocation = const LatLng(20.288187, 85.817814);
 
   BitmapDescriptor sourceIcon = BitmapDescriptor.defaultMarker;
   BitmapDescriptor destinationIcon = BitmapDescriptor.defaultMarker;
@@ -336,9 +336,18 @@ class DriverDashboardController extends GetxController
     subscription = operation.listen(
       (event) {
         if (event.data != null) {
-          if (userDetails == "" && incomingBookingModel == null) {
+          Map? receiveDataNewClose = jsonDecode(event.data as String) ?? {};
+          if(receiveDataNewClose != null &&
+              receiveDataNewClose['incomingBooking']['status'].toString().trim() == "Booking Timeout"){
+            // incomingBookingModel = null;
+            // subscribeBookingDetailsModel = null;
+            userDetails = "";
+            closeDialogIfOpen();
+          }
+          else if (userDetails == "" && incomingBookingModel == null) {
             Map? receiveDataNew = jsonDecode(event.data as String) ?? {};
-            if (receiveDataNew != null &&
+            // Booking Timeout
+             if (receiveDataNew != null &&
                 receiveDataNew['incomingBooking']['status'].toString().trim() ==
                     "Incoming Booking") {
               userDetails = (event.data ?? "").toString();
@@ -348,7 +357,7 @@ class DriverDashboardController extends GetxController
               flutterLocalNotificationsPlugin.show(
                 888,
                 "Eviman App",
-                "Pleas be ready for trips",
+                "Please be ready for trips",
                 const NotificationDetails(
                     android: AndroidNotificationDetails(
                         "eViman-rider", "foregrounf service",
@@ -401,10 +410,12 @@ class DriverDashboardController extends GetxController
               });
 
               safePrint(">>>>>>>>>>>mapData" + receiveData.toString());
-            } else {
+            }
+            else {
               // Snack.callSuccess("Please take action quick");
             }
-          } else {
+          }
+          else {
             // Snack.callSuccess("Please take action quick");
           }
         }
@@ -475,6 +486,7 @@ class DriverDashboardController extends GetxController
             subscribeBookingDetailsModel =
                 SubscribeBookingDetailsModel.fromJson(
                     receiveData as Map<String, dynamic>);
+            update(['allPage','top']);
           }
         }
         safePrint('Subscription event data received2: ${event.data}');
@@ -669,7 +681,7 @@ class DriverDashboardController extends GetxController
 
   void infoDialog() async {
     bool isOk = await showCommonPopupNew3(
-        "eViman App collect location data to enable identification of nearby driver even when the app is closed or not in use",
+        "eViman App collect location(Background location) data to enable identification of nearby driver even when the app is closed or not in use",
         "No need to worry",
         barrierDismissible: true,
         isYesOrNoPopup: false,
@@ -682,18 +694,20 @@ class DriverDashboardController extends GetxController
   void infoDialog1() async {
     var status = await permission.Permission.location.status;
     var status1 = await permission.Permission.locationAlways.status;
-    print(">>>>>>>>>>>>>>status"+status.toString());
+    // var status2 = await permission.Permission.notification.status;
+    print(">>>>>>>>>>>>>>status$status");
     if (status.isDenied || status.isPermanentlyDenied || status1.isDenied || status1.isPermanentlyDenied ) {
-      bool isOk = await showCommonPopupNew3(
-          "eViman App need your location and notification permission(Please select allow all the time).It's required to give smooth less service to you",
+      bool isOk = await showCommonPopupNew6(
+          "eViman App need your background location and notification permission(Please select allow all the time).We are redirecting to you app setting please select allow all the time.It's required to give smooth less service to you",
           "No need to worry",
           barrierDismissible: true,
-          isYesOrNoPopup: true,
-          filePath: "assets/json/done.json");
+          isYesOrNoPopup: true
+      );
       if (isOk) {
-        askPermissions();
+        permission.openAppSettings();
       }
     }else{
+      permission. Permission.notification.request();
       permissionAllow = true;
       getRiderId();
       getCurrentLocation();
@@ -709,7 +723,7 @@ class DriverDashboardController extends GetxController
     double distanceInKilometer = distance! / 1000;
 
     bool isOk = await showCommonPopupNew5(
-        "Travel Distance-${distanceInKilometer ?? ""}K.M.\nTime Taken $durationInMinutes minutes",
+        "Travel Distance-${(distanceInKilometer ?? 0).toStringAsFixed(2)}K.M.\nTime Taken $durationInMinutes minutes",
         "You need to collect ₹$amount from customer",
         barrierDismissible: true,
         isYesOrNoPopup: true,
@@ -782,21 +796,25 @@ class DriverDashboardController extends GetxController
   calculateDistance(List<dynamic> latLngList) async {
     // calculateDistanceUsingAPI
     dev.log(">>>>>>>>>>>DISTLIST" + latLngList.toString());
+    MyWidgets.showLoading3();
     double totalDistance = 0;
     if (latLngList.length > 1) {
       for (int i = 0; i < (latLngList.length - 1); i++) {
-        calculateDistanceUsingAPIReturnMeter(
+        await calculateDistanceUsingAPIReturnMeter(
                 originLong: latLngList[i]['longitude'],
                 originLat: latLngList[i]['latitude'],
                 desLat: latLngList[i + 1]['latitude'],
                 desLong: latLngList[i + 1]['longitude'])
             .then((value) {
           if (value != 0.00 && value != 0) {
+            print(">>>>>>>>>>>>>>>valueJKs"+value.toString());
             totalDistance = totalDistance + value;
+            print(">>>>>>>>>>>>>>>valueJKs"+totalDistance.toString());
           }
         });
       }
     }
+    closeDialogIfOpen();
 
     print(">>>>>>>>>>>>>>>>>travel distance$totalDistance");
     String? startDate =
@@ -804,8 +822,8 @@ class DriverDashboardController extends GetxController
     DateTime startDate1 = DateTime.parse(startDate!);
     DateTime endDate = DateTime.now();
     Duration duration = endDate.difference(startDate1);
-
-    getActualAmount(totalDistance.toString(), duration.toString()).then((value) {
+    double distanceInKilometer = totalDistance / 1000;
+    getActualAmount(distanceInKilometer.toString(), duration.inMinutes.toString()).then((value) {
       if (value.toString().trim() != "") {
         completeRide1(
             amount: value ?? "40",
@@ -827,6 +845,7 @@ class DriverDashboardController extends GetxController
       "distance": distance,
       "duration": duration
     };
+    print("postData"+postData.toString());
     try {
       Get.find<ConnectorController>().POSTMETHOD_TOKEN(
           api: "https://backend.eviman.co.in/api/rides/v1/actual-fare",
@@ -872,14 +891,11 @@ class DriverDashboardController extends GetxController
 
 
     permission = await geoLoc.Geolocator.checkPermission();
+    if(permission == geoLoc.LocationPermission.always){
+      return true;
+    }
     if (permission == geoLoc.LocationPermission.denied || permission == geoLoc.LocationPermission.whileInUse ) {
-      permission = await geoLoc.Geolocator.requestPermission();
-      if (permission == geoLoc.LocationPermission.denied) {
-        // ScaffoldMessenger.of(Get.context!).showSnackBar(const SnackBar(content: Text('Location permissions are denied')));
-        return false;
-      }else if(permission == geoLoc.LocationPermission.whileInUse){
-        return false;
-      }
+      return false;
     }
     if (permission == geoLoc.LocationPermission.deniedForever) {
       // openAppSettings();
@@ -902,22 +918,23 @@ class DriverDashboardController extends GetxController
 
   bool permissionAllow = false;
   askPermissions() async {
+    // var sta =  permission.Permission.locationAlways;
+    handleLocationPermission().then((value) async {
 
-    Map<permission.Permission, permission.PermissionStatus> statuses = await [
-    permission.Permission.locationAlways, permission. Permission.notification
-    ].request();
-    var sta =  permission.Permission.locationAlways;
-    handleLocationPermission().then((value) {
       if(value){
-        permissionAllow = true;
-        // update(['allPage']);
-        getRiderId();
-        getCurrentLocation();
+        var sta = await permission. Permission.notification.request();
+        if(sta.isPermanentlyDenied || sta.isDenied){
+          permissionAllow = false;
+          update(['allPage']);
+        }else{
+          permissionAllow = true;
+          // update(['allPage']);
+          getRiderId();
+          getCurrentLocation();
+        }
       }else{
         permissionAllow = false;
-        getRiderId();
-        getCurrentLocation();
-        // update(['allPage']);
+        update(['allPage']);
       }
     });
   }
@@ -927,7 +944,8 @@ class DriverDashboardController extends GetxController
     // Timer.periodic(Duration(seconds: 20), (timer) { showRideAcceptDialog(Get.context!,Get.width*0.9); });
     // showModalbottomSheet();
     // getCurrentLocation();
-    infoDialog1();
+    // infoDialog1();
+    askPermissions();
     // timerController  =LinearTimerController(this);
 
     super.onReady();

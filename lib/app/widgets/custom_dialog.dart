@@ -11,6 +11,7 @@ class CustomDialog extends StatefulWidget {
   final Widget? descriptionWidget;
   final List<Widget>? actionButtonList;
   final bool isVerical;
+  final double? width;
 
   const CustomDialog({
     Key? key,
@@ -21,6 +22,7 @@ class CustomDialog extends StatefulWidget {
     this.descriptionWidget,
     this.actionButtonList,
     this.isVerical = false,
+    this.width
   }) : super(key: key);
 
   @override
@@ -66,7 +68,7 @@ class _CustomDialogState extends State<CustomDialog>
             elevation: 0.0,
             backgroundColor: Colors.transparent,
             child: SizedBox(
-              width: 380,
+              width:widget.width?? 380,
               child: dialogContent(context),
             ),
           ),
@@ -112,7 +114,7 @@ class _CustomDialogState extends State<CustomDialog>
                         child: Text(
                           widget.title,
                           textAlign: TextAlign.center,
-                          style: TextStyles(context).getTitleStyle(),
+                          style: TextStyles(context).getTitleStyle().copyWith(fontSize: 13),
                         ),
                       ),
                     )

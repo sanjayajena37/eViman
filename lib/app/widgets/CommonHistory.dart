@@ -50,7 +50,7 @@ class CommonHistoryWidget extends StatelessWidget {
                   size: const Size.fromRadius(
                       48), // Image radius
                   child: Image.asset(
-                    'assets/images/mapImage.png',
+                    'assets/images/mapHistory.jpg',
                     fit: BoxFit.cover,
                   ),
                 ),

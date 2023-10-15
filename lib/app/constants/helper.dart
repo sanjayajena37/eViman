@@ -187,6 +187,56 @@ mixin Helper {
     });
   }
 
+  Future<bool> showCommonPopupNew6(
+      String title, String descriptionText,
+      {bool isYesOrNoPopup = false, bool barrierDismissible = true,String? filePath}) async {
+    bool isOkClick = false;
+    return await Get.dialog(
+      barrierDismissible: barrierDismissible,
+      CustomDialog(
+        title: title,width: Get.width*0.96,
+        topWidget:Image.asset(
+          filePath??"assets/images/appSetting.jpg",
+          fit: BoxFit.contain,
+        ),
+        description: descriptionText,
+        onCloseClick: () {
+          Get.back();
+        },
+        actionButtonList: isYesOrNoPopup
+            ?<Widget>[
+          CustomDialogActionButton(
+            buttonText: "Don't allow",
+            color: Colors.red,
+            onPressed: () {
+              Get.back();
+            },
+          ),
+          CustomDialogActionButton(
+            buttonText: "Allow",
+            color: Colors.green,
+            onPressed: () {
+              isOkClick = true;
+              Get.back();
+            },
+          )
+        ]
+            : <Widget>[
+          CustomDialogActionButton(
+            buttonText: "OK",
+            color: Colors.green,
+            onPressed: () {
+              isOkClick = true;
+              Get.back();
+            },
+          )
+        ],
+      ),
+    ).then((_) {
+      return isOkClick;
+    });
+  }
+
   Future<bool> showCommonPopupNew5(
       String title, String descriptionText,
       {bool isYesOrNoPopup = false, bool barrierDismissible = true,String? filePath}) async {

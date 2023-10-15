@@ -118,7 +118,8 @@ extension MapHelper on DriverDashboardController {
         String? distanceText =
             data["rows"][0]["elements"][0]["distance"]["text"];
         double distanceValue =
-            data["rows"][0]["elements"][0]["distance"]["value"];
+            double.parse((data["rows"][0]["elements"][0]["distance"]["value"] != null &&
+                data["rows"][0]["elements"][0]["distance"]["value"] != "")?(data["rows"][0]["elements"][0]["distance"]["value"]??"0").toString():"0");
 
         print(
             "Distance: $distanceText"); // Distance in text format (e.g., "5.4 km")

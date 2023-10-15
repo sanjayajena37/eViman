@@ -54,11 +54,6 @@
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
 
-       <service
-           android:name="MyNavigationService"
-           android:foregroundServiceType="location">
-           <!-- Any inner elements would go here. -->
-       </service>
 
        <meta-data android:name="com.google.android.geo.API_KEY"
            android:value="AIzaSyDwVSaWuD9KLlbKhJWj9tgKZN_QDDrvmpQ"/>

@@ -54,57 +54,65 @@ extension HelperController on DriverDashboardController {
 
   Future<String> goOnline1(bool val) async {
     Completer<String> completer = Completer();
-    Map sendData = {
-      "status": (val) ? 1 : 0,
-    };
-    // print(">>>>>update-online-status" + sendData.toString());
-    Get.find<ConnectorController>().PATCH_METHOD_TOKEN(
-        api:
-            "https://backend.eviman.co.in/api/riders/v1/update-online-status/$riderIdNew",
-        json: sendData,
-        token: authToken ?? "",
-        fun: (map) {
-          print(">>>>>>" + map.toString());
-          if (map is Map &&
-              map.containsKey("success") &&
-              map['success'] == true) {
-            if (val == false) {
-              callOrStopServices().then((value) {
+
+    try{
+      Map sendData = {
+        "status": (val) ? 1 : 0,
+      };
+      // print(">>>>>update-online-status" + sendData.toString());
+      Get.find<ConnectorController>().PATCH_METHOD_TOKEN(
+          api:
+          "https://backend.eviman.co.in/api/riders/v1/update-online-status/$riderIdNew",
+          json: sendData,
+          token: authToken ?? "",
+          fun: (map) {
+            print(">>>>>>" + map.toString());
+            if (map is Map &&
+                map.containsKey("success") &&
+                map['success'] == true) {
+              if (val == false) {
+                callOrStopServices().then((value) {
+                  userDetails = "";
+                  incomingBookingModel = null;
+                  unsubscribe();
+                  unsubscribe2();
+                });
+                isDisappear = Rx<bool>(false);
                 userDetails = "";
+                initialChildSize = Rx<double>(0.1);
+                maxChildSize = Rx<double>(0.1);
+                snapSize = Rx<List<double>>([0.1]);
                 incomingBookingModel = null;
-                unsubscribe();
-                unsubscribe2();
-              });
-              isDisappear = Rx<bool>(false);
-              userDetails = "";
-              initialChildSize = Rx<double>(0.1);
-              maxChildSize = Rx<double>(0.1);
-              snapSize = Rx<List<double>>([0.1]);
-              incomingBookingModel = null;
-              polylineCoordinates = [];
-              isDisappear.refresh();
-              update(['top']);
-              completer.complete("");
-              // stopBackgroundService();
-            } else {
-              // callBackgroundService();
-              calBackgroundServices("true");
-              userDetails = "";
-              subscribeIncomingBooking();
-              isDisappear = Rx<bool>(true);
-              isDisappear.refresh();
-              userDetails = "";
-              initialChildSize = Rx<double>(0.1);
-              maxChildSize = Rx<double>(0.1);
-              snapSize = Rx<List<double>>([0.1]);
-              incomingBookingModel = null;
-              polylineCoordinates = [];
-              update(['top']);
-              completer.complete("");
-            }
-          } else {}
-        });
-    return completer.future;
+                polylineCoordinates = [];
+                isDisappear.refresh();
+                update(['top']);
+                completer.complete("");
+                // stopBackgroundService();
+              } else {
+                // callBackgroundService();
+                calBackgroundServices("true");
+                userDetails = "";
+                subscribeIncomingBooking();
+                isDisappear = Rx<bool>(true);
+                isDisappear.refresh();
+                userDetails = "";
+                initialChildSize = Rx<double>(0.1);
+                maxChildSize = Rx<double>(0.1);
+                snapSize = Rx<List<double>>([0.1]);
+                incomingBookingModel = null;
+                polylineCoordinates = [];
+                update(['top']);
+                completer.complete("");
+              }
+            } else {}
+          });
+      return completer.future;
+    }catch(e){
+      return completer.future;
+    }
+
+
+
   }
 
   showModalbottomSheet() {
@@ -636,7 +644,8 @@ extension HelperController on DriverDashboardController {
                                 // getPolyPoints();
                                 setCustomMarkerIcon();
                                 Get.back();
-                              } catch (e) {
+                              }
+                              catch (e) {
                                 userDetails = "";
                                 maxChildSize = Rx<double>(0.2);
                                 snapSize = Rx<List<double>>([0.1, 0.2]);
@@ -729,8 +738,7 @@ extension HelperController on DriverDashboardController {
                   SizedBox(
                     height: 3,
                   ),
-                  Text(
-                      "Otp: ${subscribeBookingDetailsModel?.subscribeBookingDetails?.otp ?? ""}"),
+                  // Text("Otp: ${subscribeBookingDetailsModel?.subscribeBookingDetails?.otp ?? ""}"),
                   PinFieldAutoFill(
                     textInputAction: TextInputAction.done,
                     codeLength: 4,

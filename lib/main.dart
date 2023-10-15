@@ -65,13 +65,8 @@ Future<void> onStart(ServiceInstance service) async {
       FlutterLocalNotificationsPlugin();
 
   String sta = "false";
-  StreamSubscription<geoLoc.Position>? positionStream;
-  geoLoc.GeolocatorPlatform geolocator = geoLoc.GeolocatorPlatform.instance;
   List<Map<String, double>> locationData = [];
-  geoLoc.LocationSettings locationSettings = geoLoc.AndroidSettings(
-      accuracy: geoLoc.LocationAccuracy.high,
-      distanceFilter: 500,
-      forceLocationManager: true);
+  StreamSubscription<geoLoc.Position>? positionStream;
 
   if (service is AndroidServiceInstance) {
     service.on('setAsBackground').listen((event) {
@@ -91,25 +86,35 @@ Future<void> onStart(ServiceInstance service) async {
   String? authToken =
       await SharedPreferencesKeys().getStringData(key: 'authToken');
 
-  positionStream =
-      geolocator.getPositionStream(locationSettings: locationSettings).listen(
-    (geoLoc.Position position) async {
-      // sendPort.send(position.toJson());
-      final data = {
-        'latitude': position.latitude,
-        'longitude': position.longitude,
-      };
+  if (riderId != null && authToken != null && riderId != "" && authToken != "") {
 
-      locationData.add(data);
-      print(">>>>>>>>>message from isolate JKS3" + locationData.toString());
+    geoLoc.GeolocatorPlatform geolocator = geoLoc.GeolocatorPlatform.instance;
 
-      checkInternetConnectivity().then((value) async {
-        if(value){
+    geoLoc.LocationSettings locationSettings = geoLoc.AndroidSettings(
+        accuracy: geoLoc.LocationAccuracy.high,
+        distanceFilter: 500,
+        forceLocationManager: true);
 
-          String ? isInternetError = await SharedPreferencesKeys().getStringData(key: 'isInternetError');
-          String ? listData = await SharedPreferencesKeys().getStringData(key: 'latLngForDst');
-          if(isInternetError == "yes"){
-           /* flutterLocalNotificationsPlugin.show(
+
+    positionStream =
+        geolocator.getPositionStream(locationSettings: locationSettings).listen(
+              (geoLoc.Position position) async {
+            // sendPort.send(position.toJson());
+            final data = {
+              'latitude': position.latitude,
+              'longitude': position.longitude,
+            };
+
+            locationData.add(data);
+            print(">>>>>>>>>message from isolate JKS3" + locationData.toString());
+
+            checkInternetConnectivity().then((value) async {
+              if(value){
+
+                String ? isInternetError = await SharedPreferencesKeys().getStringData(key: 'isInternetError');
+                String ? listData = await SharedPreferencesKeys().getStringData(key: 'latLngForDst');
+                if(isInternetError == "yes"){
+                  /* flutterLocalNotificationsPlugin.show(
               888,
               "Eviman App",
               "Currently I am testing(balanced)",
@@ -122,50 +127,50 @@ Future<void> onStart(ServiceInstance service) async {
                   )),
             );*/
 
-            Map<String,dynamic> postDataNew = {
-              "data":listData??"" ,
-              "dateTime":"",
-              "rider_id":riderId??""
-            };
-            print(">>>>>>>>>>>>>>>postData"+postDataNew.toString());
+                  Map<String,dynamic> postDataNew = {
+                    "data":listData??"" ,
+                    "dateTime":"",
+                    "rider_id":riderId??""
+                  };
+                  print(">>>>>>>>>>>>>>>postData"+postDataNew.toString());
 
-            try {
-              var dio = Dio();
-              service1.Response response = await dio.post(
-                "https://backend.eviman.co.in/api/rider_data/v1/create-rider-data",
-                options: Options(headers: {
-                  "Authorization":
-                  "Bearer " + ((authToken != null) ? authToken ?? '' : "")
-                }),
-                data: (postDataNew != null) ? jsonEncode(postDataNew) : null,
-              );
-              if (response.statusCode == 200 || response.statusCode == 201) {
-                try {} catch (e) {
-                  print("Message is: " + e.toString());
+                  try {
+                    var dio = Dio();
+                    service1.Response response = await dio.post(
+                      "https://backend.eviman.co.in/api/rider_data/v1/create-rider-data",
+                      options: Options(headers: {
+                        "Authorization":
+                        "Bearer " + ((authToken != null) ? authToken ?? '' : "")
+                      }),
+                      data: (postDataNew != null) ? jsonEncode(postDataNew) : null,
+                    );
+                    if (response.statusCode == 200 || response.statusCode == 201) {
+                      try {} catch (e) {
+                        print("Message is: " + e.toString());
+                      }
+                    }
+                    else if (response.statusCode == 417) {
+                    } else {
+                      print("Message is: >>1");
+                    }
+                  } on DioError catch (e) {
+                    switch (e.type) {
+                      case DioErrorType.connectTimeout:
+                      case DioErrorType.cancel:
+                      case DioErrorType.sendTimeout:
+                      case DioErrorType.receiveTimeout:
+                      case DioErrorType.other:
+                        print("Message is: >>1" + e.toString());
+                        break;
+                      case DioErrorType.response:
+                        print(
+                            "Message is: >>1" + (e.response?.data ?? "").toString());
+                    }
+                  }
+
                 }
-              }
-              else if (response.statusCode == 417) {
-              } else {
-                print("Message is: >>1");
-              }
-            } on DioError catch (e) {
-              switch (e.type) {
-                case DioErrorType.connectTimeout:
-                case DioErrorType.cancel:
-                case DioErrorType.sendTimeout:
-                case DioErrorType.receiveTimeout:
-                case DioErrorType.other:
-                  print("Message is: >>1" + e.toString());
-                  break;
-                case DioErrorType.response:
-                  print(
-                      "Message is: >>1" + (e.response?.data ?? "").toString());
-              }
-            }
-
-          }
-          else{
-           /* flutterLocalNotificationsPlugin.show(
+                else{
+                  /* flutterLocalNotificationsPlugin.show(
               888,
               "Eviman App",
               "Currently I am testing(normal)",
@@ -178,53 +183,53 @@ Future<void> onStart(ServiceInstance service) async {
                   )),
             );*/
 
-            Map<String,dynamic> postDataNew = {
-              "data":jsonEncode({'list': locationData}),
-              "dateTime":"",
-              "rider_id":riderId??""
-            };
-            print(">>>>>>>>>>>>>>>postData"+postDataNew.toString());
-            try {
-              var dio = Dio();
-              service1.Response response = await dio.post(
-                "https://backend.eviman.co.in/api/rider_data/v1/create-rider-data",
-                options: Options(headers: {
-                  "Authorization":
-                  "Bearer " + ((authToken != null) ? authToken ?? '' : "")
-                }),
-                data: (postDataNew != null) ? jsonEncode(postDataNew) : null,
-              );
-              if (response.statusCode == 200 || response.statusCode == 201) {
-                try {} catch (e) {
-                  print("Message is: " + e.toString());
+                  Map<String,dynamic> postDataNew = {
+                    "data":jsonEncode({'list': locationData}),
+                    "dateTime":"",
+                    "rider_id":riderId??""
+                  };
+                  print(">>>>>>>>>>>>>>>postData"+postDataNew.toString());
+                  try {
+                    var dio = Dio();
+                    service1.Response response = await dio.post(
+                      "https://backend.eviman.co.in/api/rider_data/v1/create-rider-data",
+                      options: Options(headers: {
+                        "Authorization":
+                        "Bearer " + ((authToken != null) ? authToken ?? '' : "")
+                      }),
+                      data: (postDataNew != null) ? jsonEncode(postDataNew) : null,
+                    );
+                    if (response.statusCode == 200 || response.statusCode == 201) {
+                      try {} catch (e) {
+                        print("Message is: " + e.toString());
+                      }
+                    }
+                    else if (response.statusCode == 417) {
+                    } else {
+                      print("Message is: >>1");
+                    }
+                  } on DioError catch (e) {
+                    switch (e.type) {
+                      case DioErrorType.connectTimeout:
+                      case DioErrorType.cancel:
+                      case DioErrorType.sendTimeout:
+                      case DioErrorType.receiveTimeout:
+                      case DioErrorType.other:
+                        print("Message is: >>1" + e.toString());
+                        break;
+                      case DioErrorType.response:
+                        print(
+                            "Message is: >>1" + (e.response?.data ?? "").toString());
+                    }
+                  }
+
                 }
-              }
-              else if (response.statusCode == 417) {
-              } else {
-                print("Message is: >>1");
-              }
-            } on DioError catch (e) {
-              switch (e.type) {
-                case DioErrorType.connectTimeout:
-                case DioErrorType.cancel:
-                case DioErrorType.sendTimeout:
-                case DioErrorType.receiveTimeout:
-                case DioErrorType.other:
-                  print("Message is: >>1" + e.toString());
-                  break;
-                case DioErrorType.response:
-                  print(
-                      "Message is: >>1" + (e.response?.data ?? "").toString());
-              }
-            }
 
-          }
-
-          await SharedPreferencesKeys().setStringData(key: "isInternetError", text: "no");
-        }else{
-          await SharedPreferencesKeys().setStringData(key: "isInternetError", text: "yes");
-          await SharedPreferencesKeys().setStringData(key: "latLngForDst", text: jsonEncode({"list": locationData}));
-          /*flutterLocalNotificationsPlugin.show(
+                await SharedPreferencesKeys().setStringData(key: "isInternetError", text: "no");
+              }else{
+                await SharedPreferencesKeys().setStringData(key: "isInternetError", text: "yes");
+                await SharedPreferencesKeys().setStringData(key: "latLngForDst", text: jsonEncode({"list": locationData}));
+                /*flutterLocalNotificationsPlugin.show(
             888,
             "Eviman App",
             "Currently I am testing with offline(pending)",
@@ -236,24 +241,27 @@ Future<void> onStart(ServiceInstance service) async {
                   ongoing: true,
                 )),
           );*/
-        }
-      });
+              }
+            });
 
 
-    },
-    onError: (e) {
-      print(">>>>>>>>>>exception" + e.toString());
-      // sendPort.send("Error: $e");
-    },
-    cancelOnError: true,
-  );
+          },
+          onError: (e) {
+            print(">>>>>>>>>>exception" + e.toString());
+            // sendPort.send("Error: $e");
+          },
+          cancelOnError: true,
+        );
+  }
+
+
 
   Timer.periodic(const Duration(seconds: 10), (timer) async {
     Position? curentPosition;
     vehicleId = await SharedPreferencesKeys().getStringData(key: 'vehicleId');
     authToken = await SharedPreferencesKeys().getStringData(key: 'authToken');
     print("background Service call\n ");
-    if (vehicleId != null && authToken != null) {
+    if (vehicleId != null && authToken != null && vehicleId != "" && authToken != "") {
       if (service is AndroidServiceInstance) {
         if (await service.isForegroundService()) {
           await Geolocator.getCurrentPosition(
@@ -278,7 +286,7 @@ Future<void> onStart(ServiceInstance service) async {
             }
             Map<String, dynamic> postData = {
               "currentCity": locationDetails?.locality ?? "India",
-              "currentLocality": locationDetails?.subLocality ?? locationDetails?.locality ?? "India",
+              "currentLocality": (locationDetails?.subLocality != null && locationDetails?.subLocality != "")?(locationDetails?.subLocality ?? locationDetails?.locality ?? "India"):locationDetails?.locality,
               "lat": (position.latitude ?? 0).toString(),
               "lng": (position.longitude ?? 0).toString()
             };
@@ -291,71 +299,6 @@ Future<void> onStart(ServiceInstance service) async {
                 options: Options(headers: {
                   "Authorization":
                       "Bearer " + ((authToken != null) ? authToken ?? '' : "")
-                }),
-                data: (postData != null) ? jsonEncode(postData) : null,
-              );
-              if (response.statusCode == 200 || response.statusCode == 201) {
-                try {} catch (e) {
-                  print("Message is: " + e.toString());
-                }
-              } else if (response.statusCode == 417) {
-              } else {
-                print("Message is: >>1");
-              }
-            } on DioError catch (e) {
-              switch (e.type) {
-                case DioErrorType.connectTimeout:
-                case DioErrorType.cancel:
-                case DioErrorType.sendTimeout:
-                case DioErrorType.receiveTimeout:
-                case DioErrorType.other:
-                  print("Message is: >>1" + e.toString());
-                  break;
-                case DioErrorType.response:
-                  print(
-                      "Message is: >>1" + (e.response?.data ?? "").toString());
-              }
-            }
-          }).catchError((e) {
-            Fluttertoast.showToast(msg: e.toString());
-          });
-        }
-        else{
-          await Geolocator.getCurrentPosition(
-              desiredAccuracy: LocationAccuracy.high,
-              forceAndroidLocationManager: true)
-              .then((Position position) async {
-            curentPosition = position;
-            print("bg location ${position.latitude}");
-            Placemark? locationDetails;
-            List<Placemark> placeMarks = await placemarkFromCoordinates(
-                position.latitude, position.longitude);
-            if (placeMarks.isNotEmpty) {
-              locationDetails = placeMarks.first;
-
-              for(int i=0;i<placeMarks.length;i++){
-                if(placeMarks[i].subLocality != null && placeMarks[i].locality != null){
-                  locationDetails = placeMarks[i];
-                  break;
-                }
-              }
-
-            }
-            Map<String, dynamic> postData = {
-              "currentCity": locationDetails?.locality ?? "India",
-              "currentLocality": locationDetails?.subLocality ?? locationDetails?.locality ?? "India",
-              "lat": (position.latitude ?? 0).toString(),
-              "lng": (position.longitude ?? 0).toString()
-            };
-            // print(">>>>>postData" + postData.toString());
-            // print(">>>>>>>>api" + "https://backend.eviman.co.in/api/vehicles/v1/update/location/" + (vehicleId ?? 0).toString());
-            try {
-              var dio = Dio();
-              service1.Response response = await dio.patch(
-                "https://backend.eviman.co.in/api/vehicles/v1/update/location/${vehicleId ?? 0}",
-                options: Options(headers: {
-                  "Authorization":
-                  "Bearer " + ((authToken != null) ? authToken ?? '' : "")
                 }),
                 data: (postData != null) ? jsonEncode(postData) : null,
               );
@@ -449,8 +392,8 @@ Future<void> initializeService() async {
         isForegroundMode: true,
         autoStart: false,
         notificationChannelId: "eViman-rider",
-        initialNotificationTitle: "eViman service enable",
-        initialNotificationContent: "initializing eViman background service",
+        initialNotificationTitle: "eViman background service enable",
+        initialNotificationContent: "It's following data security policy",
         foregroundServiceNotificationId: 888,
         autoStartOnBoot: true),
   );
