@@ -577,10 +577,19 @@ class Utils {
 
   static String convertDateFormat(String? date){
     if(date != null && date.trim() != ""){
-      String formattedDate = DateFormat("EEEE, hh:mm a dd/MM/yyyy").format(DateTime.parse(date));
+      String formattedDate = DateFormat("EEEE, hh:mm a dd/MM/yyyy").format(DateTime.parse(date).toLocal());
       return formattedDate;
     }else{
-      return DateFormat("EEEE, hh:mm a dd/MM/yyyy").format(DateTime.now());
+      return DateFormat("EEEE, hh:mm a dd/MM/yyyy").format(DateTime.now().toLocal());
+    }
+  }
+
+  static DateTime convertDateFormat2(String? date){
+    if(date != null && date.trim() != ""){
+      DateTime formattedDate = DateTime.parse(date).toLocal();
+      return formattedDate;
+    }else{
+      return DateTime.now().toLocal();
     }
   }
 

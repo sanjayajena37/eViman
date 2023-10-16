@@ -155,7 +155,7 @@ class VehicleDetailsController extends GetxController {
       bool pollution = false,
       bool insurance = false}) async {
     try {
-      final image = await ImagePicker().pickImage(source: source);
+      final image = await ImagePicker().pickImage(source: source,imageQuality: 20);
       if (image == null) return;
       final imageTemporary = File(image.path);
       if (vehicle) {

@@ -39,7 +39,7 @@ class HistoryscreenView extends GetView<HistoryscreenController> {
                 id: "his",
                 builder: (logic) {
                   return ListView.builder(
-                      itemCount: controller.rideHistoryModel?.rides?.length,
+                      itemCount: (controller.rideHistory).length,
                       physics: BouncingScrollPhysics(),
                       itemBuilder: (context, index) {
                         return Padding(

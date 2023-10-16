@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:dateplan/app/providers/Utils.dart';
 import 'package:get/get.dart';
 
 import '../../../constants/shared_preferences_keys.dart';
@@ -38,6 +39,7 @@ class HistoryscreenController extends GetxController {
     getProfileDetails();
   }
   RideHistoryModel? rideHistoryModel;
+  List<Rides> rideHistory = [];
   getProfileDetails() {
     MyWidgets.showLoading3();
     Get.find<ConnectorController>().GETMETHODCALL_TOKEN(
@@ -50,10 +52,14 @@ class HistoryscreenController extends GetxController {
           if (map is Map &&
               map.containsKey("success") &&
               map['success'] == true) {
+            rideHistory.clear();
             rideHistoryModel = RideHistoryModel.fromJson(map as Map<String,dynamic>);
+            rideHistory = rideHistoryModel?.rides??[];
+            rideHistory.sort((a,b) => Utils.convertDateFormat2(b.rideStartTime).compareTo(Utils.convertDateFormat2(a.rideStartTime)) );
             update(['his']);
           } else {
             rideHistoryModel = null;
+            rideHistory = [];
             Get.back();
           }
         });

@@ -61,17 +61,17 @@ class IntroscreenView extends GetView<IntroscreenController> {
               // NavigationServices(context).gotoLoginScreen();
             },
           ),
-          CommonButton(
+          /*CommonButton(
             padding:
             const EdgeInsets.only(left: 48, right: 48, bottom: 32, top: 8),
             buttonText: "Create account",
             backgroundColor: AppTheme.backgroundColor,
             textColor: AppTheme.primaryTextColor,
             onTap: () {
-              Get.toNamed(Routes.DRIVER_DASHBOARD);
+              // Get.toNamed(Routes.DRIVER_DASHBOARD);
               // NavigationServices(context).gotoSignScreen();
             },
-          ),
+          ),*/
           SizedBox(
             height: MediaQuery.of(context).padding.bottom,
           )

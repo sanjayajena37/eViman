@@ -226,7 +226,7 @@ class ProfilescreenController extends GetxController
       bool aadhaar = false,
       bool pan = false}) async {
     try {
-      final image = await ImagePicker().pickImage(source: source);
+      final image = await ImagePicker().pickImage(source: source,imageQuality: 20);
       if (image == null) return;
       final imageTemporary = File(image.path);
       if (profile) {

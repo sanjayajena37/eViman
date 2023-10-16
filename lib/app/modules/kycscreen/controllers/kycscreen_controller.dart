@@ -707,7 +707,7 @@ class KycscreenController extends GetxController with Helper{
       bool insurance = false,
       bool pollution = false,bool profile = false}) async {
     try {
-      final image = await ImagePicker().pickImage(source: source);
+      final image = await ImagePicker().pickImage(source: source,imageQuality: 20,);
       if (image == null) return;
       final imageTemporary = File(image.path);
       if (dl) {
