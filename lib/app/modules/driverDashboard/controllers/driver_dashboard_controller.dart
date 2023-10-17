@@ -552,7 +552,7 @@ class DriverDashboardController extends GetxController
         });
   }
 
-  Future<void> upDateRideStatusComplete(String? sta,
+  Future<void> upDateRideStatusComplete(String? sta,  String? amount,
       {String? bookingId}) async {
     print(">>>>>>>>>>>>>>>>subscribeBookingDetailsModel" +
         (subscribeBookingDetailsModel?.subscribeBookingDetails?.bookingId ?? "")
@@ -563,8 +563,7 @@ class DriverDashboardController extends GetxController
       "bookingStatus": sta ?? "",
       "updatedById": riderIdNew ?? "",
       "updatedByUserType": "Rider",
-      "amountReceived": double.tryParse(amountEditingController.text ?? "0") ??
-          0 //Pass when bookingStatus is COMPLETED
+      "amountReceived": double.tryParse((amount??"0").toString() ?? "0") ?? 0 //Pass when bookingStatus is COMPLETED
     };
     print(">>>>>>>>>>>>>>>" + (postData).toString());
     Get.find<ConnectorController>().PATCH_METHOD1_POST_TOKEN(
@@ -740,7 +739,7 @@ class DriverDashboardController extends GetxController
       upDateRideStatusComplete("COMPLETED",
               bookingId: subscribeBookingDetailsModel
                       ?.subscribeBookingDetails?.bookingId ??
-                  "")
+                  "",amount)
           .then((value) {
         unsubscribe2();
       });
