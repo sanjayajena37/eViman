@@ -565,7 +565,7 @@ class DriverDashboardController extends GetxController
       "updatedByUserType": "Rider",
       "amountReceived": double.tryParse((amount??"0").toString() ?? "0") ?? 0 //Pass when bookingStatus is COMPLETED
     };
-    print(">>>>>>>>>>>>>>>" + (postData).toString());
+    print(">>>>>>>>>>>>>>>complete" + (postData).toString());
     Get.find<ConnectorController>().PATCH_METHOD1_POST_TOKEN(
         api: "https://backend.eviman.co.in/api/rides/v1/update-ride-status",
         token: authToken ?? "token",
@@ -599,7 +599,7 @@ class DriverDashboardController extends GetxController
             incomingBookingModel?.incomingBooking?.bookingId ?? "EVIMAN_1",
         "riderAssigned": riderIdNew ?? "41",
         "vehicleAssigned": vehicleIdNew ?? "33",
-        "vehicleTypeId": "1",
+        "vehicleTypeId":  incomingBookingModel?.incomingBooking?.fareInfo??"",
         "clientId": incomingBookingModel?.incomingBooking?.clientId ?? "28",
         "pickupLat":
             incomingBookingModel?.incomingBooking?.clientLat ?? "8.2522",
@@ -614,7 +614,7 @@ class DriverDashboardController extends GetxController
         "dropAddress": incomingBookingModel?.incomingBooking?.dropAddress ??
             "Bhubaneswar, Odisha"
       };
-      print(">>>>>>>>>" + postData.toString());
+      print(">>>>>>>>>createRideData" + postData.toString());
       MyWidgets.showLoading3();
       Get.find<ConnectorController>().POSTMETHOD_TOKEN(
           api: "https://backend.eviman.co.in/api/rides/v1/create-ride",
@@ -628,7 +628,7 @@ class DriverDashboardController extends GetxController
             } else {
               Snack.callError((map ?? "Something went wrong").toString());
             }
-            print(">>>>>" + map.toString());
+            print(">>>>>mapData create ride" + map.toString());
           });
     }
   }

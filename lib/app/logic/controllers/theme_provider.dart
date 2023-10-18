@@ -9,7 +9,7 @@ import '../../models/enum.dart';
 
 class ThemeController extends GetxController {
   bool isLightMode = true;
-  ThemeModeType themeModeType = ThemeModeType.system;
+  ThemeModeType themeModeType = ThemeModeType.light;
   FontFamilyType fontType = FontFamilyType.montserrat;
   ColorType colorType = ColorType.eViman;
 

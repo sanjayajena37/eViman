@@ -92,7 +92,8 @@ Future<void> onStart(ServiceInstance service) async {
 
     geoLoc.LocationSettings locationSettings = geoLoc.AndroidSettings(
         accuracy: geoLoc.LocationAccuracy.high,
-        distanceFilter: 0,
+        distanceFilter: 500,
+        intervalDuration: const Duration(seconds: 4),
         forceLocationManager: true);
 
 

@@ -224,7 +224,7 @@ class DriverDashboardView extends StatelessWidget {
                     ),
                     ListTile(
                       onTap: () {
-                        controllerX.advancedDrawerController?.hideDrawer();
+                        controllerX.advancedDrawerController.hideDrawer();
                       },
                       leading: Icon(Icons.home,
                           color: Theme.of(context).primaryColor),
@@ -456,285 +456,203 @@ class DriverDashboardView extends StatelessWidget {
                         builder: (controllerX) {
                           return SizedBox(
                             width: Get.width,
-                            height: double.maxFinite,
-                            child: Stack(
+                            height: Get.height,
+                            child: Column(
                               children: [
-                                Positioned(
-                                  top: MediaQuery.of(context).padding.top + 25,
-                                  left: 0,
-                                  right: 0,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Row(
+                                  children: [
+                                    Column(
                                       children: [
-                                        Card(
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(
-                                                5.0), //<-- SEE HERE
-                                          ),
-                                          margin: EdgeInsets.all(2),
-                                          elevation: 5,
-                                          child: IconButton(
-                                            onPressed: controllerX
-                                                .handleMenuButtonPressed,
-                                            padding: EdgeInsets.all(2),
-                                            visualDensity: VisualDensity(
-                                                horizontal: -4, vertical: -4),
-                                            icon: ValueListenableBuilder<
-                                                AdvancedDrawerValue>(
-                                              valueListenable: controllerX
-                                                  .advancedDrawerController,
-                                              builder: (_, value, __) {
-                                                return AnimatedSwitcher(
-                                                  duration:
-                                                      Duration(milliseconds: 250),
-                                                  child: Icon(
-                                                    value.visible
-                                                        ? Icons.clear
-                                                        : Icons.menu,
-                                                    key: ValueKey<bool>(
-                                                        value.visible),
-                                                  ),
-                                                );
-                                              },
-                                            ),
+                                        Center(
+                                          child: SizedBox(
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width *
+                                                0.5,
+                                            height: Get.height * 0.4,
+                                            child: AspectRatio(
+                                                aspectRatio: 1,
+                                                child: Image.asset(
+                                                    "assets/images/appPermission.jpg",
+                                                    fit: BoxFit.contain,
+                                                    height: Get.height * 0.2)),
                                           ),
                                         ),
-                                        InkWell(
-                                          onTap: () {},
-                                          child: GetBuilder<
-                                              DriverDashboardController>(
-                                            id: "amt",
-                                            builder: (controllerX) {
-                                              return Card(
-                                                  elevation: 0,
-                                                  color: Colors.white,
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8.0),
-                                                  ),
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(8.0),
-                                                    child: Text(
-                                                      "₹${controllerX.totalAmount}",
-                                                      style: Theme.of(context)
-                                                          .textTheme
-                                                          .headline5!
-                                                          .copyWith(
-                                                              fontSize: 25,
-                                                              color:
-                                                                  Colors.white),
-                                                    ),
-                                                  ));
-                                            },
-                                          ),
-                                        ),
-                                        const SizedBox(
-                                          width: 25,
-                                        ),
+                                         Text("Step 1", style: TextStyles(context)
+                                            .getTitleStyle()
+                                            .copyWith(fontSize: 11),)
                                       ],
+                                    ),
+                                    Column(
+                                      children: [
+                                        Center(
+                                          child: SizedBox(
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.5,
+                                            height: Get.height * 0.4,
+                                            child: AspectRatio(
+                                                aspectRatio: 1,
+                                                child: Image.asset(
+                                                    "assets/images/appSetting.jpg",
+                                                    fit: BoxFit.contain,
+                                                    height: Get.height * 0.2)),
+                                          ),
+                                        ),
+                                         Text("Step 2", style: TextStyles(context)
+                                             .getTitleStyle()
+                                             .copyWith(fontSize: 11),)
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                Center(
+                                  child: SizedBox(
+                                    width: MediaQuery.of(context)
+                                        .size
+                                        .width *
+                                        0.6,
+                                    height: Get.height * 0.07,
+                                    child: AspectRatio(
+                                      aspectRatio: 1,
+                                      child: lottie.Lottie.asset(
+                                          "assets/json/allowLocation.json",
+                                          fit: BoxFit.contain,
+                                          height: Get.height * 0.07),
                                     ),
                                   ),
                                 ),
-                                Column(
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Column(
-                                          children: [
-                                            Center(
-                                              child: SizedBox(
-                                                width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                    0.5,
-                                                height: Get.height * 0.5,
-                                                child: AspectRatio(
-                                                    aspectRatio: 1,
-                                                    child: Image.asset(
-                                                        "assets/images/appPermission.jpg",
-                                                        fit: BoxFit.contain,
-                                                        height: Get.height * 0.2)),
-                                              ),
-                                            ),
-                                             Text("Step 1", style: TextStyles(context)
-                                                .getTitleStyle()
-                                                .copyWith(fontSize: 11),)
-                                          ],
-                                        ),
-                                        Column(
-                                          children: [
-                                            Center(
-                                              child: SizedBox(
-                                                width: MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    0.5,
-                                                height: Get.height * 0.5,
-                                                child: AspectRatio(
-                                                    aspectRatio: 1,
-                                                    child: Image.asset(
-                                                        "assets/images/appSetting.jpg",
-                                                        fit: BoxFit.contain,
-                                                        height: Get.height * 0.2)),
-                                              ),
-                                            ),
-                                             Text("Step 2", style: TextStyles(context)
-                                                 .getTitleStyle()
-                                                 .copyWith(fontSize: 11),)
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                    Center(
-                                      child: SizedBox(
-                                        width: MediaQuery.of(context)
-                                            .size
-                                            .width *
-                                            0.6,
-                                        height: Get.height * 0.07,
-                                        child: AspectRatio(
-                                          aspectRatio: 1,
-                                          child: lottie.Lottie.asset(
-                                              "assets/json/allowLocation.json",
-                                              fit: BoxFit.contain,
-                                              height: Get.height * 0.07),
-                                        ),
-                                      ),
-                                    ),
-                                    Center(
-                                        child: Text(
-                                      "Location Permission(Allow all the time) Denied",
+                                Center(
+                                    child: Text(
+                                  "Location Permission(Allow all the time) Denied",
+                                  style: TextStyles(context)
+                                      .getBoldStyle()
+                                      .copyWith(
+                                          fontSize: 15, color: Colors.red),
+                                )),
+                                Center(
+                                    child: Text(
+                                      "or",
                                       style: TextStyles(context)
                                           .getBoldStyle()
                                           .copyWith(
-                                              fontSize: 15, color: Colors.red),
+                                          fontSize: 15, color: Colors.red),
                                     )),
-                                    Center(
-                                        child: Text(
-                                          "or",
-                                          style: TextStyles(context)
-                                              .getBoldStyle()
-                                              .copyWith(
-                                              fontSize: 15, color: Colors.red),
-                                        )),
-                                    Center(
-                                        child: Text(
-                                          "Notification Permission Denied",
-                                          style: TextStyles(context)
-                                              .getBoldStyle()
-                                              .copyWith(
-                                              fontSize: 15, color: Colors.red),
-                                        )),
-                                    SizedBox(
-                                      height: 4,
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                        left: 8.0,
-                                        right: 8,
-                                      ),
-                                      child: SizedBox(
-                                        width: Get.width * 0.86,
-                                        child: Center(
-                                            child: Text(
-                                          "> Please enable your location(Allow all the time),It's mandatory to use our application.Because we need to collect your location data even if your application is close.It's our requirement to give smooth less service to our user.",
-                                          style: TextStyles(context)
-                                              .getTitleStyle()
-                                              .copyWith(fontSize: 11),
-                                        )),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 7,
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                        left: 8.0,
-                                        right: 8,
-                                      ),
-                                      child: SizedBox(
-                                        width: Get.width * 0.86,
-                                        child: Center(
-                                            child: Text(
-                                          "> Please enable your notification permission,It's required to notify you for further information",
-                                          style: TextStyles(context)
-                                              .getTitleStyle()
-                                              .copyWith(fontSize: 11),
-                                        )),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 7,
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                        left: 8.0,
-                                        right: 8,
-                                      ),
-                                      child: SizedBox(
-                                        width: Get.width * 0.86,
-                                        child: Center(
-                                            child: Text(
-                                          "> Please go to the app setting and enable your location(allow all the time) and notification. after that re open the app or press refresh buttons",
-                                          style: TextStyles(context)
-                                              .getTitleStyle()
-                                              .copyWith(fontSize: 11),
-                                        )),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 15.0,
-                                          right: 15,
-                                          top: 6,
-                                          bottom: 5),
-                                      child: CommonButton(
-                                          padding: const EdgeInsets.only(
-                                              left: 24, right: 24, bottom: 16),
-                                          isIcon: true,
-                                          height: Get.height*0.05,
-                                          icon: Icons.settings,
-                                          buttonText: "App Setting",
-                                          onTap: () {
-                                            openAppSettings();
-                                          }),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 15.0,
-                                          right: 15,
-                                          top: 3,
-                                          bottom: 5),
-                                      child: CommonButton(
-                                          padding: const EdgeInsets.only(
-                                              left: 24, right: 24, bottom: 16),
-                                          buttonText: "Refresh The page",
-                                          isIcon: true,
-                                          height: Get.height*0.05,
-                                          icon: Icons.refresh,
-                                          onTap: () {
-                                            controllerX
-                                                .handleLocationPermission()
-                                                .then((value) {
-                                              if (value) {
-                                                controllerX.permissionAllow =
-                                                    true;
-                                                // update(['allPage']);
-                                                controllerX.getRiderId();
-                                                controllerX.getCurrentLocation();
-                                              } else {
-                                                controllerX.infoDialog1();
-                                              }
-                                            });
-                                          }),
-                                    )
-                                  ],
+                                Center(
+                                    child: Text(
+                                      "Notification Permission Denied",
+                                      style: TextStyles(context)
+                                          .getBoldStyle()
+                                          .copyWith(
+                                          fontSize: 15, color: Colors.red),
+                                    )),
+                                SizedBox(
+                                  height: 4,
                                 ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                    left: 8.0,
+                                    right: 8,
+                                  ),
+                                  child: SizedBox(
+                                    width: Get.width * 0.86,
+                                    child: Center(
+                                        child: Text(
+                                      "> Please enable your location(Allow all the time),It's mandatory to use our application.Because we need to collect your location data even if your application is close.It's our requirement to give smooth less service to our user.",
+                                      style: TextStyles(context)
+                                          .getTitleStyle()
+                                          .copyWith(fontSize: 11),
+                                    )),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 7,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                    left: 8.0,
+                                    right: 8,
+                                  ),
+                                  child: SizedBox(
+                                    width: Get.width * 0.86,
+                                    child: Center(
+                                        child: Text(
+                                      "> Please enable your notification permission,It's required to notify you for further information",
+                                      style: TextStyles(context)
+                                          .getTitleStyle()
+                                          .copyWith(fontSize: 11),
+                                    )),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 7,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                    left: 8.0,
+                                    right: 8,
+                                  ),
+                                  child: SizedBox(
+                                    width: Get.width * 0.86,
+                                    child: Center(
+                                        child: Text(
+                                      "> Please go to the app setting and enable your location(allow all the time) and notification. after that re open the app or press refresh buttons",
+                                      style: TextStyles(context)
+                                          .getTitleStyle()
+                                          .copyWith(fontSize: 11),
+                                    )),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 15.0,
+                                      right: 15,
+                                      top: 6,
+                                      bottom: 5),
+                                  child: CommonButton(
+                                      padding: const EdgeInsets.only(
+                                          left: 24, right: 24, bottom: 16),
+                                      isIcon: true,
+                                      height: Get.height*0.05,
+                                      icon: Icons.settings,
+                                      buttonText: "App Setting",
+                                      onTap: () {
+                                        openAppSettings();
+                                      }),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 15.0,
+                                      right: 15,
+                                      top: 3,
+                                      bottom: 5),
+                                  child: CommonButton(
+                                      padding: const EdgeInsets.only(
+                                          left: 24, right: 24, bottom: 16),
+                                      buttonText: "Refresh The page",
+                                      isIcon: true,
+                                      height: Get.height*0.05,
+                                      icon: Icons.refresh,
+                                      onTap: () {
+                                        controllerX
+                                            .handleLocationPermission()
+                                            .then((value) {
+                                          if (value) {
+                                            controllerX.permissionAllow =
+                                                true;
+                                            // update(['allPage']);
+                                            controllerX.getRiderId();
+                                            controllerX.getCurrentLocation();
+                                          } else {
+                                            controllerX.infoDialog1();
+                                          }
+                                        });
+                                      }),
+                                )
                               ],
                             ),
                           );

@@ -28,15 +28,15 @@ class RideHistoryModel {
 }
 
 class Rides {
-  int? id;
+  String? id;
   String? bookingId;
-  int? clientId;
+  String? clientId;
   String? vehicleAssigned;
   String? riderAssigned;
-  int? fareInfo;
-  int? discount;
-  double? totalAmount;
-  int? amountPaid;
+  String? fareInfo;
+  String? discount;
+  String? totalAmount;
+  String? amountPaid;
   bool? isPaid;
   String? rideStatus;
   String? rideDate;
@@ -50,7 +50,7 @@ class Rides {
   String? dropAddress;
   String? eta;
   String? distance;
-  int? otp;
+  String? otp;
   String? pickupDistance;
   String? createdAt;
   String? updatedAt;
@@ -84,16 +84,16 @@ class Rides {
         this.updatedAt});
 
   Rides.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
+    id = (json['id']??"").toString();
     bookingId = json['booking_id'];
-    clientId = json['client_id'];
+    clientId = (json['client_id']??"").toString();
     vehicleAssigned = json['vehicle_assigned'];
     riderAssigned = json['rider_assigned'];
-    fareInfo = json['fare_info'];
-    discount = json['discount'];
-    totalAmount = json['total_amount'];
-    amountPaid = json['amount_paid'];
-    isPaid = json['is_paid'];
+    fareInfo = (json['fare_info']??"").toString();
+    discount = (json['discount']??"").toString();
+    totalAmount = (json['total_amount']??"").toString();
+    amountPaid = (json['amount_paid']??"").toString();
+    isPaid = (json['is_paid']??false);
     rideStatus = json['ride_status'];
     rideDate = json['ride_date'];
     pickupLat = json['pickup_lat'];
@@ -106,7 +106,7 @@ class Rides {
     dropAddress = json['drop_address'];
     eta = json['eta'];
     distance = json['distance'];
-    otp = json['otp'];
+    otp = json['otp'].toString();
     pickupDistance = (json['pickup_distance']??'0').toString();
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];

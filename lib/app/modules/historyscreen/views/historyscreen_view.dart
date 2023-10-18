@@ -48,8 +48,10 @@ class HistoryscreenView extends GetView<HistoryscreenController> {
                               bottom: 5,
                               top: 2),
                           child: CommonHistoryWidget(amount: (controller
-                              .rideHistoryModel?.rides?[index].totalAmount ??
-                              123).toString(),
+                              .rideHistoryModel?.rides?[index].amountPaid ??
+                              "").toString(),
+                              status:controller
+                                  .rideHistoryModel?.rides?[index].rideStatus??"" ,
                               date:Utils.convertDateFormat(controller
                                   .rideHistoryModel?.rides?[index].rideEndTime)?? "Today, 10:30 AM",
                               destination:controller

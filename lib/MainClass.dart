@@ -26,7 +26,8 @@ class _MainClassState extends State<MainClass> {
     _setStatusBarNavigationBarTheme(theme);
     //we call some theme basic data set in app like color, font, theme mode, language
     Get.find<ThemeController>()
-        .checkAndSetThemeMode(MediaQuery.of(context).platformBrightness);
+        // .checkAndSetThemeMode(MediaQuery.of(context).platformBrightness);
+        .checkAndSetThemeMode(Brightness.light);
   }
 
   void _setStatusBarNavigationBarTheme(ThemeData themeData) {
@@ -53,6 +54,8 @@ class _MainClassState extends State<MainClass> {
         final ThemeData theme = AppTheme.getThemeData;
         return GetMaterialApp(
           theme: theme,
+          themeMode:ThemeMode.light ,
+          darkTheme:theme ,
             title: "Application",
             initialRoute: AppPages.INITIAL,
             getPages: AppPages.routes,
