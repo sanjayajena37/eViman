@@ -16,6 +16,7 @@ import 'package:image_picker/image_picker.dart';
 import '../../../constants/themes.dart';
 import '../../../data/ApiFactory.dart';
 import '../../../routes/app_pages.dart';
+import '../../../utils/validator.dart';
 import '../../../widgets/KeyvalueModel.dart';
 import '../../../widgets/MyWidget.dart';
 import '../../../widgets/common_button.dart';
@@ -23,10 +24,11 @@ import '../../ConnectorController.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:dio/dio.dart' as service;
 import 'package:location/location.dart' as lo;
-
+import 'package:permission_handler/permission_handler.dart' as permission;
 import '../FareInfoModel.dart';
+import 'package:geolocator/geolocator.dart' as geoLoc;
 
-class KycscreenController extends GetxController with Helper{
+class KycscreenController extends GetxController with Helper {
   //TODO: Implement KycscreenController
   final TextEditingController firstNameController = TextEditingController();
   final TextEditingController lastNameController = TextEditingController();
@@ -142,6 +144,18 @@ class KycscreenController extends GetxController with Helper{
       errorPin = "";
       isValid = false;
     } else if (emailController.text.trim().isEmpty) {
+      errorEmail = "Please enter your email";
+      errorMobile = '';
+      errorLastName = '';
+      errorFirstName = '';
+      errorAddress1 = "";
+      errorAddress2 = "";
+      errorCity = "";
+      errorState = "";
+      errorCountry = "";
+      errorPin = "";
+      isValid = false;
+    }else if (Validator.validateEmail(emailController.text.trim())) {
       errorEmail = "Please enter your email";
       errorMobile = '';
       errorLastName = '';
@@ -335,7 +349,7 @@ class KycscreenController extends GetxController with Helper{
       errorVehiclePin = '';
       errorVehicleCurrentCity = '';
       isValid = false;
-    }else if (vehicleNameController.text.trim().isEmpty) {
+    } else if (vehicleNameController.text.trim().isEmpty) {
       errorChassis = '';
       errorRegNo = '';
       errorChassis = '';
@@ -352,8 +366,7 @@ class KycscreenController extends GetxController with Helper{
       errorVehiclePin = '';
       errorVehicleCurrentCity = '';
       isValid = false;
-    }
-    else if (image4 == null) {
+    } else if (image4 == null) {
       isValid = false;
       Snack.callError("Please upload your RC");
     } else if (image5 == null) {
@@ -543,7 +556,6 @@ class KycscreenController extends GetxController with Helper{
       }
       update(['ref']);
     } else if ((currentStep == 1) && allValidation2()) {
-
       createProfile();
     } else if ((currentStep == 2) && allValidation3()) {
       if (currentStep < 2) {
@@ -559,7 +571,6 @@ class KycscreenController extends GetxController with Helper{
         currentStep1.toString() +
         "      " +
         currentStep.toString());
-
   }
 
   String riderId = "";
@@ -578,7 +589,7 @@ class KycscreenController extends GetxController with Helper{
       "dl_image": image1 ?? "dlImage",
       "aadhaar_image": image2 ?? "aadhaarImage",
       "pan_image": image3 ?? "panImage",
-      "profile_image":profileImg??""
+      "profile_image": profileImg ?? ""
     };
     print(">>>>>>" + jsonEncode(sendData).toString());
     MyWidgets.showLoading3();
@@ -590,8 +601,8 @@ class KycscreenController extends GetxController with Helper{
           if (map is Map &&
               map.containsKey('success') &&
               map['success'] == true) {
-             riderId =( map['riderId']??"").toString();
-             print(">>>>>"+(map['riderId']??"").toString());
+            riderId = (map['riderId'] ?? "").toString();
+            print(">>>>>" + (map['riderId'] ?? "").toString());
             if (currentStep < 2) {
               currentStep = currentStep + 1;
             }
@@ -599,7 +610,7 @@ class KycscreenController extends GetxController with Helper{
             update(['ref']);
             Snack.callSuccess((map['message'] ?? "").toString());
           } else {
-            Snack.callError((map ?? "Something went wrong").toString());
+            Snack.callError(((map['errMessage'] )?? "Something went wrong").toString());
           }
           print(">>>>>" + map.toString());
         });
@@ -607,25 +618,25 @@ class KycscreenController extends GetxController with Helper{
 
   void addVehicle() {
     Map sendData = {
-      "riderId": riderId??"",
-      "regdNumber": regNumberController.text??"",
-      "chasisNumber": chasisNumberController.text??"",
-      "engineNumber": engineNumberController.text??"",
-      "ownerName": ownerNumberController.text??"",
-      "vehicleName":vehicleNameController.text,
+      "riderId": riderId ?? "",
+      "regdNumber": regNumberController.text ?? "",
+      "chasisNumber": chasisNumberController.text ?? "",
+      "engineNumber": engineNumberController.text ?? "",
+      "ownerName": ownerNumberController.text ?? "",
+      "vehicleName": vehicleNameController.text,
       "rcImage": image4,
       "vehicleImage": image5,
       "insuranceImage": image6,
       "pollutionImage": image7,
-      "vehicleType": vehicleTypeController.text??"",
-      "vehicleSubType": vehicleSubTypeController.text??"",
-      "address1": address1VehicleController.text??"",
-      "address2": address2VehicleController.text??"",
-      "city": cityVehicleController.text??"",
-      "state": stateVehicleController.text??"",
-      "country": countryVehicleController.text??"",
-      "pin": pinVehicleController.text??"",
-      "currentCity": currentCityVehicleController.text??'',
+      "vehicleType": vehicleTypeController.text ?? "",
+      "vehicleSubType": vehicleSubTypeController.text ?? "",
+      "address1": address1VehicleController.text ?? "",
+      "address2": address2VehicleController.text ?? "",
+      "city": cityVehicleController.text ?? "",
+      "state": stateVehicleController.text ?? "",
+      "country": countryVehicleController.text ?? "",
+      "pin": pinVehicleController.text ?? "",
+      "currentCity": currentCityVehicleController.text ?? '',
       "lat": locationDetail['lat'],
       "lng": locationDetail['lng']
     };
@@ -646,13 +657,17 @@ class KycscreenController extends GetxController with Helper{
             if (currentStep1 > 2) {
               showUnderProcess();
             }
-            Snack.callSuccess((map['message'] ?? "").toString(),);
+            Snack.callSuccess(
+              (map['message'] ?? "").toString(),
+            );
           } else {
             Snack.callError((map ?? "Something went wrong").toString());
           }
           print(">>>>>" + map.toString());
-        }, token: authToken??"");
+        },
+        token: authToken ?? "");
   }
+
   void showUnderProcess() async {
     bool isOk = await showCommonPopupNew2(
       "Your kyc verification under process?",
@@ -705,9 +720,13 @@ class KycscreenController extends GetxController with Helper{
       bool rc = false,
       bool vehicle = false,
       bool insurance = false,
-      bool pollution = false,bool profile = false}) async {
+      bool pollution = false,
+      bool profile = false}) async {
     try {
-      final image = await ImagePicker().pickImage(source: source,imageQuality: 20,);
+      final image = await ImagePicker().pickImage(
+        source: source,
+        imageQuality: 20,
+      );
       if (image == null) return;
       final imageTemporary = File(image.path);
       if (dl) {
@@ -738,7 +757,7 @@ class KycscreenController extends GetxController with Helper{
         imageDataPollution = imageTemporary;
         MyWidgets.showLoading3();
         postDocument(imageTemporary, pollution: pollution);
-      }else if (profile) {
+      } else if (profile) {
         profileImage = imageTemporary;
         MyWidgets.showLoading3();
         postDocument(imageTemporary, profile: profile);
@@ -759,7 +778,8 @@ class KycscreenController extends GetxController with Helper{
       bool rc = false,
       bool vehicle = false,
       bool insurance = false,
-      bool pollution = false,bool profile = false}) {
+      bool pollution = false,
+      bool profile = false}) {
     showCupertinoModalPopup(
         context: Get.context!,
         builder: (BuildContext cont) {
@@ -776,7 +796,8 @@ class KycscreenController extends GetxController with Helper{
                       pollution: pollution,
                       insurance: insurance,
                       vehicle: vehicle,
-                      rc: rc,profile:profile);
+                      rc: rc,
+                      profile: profile);
                 },
                 child: const Text('Use Camera'),
               ),
@@ -791,7 +812,8 @@ class KycscreenController extends GetxController with Helper{
                       pollution: pollution,
                       insurance: insurance,
                       vehicle: vehicle,
-                      rc: rc,profile:profile);
+                      rc: rc,
+                      profile: profile);
                 },
                 child: const Text('Upload from files'),
               ),
@@ -833,7 +855,8 @@ class KycscreenController extends GetxController with Helper{
       bool rc = false,
       bool vehicle = false,
       bool insurance = false,
-      bool pollution = false,bool profile = false}) async {
+      bool pollution = false,
+      bool profile = false}) async {
     try {
       service.Response response;
       response = await dioIns.post(
@@ -869,7 +892,7 @@ class KycscreenController extends GetxController with Helper{
           } else if (pollution) {
             image7 = response.data['uploadedFile'];
             update(['image7']);
-          }else if (profile) {
+          } else if (profile) {
             profileImg = response.data['uploadedFile'];
             update(['image0']);
           } else {}
@@ -884,13 +907,86 @@ class KycscreenController extends GetxController with Helper{
     }
   }
 
+  bool permissionAllow = false;
+
+  Future<String> handleLocationPermission() async {
+    try{
+      geoLoc.LocationPermission permission1;
+      permission1 = await geoLoc.Geolocator.checkPermission();
+
+      // permission1 = await geoLoc.Geolocator.checkPermission();
+      if(permission1 == geoLoc.LocationPermission.always){
+        return "true";
+      }
+      if (permission1 == geoLoc.LocationPermission.denied || permission1 == geoLoc.LocationPermission.whileInUse ) {
+        return "false";
+      }
+      if (permission1 == geoLoc.LocationPermission.deniedForever) {
+        // openAppSettings();
+        // ScaffoldMessenger.of(Get.context!).showSnackBar(const SnackBar(content: Text('Location permissions are permanently denied.')));
+        return "falsePlus";
+      }
+      if(permission1 == geoLoc.LocationPermission.whileInUse){
+        return "false";
+      }
+
+     /* var status = await permission.Permission.location.status;
+      print(">>>>>>>>sta"+status.toString());
+      if(status.isPermanentlyDenied){
+        return "falsePlus";
+      }else if(status.isDenied){
+        return "false";
+      }else{
+        return "true";
+      }*/
+
+    }catch(ex){
+      return "false";
+    }
+
+    return "true";
+  }
+
+  void infoDialog1() async {
+    var status = await permission.Permission.location.status;
+    // var status1 = await permission.Permission.locationAlways.status;
+    // var status2 = await permission.Permission.notification.status;
+    print(">>>>>>>>>>>>>>status$status");
+    if (status.isDenied) {
+      bool isOk = await showCommonPopupNew6(
+          "eViman App need your location permission.It's required to give smooth less service to you",
+          "are you agree?",
+          barrierDismissible: true,
+          isYesOrNoPopup: true);
+      if (isOk) {
+        if (status.isPermanentlyDenied) {
+          permission.openAppSettings();
+        }else{
+          print(">>>>>>>>>>>>>>>>>>>>else in dialog call");
+          permission. Permission.location.request();
+        }
+      } else {
+        permissionAllow = false;
+        update(['all']);
+      }
+    } else {
+      print(">>>>>>>>>>>>>>>>>>>>else out dialog call");
+      // permission. Permission.notification.request();
+      permissionAllow = true;
+      update(['all']);
+      // getRiderId();
+      // getCurrentLocation();
+      getCurrentLocation();
+      getFareInfo();
+    }
+  }
 
   Future<void> getCurrentLocation() async {
-    lo.Location location = new lo.Location();
+    lo.Location location = lo.Location();
     location.getLocation().then((value) async {
       List<Placemark> placeMarks = await placemarkFromCoordinates(
           value.latitude ?? 0, value.longitude ?? 0);
-      if(placeMarks.isNotEmpty){
+      if (placeMarks.isNotEmpty) {
         locationDetail = {
           "details": placeMarks.first,
           "lat": value.latitude ?? 0,
@@ -899,63 +995,66 @@ class KycscreenController extends GetxController with Helper{
         getLocationDetailsFromLatLong(locationDetail);
         update(['loc']);
       }
-
     });
   }
 
-  getLocationDetailsFromLatLong(Map<String,dynamic>? locationDetails) {
+  getLocationDetailsFromLatLong(Map<String, dynamic>? locationDetails) {
     // locationDetail
-    if(locationDetail.isNotEmpty && locationDetail.containsKey("details")
-        && locationDetail['details'] != null && locationDetail['details'] is  Placemark){
+    if (locationDetail.isNotEmpty &&
+        locationDetail.containsKey("details") &&
+        locationDetail['details'] != null &&
+        locationDetail['details'] is Placemark) {
       Placemark data = locationDetail['details'];
 
-      address1VehicleController.text = data.name??"";
-      address2VehicleController.text = data.subLocality??"";
-      cityVehicleController.text = data.locality??"";
-      stateVehicleController.text = data.administrativeArea??"";
-      countryVehicleController.text = data.country??"";
-      pinVehicleController.text = data.postalCode??"";
-      currentCityVehicleController.text = data.locality??"";
+      address1VehicleController.text = data.name ?? "";
+      address2VehicleController.text = data.subLocality ?? "";
+      cityVehicleController.text = data.locality ?? "";
+      stateVehicleController.text = data.administrativeArea ?? "";
+      countryVehicleController.text = data.country ?? "";
+      pinVehicleController.text = data.postalCode ?? "";
+      currentCityVehicleController.text = data.locality ?? "";
 
-      address1Controller.text  = data.name??'';
-      address2Controller.text = data.subLocality??"";
-      cityController.text = data.locality??"";
-      stateController.text = data.administrativeArea??"";
-      countryController.text = data.country??"";
-      pinController.text = data.postalCode??"";
+      address1Controller.text = data.name ?? '';
+      address2Controller.text = data.subLocality ?? "";
+      cityController.text = data.locality ?? "";
+      stateController.text = data.administrativeArea ?? "";
+      countryController.text = data.country ?? "";
+      pinController.text = data.postalCode ?? "";
 
       update(['ref']);
-
     }
   }
 
-  getLocationDetailsFromLatLong1(Map<String,dynamic>? locationDetails) {
+  getLocationDetailsFromLatLong1(Map<String, dynamic>? locationDetails) {
     // locationDetail
-    if(locationDetail.isNotEmpty && locationDetail.containsKey("details")
-        && locationDetail['details'] != null && locationDetail['details'] is  Placemark){
+    if (locationDetail.isNotEmpty &&
+        locationDetail.containsKey("details") &&
+        locationDetail['details'] != null &&
+        locationDetail['details'] is Placemark) {
       Placemark data = locationDetail['details'];
 
-      address1Controller.text  = data.name??'';
-      address2Controller.text = data.subLocality??"";
-      cityController.text = data.locality??"";
-      stateController.text = data.administrativeArea??"";
-      countryController.text = data.country??"";
-      pinController.text = data.postalCode??"";
+      address1Controller.text = data.name ?? '';
+      address2Controller.text = data.subLocality ?? "";
+      cityController.text = data.locality ?? "";
+      stateController.text = data.administrativeArea ?? "";
+      countryController.text = data.country ?? "";
+      pinController.text = data.postalCode ?? "";
       update(['step1']);
     }
   }
-  Map<String,dynamic> data = {};
+
+  Map<String, dynamic> data = {};
   int helpStep = 0;
   String authToken = "";
   @override
   void onInit() {
-    getCurrentLocation();
-    data = Get.arguments??{};
-    currentStep = data['index']??0;
-    helpStep = data['index']??0;
-    mobile = data['mobile']??"";
-    authToken = data['authToken']??"";
-    riderId = (data['riderId']??"").toString();
+
+    data = Get.arguments ?? {};
+    currentStep = data['index'] ?? 0;
+    helpStep = data['index'] ?? 0;
+    mobile = data['mobile'] ?? "";
+    authToken = data['authToken'] ?? "";
+    riderId = (data['riderId'] ?? "").toString();
     mobileController.text = mobile;
     dioIns = dio.Dio();
     super.onInit();
@@ -965,9 +1064,9 @@ class KycscreenController extends GetxController with Helper{
 
   List<KeyvalueModel> vehicleTypeList = [];
   List<KeyvalueModel> subVehicleTypeList = [];
-   List<Vehicle> vehicles = [];
+  List<Vehicle> vehicles = [];
 
-  getFareInfo(){
+  getFareInfo() {
     MyWidgets.showLoading3();
     Get.find<ConnectorController>().GETMETHODCALL(
         api: "https://backend.eviman.co.in/api/fareinfo/v1/get-fare-list",
@@ -978,19 +1077,24 @@ class KycscreenController extends GetxController with Helper{
           if (map is Map &&
               map.containsKey('success') &&
               map['success'] == true) {
-            fareInfoModel = FareInfoModel.fromJson(map as Map<String,dynamic>) ;
-            if(fareInfoModel?.fareList != null && (fareInfoModel?.fareList?.length??0) >0){
-               vehicles = fareInfoModel!.fareList!.map((e) => Vehicle.fromJson(e.toJson() as Map<String, dynamic>)).toList();
+            fareInfoModel = FareInfoModel.fromJson(map as Map<String, dynamic>);
+            if (fareInfoModel?.fareList != null &&
+                (fareInfoModel?.fareList?.length ?? 0) > 0) {
+              vehicles = fareInfoModel!.fareList!
+                  .map((e) =>
+                      Vehicle.fromJson(e.toJson() as Map<String, dynamic>))
+                  .toList();
             }
-            final Set<String> uniqueVehicleTypes = vehicles.map((vehicle) => vehicle.vehicleType).toSet();
-            print(">>>>>>>>>>>>vehicles"+uniqueVehicleTypes.toString());
+            final Set<String> uniqueVehicleTypes =
+                vehicles.map((vehicle) => vehicle.vehicleType).toSet();
+            print(">>>>>>>>>>>>vehicles" + uniqueVehicleTypes.toString());
             vehicleTypeList.clear();
             List data = uniqueVehicleTypes.toList();
-            for(int i=0;i<(data.length??0);i++){
-              vehicleTypeList.add(new KeyvalueModel(key:data[i]??"" ,
-                  name:data[i]??"" ));
+            for (int i = 0; i < (data.length ?? 0); i++) {
+              vehicleTypeList.add(
+                  new KeyvalueModel(key: data[i] ?? "", name: data[i] ?? ""));
             }
-            print(">>>>>>>>>>>>vehicleTypeList"+vehicleTypeList.toString());
+            print(">>>>>>>>>>>>vehicleTypeList" + vehicleTypeList.toString());
 
             // Snack.callSuccess((map['message'] ?? "").toString(),);
           } else {
@@ -1000,11 +1104,15 @@ class KycscreenController extends GetxController with Helper{
           print(">>>>>" + map.toString());
         });
   }
-  filterSubType(String key ){
+
+  filterSubType(String key) {
     subVehicleTypeList.clear();
     fareInfoModel?.fareList?.forEach((element) {
-      if(element.vehicleType.toString().trim().toLowerCase() == key.toString().trim().toLowerCase()){
-        subVehicleTypeList.add(new KeyvalueModel(key:element.vehicleSubType??"" ,name:element.vehicleSubType??"" ));
+      if (element.vehicleType.toString().trim().toLowerCase() ==
+          key.toString().trim().toLowerCase()) {
+        subVehicleTypeList.add(new KeyvalueModel(
+            key: element.vehicleSubType ?? "",
+            name: element.vehicleSubType ?? ""));
       }
     });
     update(['subt']);
@@ -1012,7 +1120,8 @@ class KycscreenController extends GetxController with Helper{
 
   @override
   void onReady() {
-    getFareInfo();
+    infoDialog1();
+
     super.onReady();
   }
 

@@ -120,11 +120,11 @@ extension MapHelper on DriverDashboardController {
         double distanceValue =
             double.parse((data["rows"][0]["elements"][0]["distance"]["value"] != null &&
                 data["rows"][0]["elements"][0]["distance"]["value"] != "")?(data["rows"][0]["elements"][0]["distance"]["value"]??"0").toString():"0");
-
         print(
             "Distance: $distanceText"); // Distance in text format (e.g., "5.4 km")
         print("Distance Value: $distanceValue meters"); // Distance in meters
         return distanceValue ?? 0;
+        // return double.parse((distanceText??"0").toString());
       } else {
         return 0.00;
         print("Error calculating distance");

@@ -132,6 +132,9 @@ class LoginscreenView extends StatelessWidget {
                                  }
 
                               }
+
+                               // Get.toNamed(Routes.OTPSCREEN);
+
                             },
                           ),
                         ],

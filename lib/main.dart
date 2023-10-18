@@ -92,7 +92,7 @@ Future<void> onStart(ServiceInstance service) async {
 
     geoLoc.LocationSettings locationSettings = geoLoc.AndroidSettings(
         accuracy: geoLoc.LocationAccuracy.high,
-        distanceFilter: 500,
+        distanceFilter: 0,
         forceLocationManager: true);
 
 
@@ -218,13 +218,11 @@ Future<void> onStart(ServiceInstance service) async {
                         print("Message is: >>1" + e.toString());
                         break;
                       case DioErrorType.response:
-                        print(
-                            "Message is: >>1" + (e.response?.data ?? "").toString());
+                        print("Message is: >>1" + (e.response?.data ?? "").toString());
                     }
                   }
 
                 }
-
                 await SharedPreferencesKeys().setStringData(key: "isInternetError", text: "no");
               }else{
                 await SharedPreferencesKeys().setStringData(key: "isInternetError", text: "yes");
@@ -256,89 +254,89 @@ Future<void> onStart(ServiceInstance service) async {
 
 
 
-  Timer.periodic(const Duration(seconds: 10), (timer) async {
-    Position? curentPosition;
-    vehicleId = await SharedPreferencesKeys().getStringData(key: 'vehicleId');
-    authToken = await SharedPreferencesKeys().getStringData(key: 'authToken');
-    print("background Service call\n ");
-    if (vehicleId != null && authToken != null && vehicleId != "" && authToken != "") {
-      if (service is AndroidServiceInstance) {
-        if (await service.isForegroundService()) {
-          await Geolocator.getCurrentPosition(
-                  desiredAccuracy: LocationAccuracy.high,
-                  forceAndroidLocationManager: true)
-              .then((Position position) async {
-            curentPosition = position;
-            print("bg location ${position.latitude}");
-            Placemark? locationDetails;
-            List<Placemark> placeMarks = await placemarkFromCoordinates(
-                position.latitude, position.longitude);
-            if (placeMarks.isNotEmpty) {
-              locationDetails = placeMarks.first;
+  if (vehicleId != null && authToken != null && vehicleId != "" && authToken != ""){
+    Timer.periodic(const Duration(seconds: 10), (timer) async {
+      Position? curentPosition;
+      vehicleId = await SharedPreferencesKeys().getStringData(key: 'vehicleId');
+      authToken = await SharedPreferencesKeys().getStringData(key: 'authToken');
+      print("background Service call\n ");
+      if (vehicleId != null && authToken != null && vehicleId != "" && authToken != "") {
+        if (service is AndroidServiceInstance) {
+          if (await service.isForegroundService()) {
+            await Geolocator.getCurrentPosition(
+                desiredAccuracy: LocationAccuracy.high,
+                forceAndroidLocationManager: true)
+                .then((Position position) async {
+              curentPosition = position;
+              print("bg location ${position.latitude}");
+              Placemark? locationDetails;
+              List<Placemark> placeMarks = await placemarkFromCoordinates(
+                  position.latitude, position.longitude);
+              if (placeMarks.isNotEmpty) {
+                locationDetails = placeMarks.first;
+                for(int i=0;i<placeMarks.length;i++){
+                  if(placeMarks[i].subLocality != null && placeMarks[i].locality != null){
+                    locationDetails = placeMarks[i];
+                    break;
+                  }
+                }
 
-              for(int i=0;i<placeMarks.length;i++){
-                if(placeMarks[i].subLocality != null && placeMarks[i].locality != null){
-                  locationDetails = placeMarks[i];
-                  break;
+              }
+              Map<String, dynamic> postData = {
+                "currentCity": await getLocality(position)?? locationDetails?.locality ?? "India",
+                "currentLocality": await getSubLocality(position)?? ((locationDetails?.subLocality != null && locationDetails?.subLocality != "")?(locationDetails?.subLocality ?? locationDetails?.locality ?? "India"):locationDetails?.locality),
+                "lat": (position.latitude ?? 0).toString(),
+                "lng": (position.longitude ?? 0).toString()
+              };
+              print(">>>>>postData" + postData.toString());
+              // print(">>>>>>>>api" + "https://backend.eviman.co.in/api/vehicles/v1/update/location/" + (vehicleId ?? 0).toString());
+              try {
+                var dio = Dio();
+                service1.Response response = await dio.patch(
+                  "https://backend.eviman.co.in/api/vehicles/v1/update/location/${vehicleId ?? 0}",
+                  options: Options(headers: {
+                    "Authorization":
+                    "Bearer " + ((authToken != null) ? authToken ?? '' : "")
+                  }),
+                  data: (postData != null) ? jsonEncode(postData) : null,
+                );
+                if (response.statusCode == 200 || response.statusCode == 201) {
+                  try {} catch (e) {
+                    print("Message is: " + e.toString());
+                  }
+                } else if (response.statusCode == 417) {
+                } else {
+                  print("Message is: >>1");
+                }
+              } on DioError catch (e) {
+                switch (e.type) {
+                  case DioErrorType.connectTimeout:
+                  case DioErrorType.cancel:
+                  case DioErrorType.sendTimeout:
+                  case DioErrorType.receiveTimeout:
+                  case DioErrorType.other:
+                    print("Message is: >>1" + e.toString());
+                    break;
+                  case DioErrorType.response:
+                    print(
+                        "Message is: >>1" + (e.response?.data ?? "").toString());
                 }
               }
-
-            }
-            Map<String, dynamic> postData = {
-              "currentCity": locationDetails?.locality ?? "India",
-              "currentLocality": (locationDetails?.subLocality != null && locationDetails?.subLocality != "")?(locationDetails?.subLocality ?? locationDetails?.locality ?? "India"):locationDetails?.locality,
-              "lat": (position.latitude ?? 0).toString(),
-              "lng": (position.longitude ?? 0).toString()
-            };
-            // print(">>>>>postData" + postData.toString());
-            // print(">>>>>>>>api" + "https://backend.eviman.co.in/api/vehicles/v1/update/location/" + (vehicleId ?? 0).toString());
-            try {
-              var dio = Dio();
-              service1.Response response = await dio.patch(
-                "https://backend.eviman.co.in/api/vehicles/v1/update/location/${vehicleId ?? 0}",
-                options: Options(headers: {
-                  "Authorization":
-                      "Bearer " + ((authToken != null) ? authToken ?? '' : "")
-                }),
-                data: (postData != null) ? jsonEncode(postData) : null,
-              );
-              if (response.statusCode == 200 || response.statusCode == 201) {
-                try {} catch (e) {
-                  print("Message is: " + e.toString());
-                }
-              } else if (response.statusCode == 417) {
-              } else {
-                print("Message is: >>1");
-              }
-            } on DioError catch (e) {
-              switch (e.type) {
-                case DioErrorType.connectTimeout:
-                case DioErrorType.cancel:
-                case DioErrorType.sendTimeout:
-                case DioErrorType.receiveTimeout:
-                case DioErrorType.other:
-                  print("Message is: >>1" + e.toString());
-                  break;
-                case DioErrorType.response:
-                  print(
-                      "Message is: >>1" + (e.response?.data ?? "").toString());
-              }
-            }
-          }).catchError((e) {
-            // Fluttertoast.showToast(msg: e.toString());
-          });
+            }).catchError((e) {
+              // Fluttertoast.showToast(msg: e.toString());
+            });
+          }
         }
-      }
-    } else {
-      if (service is AndroidServiceInstance) {
-        if (await service.isForegroundService()) {
-          await Geolocator.getCurrentPosition(
-                  desiredAccuracy: LocationAccuracy.high,
-                  forceAndroidLocationManager: true)
-              .then((Position position) {
-            curentPosition = position;
-            print("bg location ${position.latitude}");
-            /*flutterLocalNotificationsPlugin.show(
+      } else {
+        if (service is AndroidServiceInstance) {
+          if (await service.isForegroundService()) {
+            await Geolocator.getCurrentPosition(
+                desiredAccuracy: LocationAccuracy.high,
+                forceAndroidLocationManager: true)
+                .then((Position position) {
+              curentPosition = position;
+              print("bg location ${position.latitude}");
+              /*flutterLocalNotificationsPlugin.show(
               888,
               "Eviman App",
               "Currently we are starting our background service for updating you current location",
@@ -350,14 +348,14 @@ Future<void> onStart(ServiceInstance service) async {
                 ongoing: true,
               )),
             );*/
-          }).catchError((e) {
-            // Fluttertoast.showToast(msg: "To avail our app functionality it's mandatory to enable your location");
-          });
+            }).catchError((e) {
+              // Fluttertoast.showToast(msg: "To avail our app functionality it's mandatory to enable your location");
+            });
+          }
         }
       }
-    }
-  });
-
+    });
+  }
   // print(">>>>>>>>>>>authToken????\n " + authToken.toString());
 }
 
@@ -395,7 +393,7 @@ Future<void> initializeService() async {
         initialNotificationTitle: "eViman background service enable",
         initialNotificationContent: "It's following data security policy",
         foregroundServiceNotificationId: 888,
-        autoStartOnBoot: true),
+        autoStartOnBoot: false),
   );
   await service.startService();
 }
@@ -420,3 +418,43 @@ Future<bool> checkInternetConnectivity() async {
     return false;
   }
 }
+
+@pragma("vm:entry-point")
+@pragma("vm:entry-point", true)
+@pragma("vm:entry-point", !bool.fromEnvironment("dart.vm.product"))
+@pragma("vm:entry-point", "get")
+@pragma("vm:entry-point", "call")
+Future<String> getLocality(Position position) async {
+  String data = "Rourkela";
+  List<Placemark> placeMarks = await placemarkFromCoordinates(
+      position.latitude, position.longitude);
+  try{
+    Placemark? locationDetails = placeMarks.firstWhere((element) => element.locality != null &&
+        (element.locality??"").toString().trim() != "" && element.locality != "null");
+    data = locationDetails.locality??"Rourkela";
+  }catch(e){
+    data = "Rourkela";
+  }
+  return data;
+}
+
+
+@pragma("vm:entry-point")
+@pragma("vm:entry-point", true)
+@pragma("vm:entry-point", !bool.fromEnvironment("dart.vm.product"))
+@pragma("vm:entry-point", "get")
+@pragma("vm:entry-point", "call")
+Future<String> getSubLocality(Position position) async {
+  String data = "Rourkela";
+  List<Placemark> placeMarks = await placemarkFromCoordinates(
+      position.latitude, position.longitude);
+  try{
+    Placemark? locationDetails = placeMarks.firstWhere((element) => element.subLocality != null &&
+        (element.subLocality??"").toString().trim() != "" && element.subLocality != "null");
+    data = locationDetails.subLocality??"Rourkela";
+  }catch(e){
+    data = "Rourkela";
+  }
+  return data;
+}
+
