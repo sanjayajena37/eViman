@@ -156,10 +156,11 @@ class CommonHistoryWidget extends StatelessWidget {
                     ),
                     SizedBox(
                       width: Get.width*0.2,
+                        height:Get.height*0.03 ,
                         child: FittedBox(
                           fit: BoxFit.contain,
                           child: Text("₹ ${amount??0}",style:
-                          TextStyles(context).getBoldStyle().copyWith(color: Colors.blue,fontSize: 18),),
+                          TextStyles(context).getBoldStyle().copyWith(color: Colors.blue,fontSize: 15),),
                         ))
                   ],
                 ),

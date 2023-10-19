@@ -336,6 +336,7 @@ class DriverDashboardController extends GetxController
     subscription = operation.listen(
       (event) {
         if (event.data != null) {
+          print(">>>>>>>>>>>>>>>>event.data"+event.data.toString());
           Map? receiveDataNewClose = jsonDecode(event.data as String) ?? {};
           if(receiveDataNewClose != null &&
               receiveDataNewClose['incomingBooking']['status'].toString().trim() == "Booking Timeout"){
@@ -427,6 +428,7 @@ class DriverDashboardController extends GetxController
 
   String? pickUpDist;
   String? travelDist;
+  String? travelDistMeter;
   SubscribeBookingDetailsModel? subscribeBookingDetailsModel;
   void subscribeBookingDetails(String? bookingId) {
     // Replace with the desired rider ID
@@ -695,21 +697,55 @@ class DriverDashboardController extends GetxController
     var status1 = await permission.Permission.locationAlways.status;
     // var status2 = await permission.Permission.notification.status;
     print(">>>>>>>>>>>>>>status$status");
-    if (status.isDenied || status.isPermanentlyDenied || status1.isDenied || status1.isPermanentlyDenied ) {
+
+     if (status.isDenied || status.isPermanentlyDenied || status1.isDenied || status1.isPermanentlyDenied ) {
       bool isOk = await showCommonPopupNew6(
-          "eViman App need your background location and notification permission(Please select allow all the time).We are redirecting to you app setting please select allow all the time.It's required to give smooth less service to you",
-          "No need to worry",
+          (status.isDenied )?"This app collects location data to enable features like Live vehicle tracking ,Calculate ride price as per K.M and Time, even when the app is closed or not in use."
+          :"If you are not allowing the permission then you are not able to use the application features. To use this features go to App settings page and follow the instruction mentioned on the screen.",
+          "are you agree?",
           barrierDismissible: true,
           isYesOrNoPopup: true
       );
       if (isOk) {
-        permission.openAppSettings();
+        print(">>>>>>>>>>>>>>>sta loc"+status.toString());
+        if(status.isDenied){
+          await permission. Permission.location.request();
+          await permission. Permission.notification.request();
+
+          var status = await permission.Permission.location.status;
+          if (status.isDenied || status.isPermanentlyDenied){
+            permission.openAppSettings();
+          }
+        }else{
+          permission.openAppSettings();
+        }
       }
     }else{
-      permission. Permission.notification.request();
+      await permission. Permission.notification.request();
       permissionAllow = true;
       getRiderId();
       getCurrentLocation();
+    }
+  }
+
+  void infoDialog2() async {
+    var status = await permission.Permission.location.status;
+    // var status1 = await permission.Permission.locationAlways.status;
+    // var status2 = await permission.Permission.notification.status;
+    print(">>>>>>>>>>>>>>status$status");
+    if (status.isDenied || status.isPermanentlyDenied ) {
+      bool isOk = await showCommonPopupNew6(
+          // "eViman App need your run time location permission.It's required to give smooth less service to you",
+          "This app collects location data to enable features like Live vehicle tracking ,Calculate ride price as per K.M and Time, even when the app is closed or not in use.",
+          "are you agree?",
+          barrierDismissible: true,
+          isYesOrNoPopup: true
+      );
+      if (isOk) {
+        // permission.openAppSettings();
+        await permission.Permission.location.request();
+        await permission.Permission.notification.request();
+      }
     }
   }
   closeDialogIfOpen() {
@@ -795,9 +831,9 @@ class DriverDashboardController extends GetxController
   calculateDistance(List<dynamic> latLngList) async {
     // calculateDistanceUsingAPI
     dev.log(">>>>>>>>>>>DISTLIST" + latLngList.toString());
-    MyWidgets.showLoading3();
+    // MyWidgets.showLoading3();
     double totalDistance = 0;
-    if (latLngList.length > 1) {
+   /* if (latLngList.length > 1) {
       for (int i = 0; i < (latLngList.length - 1); i++) {
         await calculateDistanceUsingAPIReturnMeter(
                 originLong: latLngList[i]['longitude'],
@@ -812,8 +848,8 @@ class DriverDashboardController extends GetxController
           }
         });
       }
-    }
-    closeDialogIfOpen();
+    }*/
+    // closeDialogIfOpen();
 
     print(">>>>>>>>>>>>>>>>>travel distance$totalDistance");
     String? startDate =
@@ -944,6 +980,7 @@ class DriverDashboardController extends GetxController
     // showModalbottomSheet();
     // getCurrentLocation();
     // infoDialog1();
+    infoDialog2();
     askPermissions();
     // timerController  =LinearTimerController(this);
 

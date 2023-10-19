@@ -1183,8 +1183,7 @@ class KycscreenView extends GetView<KycscreenController> {
                                 await permission.Permission.location.request()
                                     .then((value) {
                                   if (value.isDenied) {
-                                    controller.permissionAllow = false;
-                                    controller.update(['all']);
+                                    permission.openAppSettings();
                                   } else if (value.isPermanentlyDenied) {
                                     permission.openAppSettings();
                                   } else if (value.isGranted) {

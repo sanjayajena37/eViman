@@ -274,7 +274,7 @@ class DriverDashboardView extends StatelessWidget {
                             .copyWith(fontSize: 15),
                       ),
                     ),
-                    ListTile(
+                   /* ListTile(
                       onTap: () {
                         Get.toNamed(Routes.WALETSCREEN);
                       },
@@ -286,7 +286,7 @@ class DriverDashboardView extends StatelessWidget {
                             .getRegularStyle()
                             .copyWith(fontSize: 15),
                       ),
-                    ),
+                    ),*/
                     ListTile(
                       onTap: () {
                         Get.toNamed(Routes.HISTORYSCREEN);
@@ -456,7 +456,7 @@ class DriverDashboardView extends StatelessWidget {
                         builder: (controllerX) {
                           return SizedBox(
                             width: Get.width,
-                            height: Get.height,
+                            height: Get.height*0.9,
                             child: Column(
                               children: [
                                 SizedBox(
@@ -805,7 +805,9 @@ class DriverDashboardView extends StatelessWidget {
                           ),
                         ),
                         InkWell(
-                          onTap: () {},
+                          onTap: () {
+                           controllerX.getRideAnalytics();
+                          },
                           child: GetBuilder<DriverDashboardController>(
                             id: "amt",
                             builder: (controllerX) {
@@ -815,17 +817,25 @@ class DriverDashboardView extends StatelessWidget {
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(8.0),
                                   ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text(
-                                      "₹${double.parse(controllerX.totalAmount??"0").toStringAsFixed(2)}",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headline5!
-                                          .copyWith(
-                                              fontSize: 25,
-                                              color: Colors.white),
-                                    ),
+                                  child: Row(
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text(
+                                          "₹${double.parse(controllerX.totalAmount??"0").toStringAsFixed(2)}",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline5!
+                                              .copyWith(
+                                                  fontSize: 25,
+                                                  color: Colors.white),
+                                        ),
+                                      ),
+                                      const Padding(
+                                        padding: EdgeInsets.only(right: 5.0,left: 0,top: 0,bottom: 0),
+                                        child: Icon(Icons.refresh,color: Colors.white,size: 15,),
+                                      )
+                                    ],
                                   ));
                             },
                           ),
@@ -1154,9 +1164,9 @@ class DriverDashboardView extends StatelessWidget {
                                                                     width: 5,
                                                                   ),
                                                                   Text(
-                                                                    controllerX
+                                                                    "${controllerX
                                                                             .pickUpDist ??
-                                                                        "4.0 K.M.",
+                                                                        "0.0"} K.M.",
                                                                     style: TextStyles(
                                                                             context)
                                                                         .getBoldStyle()
@@ -1194,9 +1204,9 @@ class DriverDashboardView extends StatelessWidget {
                                                                     width: 5,
                                                                   ),
                                                                   Text(
-                                                                    controllerX
+                                                                    "${controllerX
                                                                             .travelDist ??
-                                                                        "40.0 K.M.",
+                                                                        "0.0"} K.M.",
                                                                     style: TextStyles(
                                                                             context)
                                                                         .getBoldStyle()

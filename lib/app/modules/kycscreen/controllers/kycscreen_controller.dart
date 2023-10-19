@@ -952,7 +952,7 @@ class KycscreenController extends GetxController with Helper {
     // var status1 = await permission.Permission.locationAlways.status;
     // var status2 = await permission.Permission.notification.status;
     print(">>>>>>>>>>>>>>status$status");
-    if (status.isDenied) {
+    if (status.isDenied || status.isPermanentlyDenied) {
       bool isOk = await showCommonPopupNew6(
           "eViman App need your location permission.It's required to give smooth less service to you",
           "are you agree?",

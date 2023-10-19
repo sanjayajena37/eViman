@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -67,7 +68,7 @@ class ProfilescreenController extends GetxController
         api: "https://backend.eviman.co.in/api/riders/v1/profile/${riderId ?? 0}",
         token: authToken ?? "",
         fun: (map) {
-          print(">>>>" + map.toString());
+          log(">>>>" + map.toString());
           Get.back();
           if (map is Map &&
               map.containsKey("success") &&

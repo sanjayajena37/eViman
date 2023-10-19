@@ -79,7 +79,8 @@ extension MapHelper on DriverDashboardController {
         print(
             "Distance: $distanceText"); // Distance in text format (e.g., "5.4 km")
         print("Distance Value: $distanceValue meters"); // Distance in meters
-        return distanceText ?? "";
+        double distanceInKM = (double.parse((distanceValue??0).toString().trim())/ 1000) ;
+        return (distanceInKM ?? 0).toStringAsFixed(2);
       } else {
         return "0.00";
         print("Error calculating distance");

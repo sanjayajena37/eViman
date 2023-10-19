@@ -196,7 +196,7 @@ mixin Helper {
       CustomDialog(
         title: title,width: Get.width*0.96,
         topWidget:Image.asset(
-          filePath??"assets/images/appSetting.jpg",
+          filePath??"assets/images/logo.png",
           fit: BoxFit.contain,
         ),
         description: descriptionText,

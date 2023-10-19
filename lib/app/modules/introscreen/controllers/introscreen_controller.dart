@@ -25,19 +25,19 @@ class IntroscreenController extends GetxController with GetTickerProviderStateMi
 
 
     pageViewModelData.add(PageViewData(
-      titleText: "Plan your trip",
-      subText: "We have responsibility to reach your destination",
+      titleText: "Register Now",
+      subText: "Complete Your Registration",
       assetsImage: 'assets/json/lottie1.json',
     ));
 
     pageViewModelData.add(PageViewData(
-      titleText: "Plan your trip",
-      subText: "We are here to give best routes",
+      titleText: "Compete Ride",
+      subText: "Complete Your Ride",
       assetsImage: 'assets/json/lottie3.json',
     ));
     pageViewModelData.add(PageViewData(
-      titleText: "Plan your trip",
-      subText: "Now you reached your destination",
+      titleText: "Earn Now",
+      subText: "Earn Instantly",
       assetsImage: 'assets/json/lottie6.json',
     ));
 
