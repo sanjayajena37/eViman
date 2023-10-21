@@ -34,6 +34,7 @@ class RideArray {
   String? eta;
   String? rideStartTime;
   String? rideEndTime;
+  String? amount_paid;
 
   RideArray(
       {this.distance,
@@ -41,7 +42,7 @@ class RideArray {
         this.rideDate,
         this.eta,
         this.rideStartTime,
-        this.rideEndTime});
+        this.rideEndTime,this.amount_paid});
 
   RideArray.fromJson(Map<String, dynamic> json) {
     distance = json['distance'];
@@ -50,6 +51,7 @@ class RideArray {
     eta = json['eta'];
     rideStartTime = json['ride_start_time'];
     rideEndTime = json['ride_end_time'];
+    amount_paid = (json['amount_paid']??"").toString();
   }
 
   Map<String, dynamic> toJson() {
@@ -60,6 +62,7 @@ class RideArray {
     data['eta'] = this.eta;
     data['ride_start_time'] = this.rideStartTime;
     data['ride_end_time'] = this.rideEndTime;
+    data['amount_paid'] = this.amount_paid;
     return data;
   }
 }

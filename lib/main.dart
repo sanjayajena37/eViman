@@ -93,7 +93,7 @@ Future<void> onStart(ServiceInstance service) async {
     geoLoc.LocationSettings locationSettings = geoLoc.AndroidSettings(
         accuracy: geoLoc.LocationAccuracy.high,
         distanceFilter: 500,
-        intervalDuration: const Duration(seconds: 4),
+        intervalDuration: const Duration(seconds: 10),
         forceLocationManager: true);
 
 
@@ -377,12 +377,19 @@ Future<void> initializeService() async {
       enableVibration: true,
       ledColor: Colors.green,
       showBadge: true);
+  bool locSta = true;
+  await handleLocationPermission().then((value) {
+    locSta = value;
+  });
+
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
   await flutterLocalNotificationsPlugin
       .resolvePlatformSpecificImplementation<
           AndroidFlutterLocalNotificationsPlugin>()
       ?.createNotificationChannel(channel);
+
+
 
   await service.configure(
     iosConfiguration: IosConfiguration(),
@@ -391,7 +398,7 @@ Future<void> initializeService() async {
         isForegroundMode: true,
         autoStart: false,
         notificationChannelId: "eViman-rider",
-        initialNotificationTitle: "eViman background service enable",
+        initialNotificationTitle: (locSta)? "eViman background service enable":"eViman waiting for your location permission",
         initialNotificationContent: "It's following data security policy",
         foregroundServiceNotificationId: 888,
         autoStartOnBoot: false),
@@ -459,3 +466,30 @@ Future<String> getSubLocality(Position position) async {
   return data;
 }
 
+@pragma("vm:entry-point")
+@pragma("vm:entry-point", true)
+@pragma("vm:entry-point", !bool.fromEnvironment("dart.vm.product"))
+@pragma("vm:entry-point", "get")
+@pragma("vm:entry-point", "call")
+Future<bool> handleLocationPermission() async {
+  bool serviceEnabled;
+  geoLoc.LocationPermission permission;
+
+
+  permission = await geoLoc.Geolocator.checkPermission();
+  if(permission == geoLoc.LocationPermission.always){
+    return true;
+  }
+  if (permission == geoLoc.LocationPermission.denied || permission == geoLoc.LocationPermission.whileInUse ) {
+    return false;
+  }
+  if (permission == geoLoc.LocationPermission.deniedForever) {
+    // openAppSettings();
+    // ScaffoldMessenger.of(Get.context!).showSnackBar(const SnackBar(content: Text('Location permissions are permanently denied.')));
+    return false;
+  }
+  if(permission == geoLoc.LocationPermission.whileInUse){
+    return false;
+  }
+  return true;
+}

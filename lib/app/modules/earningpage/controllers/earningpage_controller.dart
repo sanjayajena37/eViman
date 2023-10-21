@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:get/get.dart';
 
 import '../../../constants/shared_preferences_keys.dart';
+import '../../../providers/Utils.dart';
 import '../../../widgets/MyWidget.dart';
 import '../../ConnectorController.dart';
 import '../EarningModel.dart';
@@ -30,6 +31,7 @@ class EarningpageController extends GetxController {
   String? riderId;
   String? authToken;
   EarningModel ?earningModel;
+  List<RideArray>? rideArray = [];
   getRiderId() async {
     MyWidgets.showLoading3();
     riderId = await SharedPreferencesKeys().getStringData(key: 'riderId');
@@ -50,6 +52,9 @@ class EarningpageController extends GetxController {
               map.containsKey("success") &&
               map['success'] == true) {
             earningModel = EarningModel.fromJson(map as Map<String,dynamic>);
+            // rideHistory.sort((a,b) => Utils.convertDateFormat2(b.rideStartTime).compareTo(Utils.convertDateFormat2(a.rideStartTime)) );
+            rideArray = earningModel?.rideArray;
+            rideArray?.sort((a,b) => Utils.convertDateFormat2(b.rideStartTime).compareTo(Utils.convertDateFormat2(a.rideStartTime)));
             update(['earn']);
           } else {
             earningModel = null;

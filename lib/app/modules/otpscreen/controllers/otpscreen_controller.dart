@@ -179,7 +179,7 @@ class OtpscreenController extends GetxController with CodeAutoFill,Helper {
   void showUnderProcess(Map map) async {
     bool isOk = await showCommonPopupNew2(
       "Your kyc verification under process?",
-      "Please wait until nex update.",
+      "Please wait until next update.",
       barrierDismissible: true,
       isYesOrNoPopup: false,
     );
