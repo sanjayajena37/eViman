@@ -367,6 +367,7 @@ class ProfilescreenView extends GetView<ProfilescreenController> {
                                           return UploadDocumentAndView(
                                               fileData: controllerX.dlImage,
                                               imageUrl: controllerX.dlImageUrl,
+                                              buttonText: "Upload DL",
                                               callback: () {
                                                 controllerX.show(dl: true);
                                               });
@@ -381,6 +382,7 @@ class ProfilescreenView extends GetView<ProfilescreenController> {
                                                   controllerX.aadhaarImage,
                                               imageUrl:
                                                   controllerX.aadhaarImageUrl,
+                                              buttonText: "Upload Aadhaar",
                                               callback: () {
                                                 controllerX.show(aadhaar: true);
                                               });
@@ -393,6 +395,7 @@ class ProfilescreenView extends GetView<ProfilescreenController> {
                                           return UploadDocumentAndView(
                                               fileData: controllerX.panImage,
                                               imageUrl: controllerX.panImageUrl,
+                                              buttonText: "Upload PAN",
                                               callback: () {
                                                 controllerX.show(pan: true);
                                               });

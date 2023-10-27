@@ -271,7 +271,7 @@ extension MapHelper on DriverDashboardController {
   }
 
   void getPolyPoints() async {
-    PolylinePoints polylinePoints = PolylinePoints();
+    /*PolylinePoints polylinePoints = PolylinePoints();
 
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
         "AIzaSyDwVSaWuD9KLlbKhJWj9tgKZN_QDDrvmpQ",
@@ -283,7 +283,7 @@ extension MapHelper on DriverDashboardController {
         polylineCoordinates.add(LatLng(point.latitude, point.longitude));
       }
       update(['map']);
-    }
+    }*/
   }
 
   void setCustomMarkerIcon() {

@@ -18,6 +18,7 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter_android/google_maps_flutter_android.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shake/shake.dart';
+import 'package:upgrader/upgrader.dart';
 import 'package:vibration/vibration.dart';
 
 import 'MainClass.dart';
@@ -31,7 +32,8 @@ import 'package:google_maps_flutter_android/google_maps_flutter_android.dart';
 import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
 import 'package:dio/dio.dart' as service1;
 import 'package:geolocator/geolocator.dart' as geoLoc;
-
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -39,18 +41,20 @@ Future<void> main() async {
       permanent: true);
 
   await initializeService();
-
+  // await Firebase.initializeApp();
+  await Upgrader.clearSavedSettings();
+  // FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
   await SystemChrome.setPreferredOrientations(
           [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown])
       .then((_) => runApp(MainClass()));
 
-  final GoogleMapsFlutterPlatform mapsImplementation =
+ /* final GoogleMapsFlutterPlatform mapsImplementation =
       GoogleMapsFlutterPlatform.instance;
   if (mapsImplementation is GoogleMapsFlutterAndroid) {
     WidgetsFlutterBinding.ensureInitialized();
     mapsImplementation.useAndroidViewSurface = true;
     mapsImplementation.initializeWithRenderer(AndroidMapRenderer.latest);
-  }
+  }*/
 }
 
 @pragma("vm:entry-point")
@@ -378,9 +382,9 @@ Future<void> initializeService() async {
       ledColor: Colors.green,
       showBadge: true);
   bool locSta = true;
-  await handleLocationPermission().then((value) {
+ /* await handleLocationPermission().then((value) {
     locSta = value;
-  });
+  });*/
 
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
@@ -398,8 +402,8 @@ Future<void> initializeService() async {
         isForegroundMode: true,
         autoStart: false,
         notificationChannelId: "eViman-rider",
-        initialNotificationTitle: (locSta)? "eViman background service enable":"eViman waiting for your location permission",
-        initialNotificationContent: "It's following data security policy",
+        initialNotificationTitle: (locSta)? "Background service is enabled":"eViman waiting for your location permission",
+        initialNotificationContent: "Find the ride Fastest & Quickest",
         foregroundServiceNotificationId: 888,
         autoStartOnBoot: false),
   );
@@ -433,15 +437,22 @@ Future<bool> checkInternetConnectivity() async {
 @pragma("vm:entry-point", "get")
 @pragma("vm:entry-point", "call")
 Future<String> getLocality(Position position) async {
-  String data = "Rourkela";
+  String data = "";
   List<Placemark> placeMarks = await placemarkFromCoordinates(
       position.latitude, position.longitude);
   try{
     Placemark? locationDetails = placeMarks.firstWhere((element) => element.locality != null &&
         (element.locality??"").toString().trim() != "" && element.locality != "null");
-    data = locationDetails.locality??"Rourkela";
+
+    if(locationDetails != null && locationDetails.locality != null && locationDetails.locality != ""){
+
+      data = locationDetails.locality??"";
+    }else{
+      data = locationDetails.subLocality ??"";
+    }
+    print(">>>>>>>>>>>>locality Gets${locationDetails.locality} >>> $data");
   }catch(e){
-    data = "Rourkela";
+    data = "";
   }
   return data;
 }
@@ -453,15 +464,22 @@ Future<String> getLocality(Position position) async {
 @pragma("vm:entry-point", "get")
 @pragma("vm:entry-point", "call")
 Future<String> getSubLocality(Position position) async {
-  String data = "Rourkela";
+  String data = "";
   List<Placemark> placeMarks = await placemarkFromCoordinates(
       position.latitude, position.longitude);
   try{
     Placemark? locationDetails = placeMarks.firstWhere((element) => element.subLocality != null &&
         (element.subLocality??"").toString().trim() != "" && element.subLocality != "null");
-    data = locationDetails.subLocality??"Rourkela";
+    data = locationDetails.subLocality?? locationDetails.locality??"";
+
+    if(locationDetails != null && locationDetails.subLocality != null && locationDetails.subLocality != ""){
+      data = locationDetails.subLocality??"";
+    }else{
+      data = locationDetails.locality??"";
+    }
+    print(">>>>>>>>>>>>subLocality Gets${locationDetails.subLocality}   >>>  $data");
   }catch(e){
-    data = "Rourkela";
+    data = "";
   }
   return data;
 }

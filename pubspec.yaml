@@ -26,7 +26,7 @@ dependencies:
   smooth_page_indicator: ^1.0.0+2
   flutter_advanced_drawer:
 #  flutter_polyline_points:
-  flutter_polyline_points_plus:
+#  flutter_polyline_points_plus:
   location:
   flutter_background_service:
   dropdown_plus:
@@ -51,7 +51,10 @@ dependencies:
   android_alarm_manager_plus:
   permission_handler:
   shake: ^2.2.0
+  firebase_core:
+  firebase_crashlytics:
   upgrader:
+#  new_version_plus:
   # device_info_plus: ^8.1.0
 
   flutter_background_service_android: 5.0.0

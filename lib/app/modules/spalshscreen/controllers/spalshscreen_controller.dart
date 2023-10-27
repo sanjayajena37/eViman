@@ -21,11 +21,6 @@ class SpalshscreenController extends GetxController with Helper{
     WidgetsFlutterBinding.ensureInitialized();
     super.onInit();
   }
-
-
-
-
-
   @override
   void onReady() {
     infoDialog2();
