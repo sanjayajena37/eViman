@@ -912,6 +912,14 @@ class DriverDashboardController extends GetxController
   Stream<ConnectivityResult>? connectivitySubscription;
   StreamSubscription<geoLoc.Position>? positionStream;
   Connectivity connectivity = Connectivity();
+  void handleMenuButtonPressed() {
+    // NOTICE: Manage Advanced Drawer state through the Controller.
+    // _advancedDrawerController.value = AdvancedDrawerValue.visible();
+    // print(">>>>>>>>>>>>>>>>>>>>advancedDrawerController"+advancedDrawerController.toString());
+    if(advancedDrawerController != null){
+      advancedDrawerController.showDrawer();
+    }
+  }
   @override
   void onInit() {
     WidgetsBinding.instance.addObserver(this);
