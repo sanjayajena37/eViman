@@ -15,6 +15,7 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:lottie/lottie.dart' as lottie;
 import 'package:permission_handler/permission_handler.dart';
+import 'package:share_plus/share_plus.dart';
 
 import 'package:url_launcher/url_launcher.dart';
 import 'package:workmanager/workmanager.dart';
@@ -293,7 +294,7 @@ class DriverDashboardView extends StatelessWidget {
                             .copyWith(fontSize: 15),
                       ),
                     ),
-                    /*  ListTile(
+                     /* ListTile(
                   onTap: () {},
                   leading: Icon(Icons.notifications_active,
                       color: Theme.of(context).primaryColor),
@@ -303,7 +304,7 @@ class DriverDashboardView extends StatelessWidget {
                         .getRegularStyle()
                         .copyWith(fontSize: 15),
                   ),
-                ),
+                ),*/
                 ListTile(
                   onTap: () {
                     Get.toNamed(Routes.INVITESCREEN);
@@ -311,13 +312,28 @@ class DriverDashboardView extends StatelessWidget {
                   leading: Icon(Icons.card_giftcard_outlined,
                       color: Theme.of(context).primaryColor),
                   title: Text(
-                    'Invite a Friend',
+                    'Refer and Earn',
                     style: TextStyles(context)
                         .getRegularStyle()
                         .copyWith(fontSize: 15),
                   ),
                 ),
-                ListTile(
+                    ListTile(
+                      onTap: () {
+                        // Get.toNamed(Routes.INVITESCREEN);
+                        Share.share('Click this link 👉 https://play.google.com/store/apps/details?id=com.eviman.rider',
+                            subject: 'Look what I made!');
+                      },
+                      leading: Icon(Icons.share,
+                          color: Theme.of(context).primaryColor),
+                      title: Text(
+                        'Share',
+                        style: TextStyles(context)
+                            .getRegularStyle()
+                            .copyWith(fontSize: 15),
+                      ),
+                    ),
+              /*  ListTile(
                   onTap: () {
                     Get.toNamed(Routes.SETTINGSCREEN);
                   },

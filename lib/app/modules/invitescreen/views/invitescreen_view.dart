@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gif/flutter_gif.dart';
 
 import 'package:get/get.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../../constants/text_styles.dart';
 import '../../../constants/themes.dart';
@@ -66,16 +67,20 @@ class InvitescreenView extends GetView<InvitescreenController> {
                             ),
                             InkWell(
                               onTap: (){
-                                controller.openCustomDialog(controller.flutterGifController!);
+                                /*controller.openCustomDialog(controller.flutterGifController!);
                                 controller.flutterGifController?.animateTo(
                                   80,
                                   duration: const Duration(seconds: 3),
                                 );
+
                                 Future.delayed(Duration(seconds: 3),() {
 
                                   Get.back();
 
-                                },);
+                                },);*/
+                                String url = "https://play.google.com/store/apps/details?id=com.eviman.rider";
+                                Share.share('Click this link 👉 https://play.google.com/store/apps/details?id=com.eviman.rider',
+                                    subject: 'Look what I made!');
                               },
                               child: Padding(
                                 padding: const EdgeInsets.all(4.0),
@@ -122,7 +127,7 @@ class InvitescreenView extends GetView<InvitescreenController> {
                 Radius.circular(32.0),
               ),
               onTap: () {
-
+                Get.back();
               },
               child: const Padding(
                 padding: EdgeInsets.all(8.0),

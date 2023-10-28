@@ -54,6 +54,7 @@ dependencies:
   firebase_core:
   firebase_crashlytics:
   upgrader:
+  share_plus:
 #  new_version_plus:
   # device_info_plus: ^8.1.0
 
