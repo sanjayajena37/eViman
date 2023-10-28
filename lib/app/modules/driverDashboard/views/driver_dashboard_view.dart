@@ -48,8 +48,6 @@ class DriverDashboardView extends StatelessWidget {
   Widget build(BuildContext context) {
     return WillPopScope(
         onWillPop: () async {
-
-          if(controllerX.permissionAllow){
             bool isOk = await controllerX.showCommonPopupNew4(
                 "What you want?", "Online or Offline",
                 barrierDismissible: false,
@@ -70,11 +68,6 @@ class DriverDashboardView extends StatelessWidget {
               Get.back();
               return sta;
             }
-          }else{
-            return true;
-          }
-
-
         },
         child: AdvancedDrawer(
           backdrop: Container(
@@ -361,8 +354,7 @@ class DriverDashboardView extends StatelessWidget {
             body: GetBuilder<DriverDashboardController>(
               id: "allPage",
               builder: (controllerX) {
-                return (controllerX.permissionAllow)
-                    ? StreamBuilder<ConnectivityResult>(
+                return StreamBuilder<ConnectivityResult>(
                         stream: controllerX.connectivitySubscription,
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
@@ -449,213 +441,6 @@ class DriverDashboardView extends StatelessWidget {
                             });
                           }
                           return maiWidgetFun(context);
-                        },
-                      )
-                    : GetBuilder<DriverDashboardController>(
-                        id: "top1",
-                        builder: (controllerX) {
-                          return SizedBox(
-                            width: Get.width,
-                            height: Get.height*0.9,
-                            child: Column(
-                              children: [
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Row(
-                                  children: [
-                                    Column(
-                                      children: [
-                                        Center(
-                                          child: SizedBox(
-                                            width: MediaQuery.of(context)
-                                                .size
-                                                .width *
-                                                0.5,
-                                            height: Get.height * 0.4,
-                                            child: AspectRatio(
-                                                aspectRatio: 1,
-                                                child: Image.asset(
-                                                    "assets/images/appPermission.jpg",
-                                                    fit: BoxFit.contain,
-                                                    height: Get.height * 0.2)),
-                                          ),
-                                        ),
-                                         Text("Step 1", style: TextStyles(context)
-                                            .getTitleStyle()
-                                            .copyWith(fontSize: 11),)
-                                      ],
-                                    ),
-                                    Column(
-                                      children: [
-                                        Center(
-                                          child: SizedBox(
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.5,
-                                            height: Get.height * 0.4,
-                                            child: AspectRatio(
-                                                aspectRatio: 1,
-                                                child: Image.asset(
-                                                    "assets/images/appSetting.jpg",
-                                                    fit: BoxFit.contain,
-                                                    height: Get.height * 0.2)),
-                                          ),
-                                        ),
-                                         Text("Step 2", style: TextStyles(context)
-                                             .getTitleStyle()
-                                             .copyWith(fontSize: 11),)
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                                Center(
-                                  child: SizedBox(
-                                    width: MediaQuery.of(context)
-                                        .size
-                                        .width *
-                                        0.6,
-                                    height: Get.height * 0.07,
-                                    child: AspectRatio(
-                                      aspectRatio: 1,
-                                      child: lottie.Lottie.asset(
-                                          "assets/json/allowLocation.json",
-                                          fit: BoxFit.contain,
-                                          height: Get.height * 0.07),
-                                    ),
-                                  ),
-                                ),
-                                Center(
-                                    child: Text(
-                                  "Location Permission(Allow all the time) Denied",
-                                  style: TextStyles(context)
-                                      .getBoldStyle()
-                                      .copyWith(
-                                          fontSize: 15, color: Colors.red),
-                                )),
-                                Center(
-                                    child: Text(
-                                      "or",
-                                      style: TextStyles(context)
-                                          .getBoldStyle()
-                                          .copyWith(
-                                          fontSize: 15, color: Colors.red),
-                                    )),
-                                Center(
-                                    child: Text(
-                                      "Notification Permission Denied",
-                                      style: TextStyles(context)
-                                          .getBoldStyle()
-                                          .copyWith(
-                                          fontSize: 15, color: Colors.red),
-                                    )),
-                                SizedBox(
-                                  height: 4,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                    left: 8.0,
-                                    right: 8,
-                                  ),
-                                  child: SizedBox(
-                                    width: Get.width * 0.86,
-                                    child: Center(
-                                        child: Text(
-                                      "> Please enable your location(Allow all the time),It's mandatory to use our application.Because we need to collect your location data even if your application is close.It's our requirement to give smooth less service to our user.",
-                                      style: TextStyles(context)
-                                          .getTitleStyle()
-                                          .copyWith(fontSize: 11),
-                                    )),
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 7,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                    left: 8.0,
-                                    right: 8,
-                                  ),
-                                  child: SizedBox(
-                                    width: Get.width * 0.86,
-                                    child: Center(
-                                        child: Text(
-                                      "> Please enable your notification permission,It's required to notify you for further information",
-                                      style: TextStyles(context)
-                                          .getTitleStyle()
-                                          .copyWith(fontSize: 11),
-                                    )),
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 7,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                    left: 8.0,
-                                    right: 8,
-                                  ),
-                                  child: SizedBox(
-                                    width: Get.width * 0.86,
-                                    child: Center(
-                                        child: Text(
-                                      "> Please go to the app setting and enable your location(allow all the time) and notification. after that re open the app or press refresh buttons",
-                                      style: TextStyles(context)
-                                          .getTitleStyle()
-                                          .copyWith(fontSize: 11),
-                                    )),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 15.0,
-                                      right: 15,
-                                      top: 6,
-                                      bottom: 5),
-                                  child: CommonButton(
-                                      padding: const EdgeInsets.only(
-                                          left: 24, right: 24, bottom: 16),
-                                      isIcon: true,
-                                      height: Get.height*0.05,
-                                      icon: Icons.settings,
-                                      buttonText: "App Setting",
-                                      onTap: () {
-                                        openAppSettings();
-                                      }),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 15.0,
-                                      right: 15,
-                                      top: 3,
-                                      bottom: 5),
-                                  child: CommonButton(
-                                      padding: const EdgeInsets.only(
-                                          left: 24, right: 24, bottom: 16),
-                                      buttonText: "Refresh The page",
-                                      isIcon: true,
-                                      height: Get.height*0.05,
-                                      icon: Icons.refresh,
-                                      onTap: () {
-                                        controllerX
-                                            .handleLocationPermission()
-                                            .then((value) {
-                                          if (value) {
-                                            controllerX.permissionAllow =
-                                                true;
-                                            // update(['allPage']);
-                                            controllerX.getRiderId();
-                                            controllerX.getCurrentLocation();
-                                          } else {
-                                            controllerX.infoDialog1();
-                                          }
-                                        });
-                                      }),
-                                )
-                              ],
-                            ),
-                          );
                         },
                       );
               },

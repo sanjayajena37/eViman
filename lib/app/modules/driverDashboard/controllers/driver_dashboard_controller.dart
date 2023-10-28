@@ -980,8 +980,10 @@ class DriverDashboardController extends GetxController
     // showModalbottomSheet();
     // getCurrentLocation();
     // infoDialog1();
-    infoDialog2();
-    askPermissions();
+    getRiderId();
+    getCurrentLocation();
+    // infoDialog2();
+    // askPermissions();
     // timerController  =LinearTimerController(this);
 
     super.onReady();

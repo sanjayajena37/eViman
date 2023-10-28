@@ -119,6 +119,8 @@ class KycscreenController extends GetxController with Helper {
 
   bool allValidation1() {
     bool isValid = true;
+    // print(">>>>>>>>>>>>email${(emailController.text.trim()).isValidEmail()}");
+    // print(">>>>>>>>>>>>email${emailController.text.trim()}");
     if (firstNameController.text.trim().isEmpty) {
       errorFirstName = "Please enter your first name";
       errorEmail = '';
@@ -155,8 +157,8 @@ class KycscreenController extends GetxController with Helper {
       errorCountry = "";
       errorPin = "";
       isValid = false;
-    }else if (Validator.validateEmail(emailController.text.trim())) {
-      errorEmail = "Please enter your email";
+    }else if (!(emailController.text.trim()).isValidEmail()) {
+      errorEmail = "Please enter valid email";
       errorMobile = '';
       errorLastName = '';
       errorFirstName = '';
@@ -265,7 +267,7 @@ class KycscreenController extends GetxController with Helper {
       isValid = true;
     }
     update(['ref']);
-    return true;
+    return isValid;
   }
 
   bool allValidation2() {
@@ -282,7 +284,7 @@ class KycscreenController extends GetxController with Helper {
     } else {
       isValid = true;
     }
-    return true;
+    return isValid;
   }
 
   bool allValidation3() {
@@ -1120,7 +1122,9 @@ class KycscreenController extends GetxController with Helper {
 
   @override
   void onReady() {
-    infoDialog1();
+    // infoDialog1();
+    getCurrentLocation();
+    getFareInfo();
 
     super.onReady();
   }

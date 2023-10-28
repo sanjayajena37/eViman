@@ -1,6 +1,8 @@
 import 'dart:ui';
 
 import 'package:dateplan/app/constants/helper.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:geolocator/geolocator.dart';
@@ -25,6 +27,9 @@ class SpalshscreenController extends GetxController with Helper{
   void onReady() {
     infoDialog2();
     askPermissions();
+    /*if(kDebugMode){
+      FirebaseCrashlytics.instance.crash();
+    }*/
     super.onReady();
   }
 
@@ -45,9 +50,6 @@ class SpalshscreenController extends GetxController with Helper{
         },
       ),
     );*/
-
-
-
     super.onClose();
   }
 

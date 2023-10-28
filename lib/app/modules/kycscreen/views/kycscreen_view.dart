@@ -46,7 +46,7 @@ class KycscreenView extends GetView<KycscreenController> {
           id: "all",
           builder: (controller) {
             return Container(
-              child: (controller.permissionAllow) ? GetBuilder<
+              child: GetBuilder<
                   KycscreenController>(
                 assignId: true,
                 id: "ref",
@@ -1094,123 +1094,7 @@ class KycscreenView extends GetView<KycscreenController> {
                     ],
                   );
                 },
-              ) : Container(
-                child: Column(
-                  children: [
-                    Center(
-                      child: SizedBox(
-                        width: MediaQuery
-                            .of(context)
-                            .size
-                            .width *
-                            0.6,
-                        height: Get.height * 0.07,
-                        child: AspectRatio(
-                          aspectRatio: 1,
-                          child: lottie.Lottie.asset(
-                              "assets/json/allowLocation.json",
-                              fit: BoxFit.contain,
-                              height: Get.height * 0.07),
-                        ),
-                      ),
-                    ),
-                    Center(
-                        child: Text(
-                          "Location Permission Denied",
-                          style: TextStyles(context)
-                              .getBoldStyle()
-                              .copyWith(
-                              fontSize: 15, color: Colors.red),
-                        )),
-                    const SizedBox(
-                      height: 4,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        left: 8.0,
-                        right: 8,
-                      ),
-                      child: SizedBox(
-                        width: Get.width * 0.86,
-                        child: Center(
-                            child: Text(
-                              "> Please enable your location(Allow all the time),It's mandatory to use our application.Because we need to collect your location data even if your application is close.It's our requirement to give smooth less service to our user.",
-                              style: TextStyles(context)
-                                  .getTitleStyle()
-                                  .copyWith(fontSize: 11),
-                            )),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 7,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        left: 8.0,
-                        right: 8,
-                      ),
-                      child: SizedBox(
-                        width: Get.width * 0.86,
-                        child: Center(
-                            child: Text(
-                              "> Please go to the app setting and enable your location(allow all the time). after that re open the app or press refresh buttons",
-                              style: TextStyles(context)
-                                  .getTitleStyle()
-                                  .copyWith(fontSize: 11),
-                            )),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 15.0,
-                          right: 15,
-                          top: 3,
-                          bottom: 5),
-                      child: CommonButton(
-                          padding: const EdgeInsets.only(
-                              left: 24, right: 24, bottom: 16),
-                          buttonText: "Refresh The page",
-                          isIcon: true,
-                          height: Get.height * 0.05,
-                          icon: Icons.refresh,
-                          onTap: () {
-                            controller.handleLocationPermission().then((
-                                value) async {
-                              print(">>>>>>>>>>>>>>>val" + value.toString());
-                              if (value == "falsePlus") {
-                                permission.openAppSettings();
-                              } else if (value == "false") {
-                                await permission.Permission.location.request()
-                                    .then((value) {
-                                  if (value.isDenied) {
-                                    permission.openAppSettings();
-                                  } else if (value.isPermanentlyDenied) {
-                                    permission.openAppSettings();
-                                  } else if (value.isGranted) {
-                                    controller.permissionAllow = true;
-                                    controller.getFareInfo();
-                                    controller.getCurrentLocation();
-                                    controller.update(['all']);
-                                  } else {
-                                    controller.permissionAllow = false;
-                                    controller.update(['all']);
-                                  }
-                                });
-                              } else if (value == "true") {
-                                controller.permissionAllow = true;
-                                controller.getFareInfo();
-                                controller.getCurrentLocation();
-                                controller.update(['all']);
-                              } else {
-                                Snack.callError(
-                                    "Please check your location permission");
-                              }
-                            });
-                          }),
-                    )
-                  ],
-                ),
-              ),
+              )
             );
           },
         ),
@@ -1219,7 +1103,7 @@ class KycscreenView extends GetView<KycscreenController> {
           id: "all",
           builder: (controller) {
         return Container(
-          child: (controller.permissionAllow) ? Row(
+          child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               SizedBox(width: 10),
@@ -1240,9 +1124,7 @@ class KycscreenView extends GetView<KycscreenController> {
               ),
               SizedBox(width: 10),
             ],
-          ) : Container(
-            child: Text("Checking Permission...."),
-          ),
+          )
         );
       }),
     );

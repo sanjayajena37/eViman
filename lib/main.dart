@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:isolate';
 import 'dart:ui';
 
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
@@ -34,27 +35,45 @@ import 'package:dio/dio.dart' as service1;
 import 'package:geolocator/geolocator.dart' as geoLoc;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+
+import 'firebase_options.dart';
 Future<void> main() async {
+  runZonedGuarded<Future<void>>(() async {
+
   WidgetsFlutterBinding.ensureInitialized();
 
   await Get.putAsync<ThemeController>(() => ThemeController.init(),
       permanent: true);
 
   await initializeService();
-  // await Firebase.initializeApp();
-  await Upgrader.clearSavedSettings();
-  // FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  // await Upgrader.clearSavedSettings();
+  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
+  PlatformDispatcher.instance.onError = (error, stack) {
+    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+    return true;
+  };
+  Isolate.current.addErrorListener(RawReceivePort((pair) async {
+    final List<dynamic> errorAndStacktrace = pair;
+    await FirebaseCrashlytics.instance.recordError(
+      errorAndStacktrace.first,
+      errorAndStacktrace.last,
+    );
+  }).sendPort);
   await SystemChrome.setPreferredOrientations(
           [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown])
       .then((_) => runApp(MainClass()));
 
- /* final GoogleMapsFlutterPlatform mapsImplementation =
+  final GoogleMapsFlutterPlatform mapsImplementation =
       GoogleMapsFlutterPlatform.instance;
   if (mapsImplementation is GoogleMapsFlutterAndroid) {
     WidgetsFlutterBinding.ensureInitialized();
     mapsImplementation.useAndroidViewSurface = true;
     mapsImplementation.initializeWithRenderer(AndroidMapRenderer.latest);
-  }*/
+  }
+  }, (error, stack) => FirebaseCrashlytics.instance.recordError(error, stack));
 }
 
 @pragma("vm:entry-point")
