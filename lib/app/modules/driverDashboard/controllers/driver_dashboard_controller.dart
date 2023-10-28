@@ -66,21 +66,6 @@ part 'mapcontroller.dart';
 part 'appsyncController.dart';
 part 'helpercontroller.dart';
 
-@pragma("vm:entry-point")
-@pragma("vm:entry-point", true)
-@pragma("vm:entry-point", !bool.fromEnvironment("dart.vm.product"))
-@pragma("vm:entry-point", "get")
-@pragma("vm:entry-point",
-    "call") // Mandatory if the App is obfuscated or using Flutter 3.1+
-void callbackDispatcher() {
-  DartPluginRegistrant.ensureInitialized();
-  Workmanager().executeTask((task, inputData) async {
-    print("Native called background task: $task");
-    final position = await determinePosition();
-    print(">>>>>>>>>position jks jks${position.longitude}");
-    return Future.value(true);
-  });
-}
 
 class DriverDashboardController extends GetxController
     with Helper, WidgetsBindingObserver, GetSingleTickerProviderStateMixin {
@@ -95,7 +80,7 @@ class DriverDashboardController extends GetxController
   Completer<GoogleMapController> mapControl = Completer<GoogleMapController>();
   List<LatLng> polylineCoordinates = [];
   GoogleMapController? mapController;
-
+  AnimationController? animationController;
   LatLng? currentLocation = const LatLng(20.288187, 85.817814);
 
   BitmapDescriptor sourceIcon = BitmapDescriptor.defaultMarker;
@@ -925,6 +910,7 @@ class DriverDashboardController extends GetxController
     WidgetsBinding.instance.addObserver(this);
      advancedDrawerController = AdvancedDrawerController();
     connectivitySubscription = connectivity.onConnectivityChanged;
+    animationController =  AnimationController(vsync: this, duration: Duration(milliseconds: 300));
     // getRiderId();
     super.onInit();
   }

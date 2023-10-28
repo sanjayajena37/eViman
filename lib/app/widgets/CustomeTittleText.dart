@@ -53,7 +53,7 @@ class CustomeSubTittleText extends StatelessWidget {
     return Text(
       text,
       style: TextStyles(context)
-          .getBoldStyle().copyWith(fontSize: 12,color: color) ,
+          .getBoldStyle().copyWith(fontSize: 10,color: color) ,
       maxLines: maxlines ?? 1,
       overflow: TextOverflow.ellipsis,
       textAlign: alignment,

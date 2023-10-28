@@ -156,7 +156,7 @@ class VehicleDetailsView extends GetView<VehicleDetailsController> {
                                                                   .error),
                                                         )
                                                             : Image.asset(
-                                                          'assets/images/avatar2.jpg',
+                                                          'assets/images/man.jpg',
                                                           fit: BoxFit
                                                               .cover,
                                                         )
@@ -362,6 +362,7 @@ class VehicleDetailsView extends GetView<VehicleDetailsController> {
                                           return UploadDocumentAndView(
                                               fileData: controllerX.insuranceImage,
                                               imageUrl: controllerX.insuranceImageUrl,
+                                              buttonText: "Upload Insurance",
                                               callback: () {
                                                 controllerX.show(insurance: true);
                                               });
@@ -376,6 +377,7 @@ class VehicleDetailsView extends GetView<VehicleDetailsController> {
                                               controllerX.pollutionImage,
                                               imageUrl:
                                               controllerX.pollutionImageUrl,
+                                              buttonText: "Upload Pollution",
                                               callback: () {
                                                 controllerX.show(pollution: true);
                                               });

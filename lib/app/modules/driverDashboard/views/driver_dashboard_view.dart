@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'dart:isolate';
 
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
@@ -77,7 +78,8 @@ class DriverDashboardView extends StatelessWidget {
           ),
           controller: controllerX.advancedDrawerController,
           animationCurve: Curves.easeInOut,
-          animationDuration: const Duration(milliseconds: 250),
+          animationDuration: const Duration(milliseconds: 300),
+          animationController: controllerX.animationController,
           animateChildDecoration: true,
           key: GlobalKey(),
           rtlOpening: false,
@@ -97,7 +99,7 @@ class DriverDashboardView extends StatelessWidget {
                   padding: EdgeInsets.zero,
                   children: [
                     SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.27,
+                      height: MediaQuery.of(context).size.height * 0.22,
                       child: DrawerHeader(
                         // decoration: const BoxDecoration(color: Colors.),
                         child: Column(
@@ -106,18 +108,126 @@ class DriverDashboardView extends StatelessWidget {
                             GetBuilder<DriverDashboardController>(
                               id: "prof",
                               builder: (controllerX) {
-                                return Row(
+                                return Column(
                                   mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment. center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Column(
+                                    Row(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                      MainAxisAlignment. spaceBetween,
+                                      children: [
+                                        ClipOval(
+                                          child: SizedBox.fromSize(
+                                            size: const Size
+                                                .fromRadius(
+                                                40), // Image radius
+                                            child: (controllerX
+                                                .profileViewModel
+                                                ?.riderData
+                                                ?.profile_image !=
+                                                null &&
+                                                controllerX
+                                                    .profileViewModel
+                                                    ?.riderData
+                                                    ?.profile_image
+                                                    .toString()
+                                                    .trim() !=
+                                                    "")
+                                                ? CachedNetworkImage(
+                                              imageUrl:
+                                              controllerX
+                                                  .profileViewModel
+                                                  ?.riderData
+                                                  ?.profile_image ??
+                                                  "",
+                                              imageBuilder:
+                                                  (context,
+                                                  imageProvider) =>
+                                                  Container(
+                                                    decoration:
+                                                    BoxDecoration(
+                                                      image: DecorationImage(
+                                                          image:
+                                                          imageProvider,
+                                                          fit:
+                                                          BoxFit.cover,),
+                                                      border: Border.all(color: Colors.red,width: 1,style: BorderStyle.solid),
+                                                      borderRadius: BorderRadius.all(Radius.circular(40))),
+                                                  ),
+                                              progressIndicatorBuilder: (context,
+                                                  url,
+                                                  downloadProgress) =>
+                                                  Column(
+                                                    mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .center,
+                                                    children: [
+                                                      SizedBox(
+                                                        height:
+                                                        Get.height * 0.04,
+                                                        width:
+                                                        Get.width * 0.15,
+                                                        child:
+                                                        Padding(
+                                                          padding:
+                                                          const EdgeInsets.all(18.0),
+                                                          child:
+                                                          CircularProgressIndicator(value: downloadProgress.progress),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                              errorWidget: (context,
+                                                  url,
+                                                  error) =>
+                                                  Icon(Icons
+                                                      .error),
+                                            )
+                                                : Image.asset(
+                                              'assets/images/man.jpg',
+                                              fit: BoxFit
+                                                  .cover,
+                                            )
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 10,
+                                        ),
+                                        GetBuilder<DriverDashboardController>(
+                                          id: "analytics",
+                                          builder: (controllerX) {
+                                            return Row(
+                                              mainAxisAlignment:
+                                              MainAxisAlignment.spaceAround,
+                                              children: [
+                                                // driverINfoWidget("assets/icon/time.png", "10.2", "Hours online"),
+                                                driverINfoWidget(
+                                                    "assets/icon/meter.png",
+                                                    controllerX.totalDistanceNew ?? "30 kM",
+                                                    "Total Distance"),
+                                                SizedBox(
+                                                  width: 10,
+                                                ),
+                                                driverINfoWidget(
+                                                    "assets/icon/jobs.png",
+                                                    controllerX.totalRides ?? "0",
+                                                    "Total Jobs"),
+                                              ],
+                                            );
+                                          },
+                                        )
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
                                         Container(
-                                          width: Get.width * 0.5,
+                                          // width: Get.width * 0.5,
                                           child: Text(
                                             "${controllerX.profileViewModel?.riderData?.firstName ?? ""} ${controllerX.profileViewModel?.riderData?.lastName ?? ""}",
                                             style: TextStyles(context)
@@ -130,7 +240,7 @@ class DriverDashboardView extends StatelessWidget {
                                           height: 05,
                                         ),
                                         Container(
-                                          width: Get.width * 0.5,
+                                          // width: Get.width * 0.5,
                                           child: Text(
                                             controllerX.profileViewModel
                                                     ?.riderData?.email ??
@@ -143,75 +253,11 @@ class DriverDashboardView extends StatelessWidget {
                                         ),
                                       ],
                                     ),
-                                    CircleAvatar(
-                                      radius: 25,
-                                      backgroundColor: Colors.white,
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(
-                                            1), // Border radius
-                                        child: ClipOval(
-                                            child: (controllerX
-                                                        .profileViewModel
-                                                        ?.riderData
-                                                        ?.profile_image !=
-                                                    null)
-                                                ? Image.network(
-                                                    controllerX
-                                                            .profileViewModel
-                                                            ?.riderData
-                                                            ?.profile_image ??
-                                                        "",
-                                                    filterQuality:
-                                                        FilterQuality.high,
-                                                    fit: BoxFit.cover,
-                                                    errorBuilder:
-                                                        (BuildContext? context,
-                                                            Object? exception,
-                                                            StackTrace?
-                                                                stackTrace) {
-                                                      return Image.asset(
-                                                        'assets/images/man.jpg',
-                                                        filterQuality:
-                                                            FilterQuality.high,
-                                                        fit: BoxFit.cover,
-                                                      );
-                                                    },
-                                                  )
-                                                : Image.asset(
-                                                    'assets/images/man.jpg',
-                                                    filterQuality:
-                                                        FilterQuality.high,
-                                                    fit: BoxFit.cover,
-                                                  )),
-                                      ),
-                                    )
                                   ],
                                 );
                               },
                             ),
-                            const SizedBox(
-                              height: 25,
-                            ),
-                            GetBuilder<DriverDashboardController>(
-                              id: "analytics",
-                              builder: (controllerX) {
-                                return Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    // driverINfoWidget("assets/icon/time.png", "10.2", "Hours online"),
-                                    driverINfoWidget(
-                                        "assets/icon/meter.png",
-                                        controllerX.totalDistanceNew ?? "30 kM",
-                                        "Total Distance"),
-                                    driverINfoWidget(
-                                        "assets/icon/jobs.png",
-                                        controllerX.totalRides ?? "0",
-                                        "Total Jobs"),
-                                  ],
-                                );
-                              },
-                            )
+
                           ],
                         ),
                       ),
@@ -1291,13 +1337,14 @@ Widget driverINfoWidget(String img, String tittle, String Subtittle) {
         width: 30,
         // color: Color(0xFF4FBE9F),
         color: Theme.of(Get.context!).primaryColor,
+        // color: Colors.blue,
       ),
       const SizedBox(
         height: 5,
       ),
       CustomeTittleText(
         text: tittle,
-        textsize: 15,
+        textsize: 10,
         color: Colors.black,
       ),
       const SizedBox(
@@ -1305,7 +1352,7 @@ Widget driverINfoWidget(String img, String tittle, String Subtittle) {
       ),
       CustomeSubTittleText(
         text: Subtittle,
-        textsize: 13,
+        textsize: 10,
         color: Colors.black,
         fontWeight: FontWeight.normal,
       ),
