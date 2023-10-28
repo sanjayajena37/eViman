@@ -77,7 +77,7 @@ class DriverDashboardView extends StatelessWidget {
           ),
           controller: controllerX.advancedDrawerController,
           animationCurve: Curves.easeInOut,
-          animationDuration: const Duration(milliseconds: 300),
+          animationDuration: const Duration(milliseconds: 250),
           animateChildDecoration: true,
           key: GlobalKey(),
           rtlOpening: false,

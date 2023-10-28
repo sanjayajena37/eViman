@@ -1024,14 +1024,7 @@ extension HelperController on DriverDashboardController {
     }
   }
 
-  void handleMenuButtonPressed() {
-    // NOTICE: Manage Advanced Drawer state through the Controller.
-    // _advancedDrawerController.value = AdvancedDrawerValue.visible();
-    // print(">>>>>>>>>>>>>>>>>>>>advancedDrawerController"+advancedDrawerController.toString());
-    if(advancedDrawerController != null){
-      advancedDrawerController.showDrawer();
-    }
-  }
+
 
   void startIsolate() async {
     ReceivePort? receivePort = ReceivePort();
