@@ -637,6 +637,15 @@ class DriverDashboardController extends GetxController
     return completer.future;
   }
 
+  void openPlayStorePage() async {
+    const url = 'https://play.google.com/store/apps/details?id=com.eviman.rider';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
   subscriptionStatus() {
     Amplify.Hub.listen(
       HubChannel.Api,

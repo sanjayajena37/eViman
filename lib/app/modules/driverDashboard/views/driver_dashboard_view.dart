@@ -353,7 +353,7 @@ class DriverDashboardView extends StatelessWidget {
                 ),*/
                 ListTile(
                   onTap: () {
-                    Get.toNamed(Routes.INVITESCREEN);
+                    Get.toNamed(Routes.INVITESCREEN,arguments: (controllerX.profileViewModel?.riderData?.referralCode??"XXXXXXXXXXXXX"));
                   },
                   leading: Icon(Icons.card_giftcard_outlined,
                       color: Theme.of(context).primaryColor),
@@ -374,6 +374,20 @@ class DriverDashboardView extends StatelessWidget {
                           color: Theme.of(context).primaryColor),
                       title: Text(
                         'Share',
+                        style: TextStyles(context)
+                            .getRegularStyle()
+                            .copyWith(fontSize: 15),
+                      ),
+                    ),
+                    ListTile(
+                      onTap: () {
+                        // Get.toNamed(Routes.INVITESCREEN);
+                        controllerX.openPlayStorePage();
+                      },
+                      leading: Icon(Icons.star_rate,
+                          color: Theme.of(context).primaryColor),
+                      title: Text(
+                        'Rate Us',
                         style: TextStyles(context)
                             .getRegularStyle()
                             .copyWith(fontSize: 15),

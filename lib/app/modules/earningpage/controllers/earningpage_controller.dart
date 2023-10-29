@@ -40,27 +40,32 @@ class EarningpageController extends GetxController {
     getEarningDetails();
   }
   getEarningDetails() {
-    MyWidgets.showLoading3();
-    Get.find<ConnectorController>().GETMETHODCALL_TOKEN(
-        api:
-        "https://backend.eviman.co.in/api/rides/v1/get-earning-history",
-        token: authToken ?? "",
-        fun: (map) {
-          log(">>>>${jsonEncode(map)}");
-          Get.back();
-          if (map is Map &&
-              map.containsKey("success") &&
-              map['success'] == true) {
-            earningModel = EarningModel.fromJson(map as Map<String,dynamic>);
-            // rideHistory.sort((a,b) => Utils.convertDateFormat2(b.rideStartTime).compareTo(Utils.convertDateFormat2(a.rideStartTime)) );
-            rideArray = earningModel?.rideArray;
-            rideArray?.sort((a,b) => Utils.convertDateFormat2(b.rideStartTime).compareTo(Utils.convertDateFormat2(a.rideStartTime)));
-            update(['earn']);
-          } else {
-            earningModel = null;
+    try{
+      MyWidgets.showLoading3();
+      Get.find<ConnectorController>().GETMETHODCALL_TOKEN(
+          api:
+          "https://backend.eviman.co.in/api/rides/v1/get-earning-history",
+          token: authToken ?? "",
+          fun: (map) {
+            log(">>>>${jsonEncode(map)}");
             Get.back();
-          }
-        });
+            if (map is Map &&
+                map.containsKey("success") &&
+                map['success'] == true) {
+              earningModel = EarningModel.fromJson(map as Map<String,dynamic>);
+              // rideHistory.sort((a,b) => Utils.convertDateFormat2(b.rideStartTime).compareTo(Utils.convertDateFormat2(a.rideStartTime)) );
+              rideArray = earningModel?.rideArray;
+              rideArray?.sort((a,b) => Utils.convertDateFormat2(b.rideStartTime).compareTo(Utils.convertDateFormat2(a.rideStartTime)));
+              update(['earn']);
+            } else {
+              earningModel = null;
+              update(['earn']);
+            }
+          });
+    }catch(e){
+      Get.back();
+    }
+
   }
 
   void increment() => count.value++;

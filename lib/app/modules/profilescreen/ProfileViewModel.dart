@@ -26,6 +26,7 @@ class ProfileViewModel {
 
 class RiderData {
   int? id;
+  String? referralCode;
   String? firstName;
   String? lastName;
   String? email;
@@ -68,7 +69,7 @@ class RiderData {
         this.updatedAt,
         this.profile_image,
         this.aadhaar_image,
-        this.pan_image});
+        this.pan_image,this.referralCode});
 
   RiderData.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -92,6 +93,7 @@ class RiderData {
     isOnline = json['is_online'];
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
+    referralCode = json['referralCode'];
   }
 
   Map<String, dynamic> toJson() {
@@ -117,6 +119,7 @@ class RiderData {
     data['is_online'] = this.isOnline;
     data['createdAt'] = this.createdAt;
     data['updatedAt'] = this.updatedAt;
+    data['referralCode'] = this.referralCode;
     return data;
   }
 }

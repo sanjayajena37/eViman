@@ -13,7 +13,8 @@ import '../controllers/invitescreen_controller.dart';
 
 class InvitescreenView extends GetView<InvitescreenController> {
    InvitescreenView({Key? key}) : super(key: key);
-   InvitescreenController controller = Get.find<InvitescreenController>();
+   @override
+  InvitescreenController controller = Get.find<InvitescreenController>();
 
 
   @override
@@ -42,7 +43,7 @@ class InvitescreenView extends GetView<InvitescreenController> {
               Container(
                 padding: const EdgeInsets.only(top: 16, left: 24, right: 24),
                 child: Text(
-                 "are you one of those who makes everything at the last moment",
+                 "Use this code in your every ride to get exciting benefits and rewards.Hurry up.",
                   textAlign: TextAlign.center,
                   style: TextStyles(context).getRegularStyle().copyWith(
                     fontSize: 16,
@@ -53,7 +54,7 @@ class InvitescreenView extends GetView<InvitescreenController> {
                 height: 15,
               ),
               Container(
-                width: Get.width*0.5,
+                width: Get.width*0.65,
                 height:Get.height*0.06 ,
                 child: CustomPaint(
                   painter: DashedBorderPainter(),
@@ -62,13 +63,13 @@ class InvitescreenView extends GetView<InvitescreenController> {
                     children: [
                       Center(
                         child: Text(
-                          'AYCOOT567',
+                          controller.referralCode??'XXX',
                           style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),
                         ),
                       ),
                       InkWell(
                           onTap: () async {
-                            await Clipboard.setData(const ClipboardData(text: "AYCOOT567"));
+                            await Clipboard.setData( ClipboardData(text: (controller.referralCode?? "XXXXX")));
                           },
                           child: Icon(Icons.copy))
                     ],

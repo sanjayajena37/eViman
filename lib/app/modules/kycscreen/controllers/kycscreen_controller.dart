@@ -648,7 +648,7 @@ class KycscreenController extends GetxController with Helper {
                 contextNew: Get.context,
                 errorText: "",
                 height: 30,enable: !(isVerify.value),
-                controller: TextEditingController(),
+                controller: referralCodeTextEditingController,
                 padding: const EdgeInsets.only(
                     left: 0, right: 0, bottom: 0),
                 hintText: "enter referral code",
