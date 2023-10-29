@@ -601,49 +601,57 @@ extension HelperController on DriverDashboardController {
                             print(">>>>>>>>>>" + receiveData.toString());
                             if (receiveData != null) {
                               try {
-                                maxChildSize = Rx<double>(0.7);
-                                initialChildSize = Rx<double>(0.5);
-                                snapSize = Rx<List<double>>(
-                                    [0.1, 0.2, 0.25, 0.3, 0.35, 0.4, 0.5, 0.6]);
-                                pickUpDist = pickUpDistance;
-                                travelDist = travelDistance;
-                                snapSize.refresh();
-                                maxChildSize.refresh();
-                                initialChildSize.refresh();
+
                                 incomingBookingModel =
                                     IncomingBooikingModel.fromJson(
                                         (receiveData ?? {})
                                             as Map<String, dynamic>);
-                                update(['drag']);
                                 print(">>>>>>>>>>" +
                                     (incomingBookingModel?.toJson())
                                         .toString());
                                 subscribeBookingDetails(incomingBookingModel
                                     ?.incomingBooking?.bookingId);
-                                createRide();
-                                sourceLocation = LatLng(
-                                    double.tryParse(incomingBookingModel
-                                                ?.incomingBooking?.clientLat ??
+                                createRide().then((value) {
+                                  if(value.toString().trim() == "true"){
+                                    maxChildSize = Rx<double>(0.7);
+                                    initialChildSize = Rx<double>(0.5);
+                                    snapSize = Rx<List<double>>(
+                                        [0.1, 0.2, 0.25, 0.3, 0.35, 0.4, 0.5, 0.6]);
+                                    pickUpDist = pickUpDistance;
+                                    travelDist = travelDistance;
+                                    snapSize.refresh();
+                                    maxChildSize.refresh();
+                                    initialChildSize.refresh();
+                                    update(['drag']);
+                                    sourceLocation = LatLng(
+                                        double.tryParse(incomingBookingModel
+                                            ?.incomingBooking?.clientLat ??
                                             "20.288187") ??
-                                        20.288187,
-                                    double.tryParse(incomingBookingModel
-                                                ?.incomingBooking?.clientLng ??
+                                            20.288187,
+                                        double.tryParse(incomingBookingModel
+                                            ?.incomingBooking?.clientLng ??
                                             "85.817814") ??
-                                        85.817814);
-                                destination = LatLng(
-                                    double.tryParse(incomingBookingModel
-                                                ?.incomingBooking
-                                                ?.destinationLat ??
+                                            85.817814);
+                                    destination = LatLng(
+                                        double.tryParse(incomingBookingModel
+                                            ?.incomingBooking
+                                            ?.destinationLat ??
                                             "20.288187") ??
-                                        20.290983,
-                                    double.tryParse(incomingBookingModel
-                                                ?.incomingBooking
-                                                ?.destinationLng ??
+                                            20.290983,
+                                        double.tryParse(incomingBookingModel
+                                            ?.incomingBooking
+                                            ?.destinationLng ??
                                             "85.817814") ??
-                                        85.845584);
-                                // getPolyPoints();
-                                setCustomMarkerIcon();
-                                Get.back();
+                                            85.845584);
+                                    // getPolyPoints();
+                                    setCustomMarkerIcon();
+                                    Get.back();
+                                  }else{
+                                    incomingBookingModel = null;
+                                    Snack.callError("Something went wrong");
+                                  }
+                                });
+
                               }
                               catch (e) {
                                 userDetails = "";

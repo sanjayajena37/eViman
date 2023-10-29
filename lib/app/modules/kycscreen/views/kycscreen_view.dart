@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:lottie/lottie.dart';
 
 import '../../../constants/text_styles.dart';
 import '../../../widgets/DropDown.dart';
@@ -12,6 +13,7 @@ import '../../../widgets/Snack.dart';
 import '../../../widgets/common_appbar_view.dart';
 import '../../../widgets/common_button.dart';
 import '../../../widgets/common_text_field_view.dart';
+import '../../../widgets/custom_dialog.dart';
 import '../../../widgets/remove_focuse.dart';
 import '../controllers/kycscreen_controller.dart';
 import 'package:permission_handler/permission_handler.dart' as permission;
@@ -1129,4 +1131,6 @@ class KycscreenView extends GetView<KycscreenController> {
       }),
     );
   }
+
+
 }

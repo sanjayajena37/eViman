@@ -7,7 +7,7 @@ import '../constants/themes.dart';
 class CustomDialog extends StatefulWidget {
   final VoidCallback? onCloseClick;
   final String title, description;
-  final Widget? topWidget;
+  final Widget? topWidget,writeWidget;
   final Widget? descriptionWidget;
   final List<Widget>? actionButtonList;
   final bool isVerical;
@@ -22,7 +22,7 @@ class CustomDialog extends StatefulWidget {
     this.descriptionWidget,
     this.actionButtonList,
     this.isVerical = false,
-    this.width
+    this.width,this.writeWidget
   }) : super(key: key);
 
   @override
@@ -119,7 +119,13 @@ class _CustomDialogState extends State<CustomDialog>
                       ),
                     )
                   else
-                    const SizedBox()
+                    const SizedBox(),
+                  if (widget.writeWidget != null)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 0,bottom: 5),
+                      child: SizedBox(
+                          height: 60, child: Center(child: widget.writeWidget)),
+                    ),
                 ],
               ),
             ),

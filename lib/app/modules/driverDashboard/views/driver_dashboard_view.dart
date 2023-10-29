@@ -413,98 +413,93 @@ class DriverDashboardView extends StatelessWidget {
             ),
           ),
           child: Scaffold(
-            body: GetBuilder<DriverDashboardController>(
-              id: "allPage",
-              builder: (controllerX) {
-                return StreamBuilder<ConnectivityResult>(
-                        stream: controllerX.connectivitySubscription,
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            try {
-                              Utils.checkInternetConnectivity().then((value) {
-                                if (value) {
-                                  controllerX =
-                                      Get.put<DriverDashboardController>(
-                                          DriverDashboardController());
-                                  // controllerX.getCurrentLocation();
-                                  return maiWidgetFun(context);
-                                } else {
-                                  return const Center(
-                                      child: CircularProgressIndicator());
-                                }
-                              });
-                            } catch (e) {
-                              return const Center(
-                                  child: CircularProgressIndicator());
-                            }
-                          }
-                          if (snapshot.hasError) {
-                            return Text('Error: ${snapshot.error}');
-                          }
-                          final connectivityResult = snapshot.data;
-                          String statusText = 'Unknown';
-                          if (connectivityResult == ConnectivityResult.mobile ||
-                              connectivityResult == ConnectivityResult.wifi ||
-                              connectivityResult ==
-                                  ConnectivityResult.ethernet) {
-                            statusText = 'Mobile Data';
-                            controllerX = Get.put<DriverDashboardController>(
+            body: StreamBuilder<ConnectivityResult>(
+              stream: controllerX.connectivitySubscription,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState ==
+                    ConnectionState.waiting) {
+                  try {
+                    Utils.checkInternetConnectivity().then((value) {
+                      if (value) {
+                        controllerX =
+                            Get.put<DriverDashboardController>(
                                 DriverDashboardController());
-                            // controllerX.getCurrentLocation();
-                            return maiWidgetFun(context);
-                          } else if (connectivityResult ==
-                              ConnectivityResult.none) {
-                            statusText = 'No Connection';
-                            return Center(
-                              child: Container(
-                                foregroundDecoration:
-                                    !Get.find<ThemeController>().isLightMode
-                                        ? BoxDecoration(
-                                            color: Theme.of(context)
-                                                .backgroundColor
-                                                .withOpacity(0.4))
-                                        : null,
-                                width: MediaQuery.of(context).size.width,
-                                height: MediaQuery.of(context).size.height,
-                                child: lottie.Lottie.asset(
-                                  'assets/json/offline.json',
-                                  fit: BoxFit.contain,
-                                ),
-                              ),
-                            );
-                          } else {
-                            Utils.checkInternetConnectivity().then((value) {
-                              if (value) {
-                                controllerX =
-                                    Get.put<DriverDashboardController>(
-                                        DriverDashboardController());
-                                // controllerX.getCurrentLocation();
-                                return maiWidgetFun(context);
-                              } else {
-                                return Center(
-                                  child: Container(
-                                    foregroundDecoration:
-                                        !Get.find<ThemeController>().isLightMode
-                                            ? BoxDecoration(
-                                                color: Theme.of(context)
-                                                    .backgroundColor
-                                                    .withOpacity(0.4))
-                                            : null,
-                                    width: MediaQuery.of(context).size.width,
-                                    height: MediaQuery.of(context).size.height,
-                                    child: lottie.Lottie.asset(
-                                      'assets/json/offline.json',
-                                      fit: BoxFit.contain,
-                                    ),
-                                  ),
-                                );
-                              }
-                            });
-                          }
-                          return maiWidgetFun(context);
-                        },
+                        // controllerX.getCurrentLocation();
+                        return maiWidgetFun(context);
+                      } else {
+                        return const Center(
+                            child: CircularProgressIndicator());
+                      }
+                    });
+                  } catch (e) {
+                    return const Center(
+                        child: CircularProgressIndicator());
+                  }
+                }
+                if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                }
+                final connectivityResult = snapshot.data;
+                String statusText = 'Unknown';
+                if (connectivityResult == ConnectivityResult.mobile ||
+                    connectivityResult == ConnectivityResult.wifi ||
+                    connectivityResult ==
+                        ConnectivityResult.ethernet) {
+                  statusText = 'Mobile Data';
+                  controllerX = Get.put<DriverDashboardController>(
+                      DriverDashboardController());
+                  // controllerX.getCurrentLocation();
+                  return maiWidgetFun(context);
+                } else if (connectivityResult ==
+                    ConnectivityResult.none) {
+                  statusText = 'No Connection';
+                  return Center(
+                    child: Container(
+                      foregroundDecoration:
+                      !Get.find<ThemeController>().isLightMode
+                          ? BoxDecoration(
+                          color: Theme.of(context)
+                              .backgroundColor
+                              .withOpacity(0.4))
+                          : null,
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height,
+                      child: lottie.Lottie.asset(
+                        'assets/json/offline.json',
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  );
+                } else {
+                  Utils.checkInternetConnectivity().then((value) {
+                    if (value) {
+                      controllerX =
+                          Get.put<DriverDashboardController>(
+                              DriverDashboardController());
+                      // controllerX.getCurrentLocation();
+                      return maiWidgetFun(context);
+                    } else {
+                      return Center(
+                        child: Container(
+                          foregroundDecoration:
+                          !Get.find<ThemeController>().isLightMode
+                              ? BoxDecoration(
+                              color: Theme.of(context)
+                                  .backgroundColor
+                                  .withOpacity(0.4))
+                              : null,
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.height,
+                          child: lottie.Lottie.asset(
+                            'assets/json/offline.json',
+                            fit: BoxFit.contain,
+                          ),
+                        ),
                       );
+                    }
+                  });
+                }
+                return maiWidgetFun(context);
               },
             ),
           ),

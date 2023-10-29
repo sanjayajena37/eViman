@@ -231,7 +231,7 @@ class DriverDashboardController extends GetxController
                 }
                 // getPolyPoints();
                 setCustomMarkerIcon();
-                update(['allPage','top']);
+                update(['top']);
               }
             }
 
@@ -239,14 +239,16 @@ class DriverDashboardController extends GetxController
                 checkStatusModel?.riderStatus?.isOnline != null) {
               if (checkStatusModel?.riderStatus?.isOnline ?? false) {
                 isDisappear = Rx<bool>(true);
+                isDisappear.refresh();
                 calBackgroundServices("true");
                 subscribeIncomingBooking();
               } else {
                 isDisappear = Rx<bool>(false);
+                isDisappear.refresh();
                 callOrStopServices();
               }
             }
-            update(['allPage','top']);
+            update(['top']);
           }
           else {
             incomingBookingModel = null;
@@ -467,13 +469,13 @@ class DriverDashboardController extends GetxController
             subscribeBookingDetailsModel = null;
             polylineCoordinates = [];
             unsubscribe2();
-            update(['allPage','top']);
+            update(['top']);
           } else {
             Map? receiveData = jsonDecode(event.data as String) ?? {};
             subscribeBookingDetailsModel =
                 SubscribeBookingDetailsModel.fromJson(
                     receiveData as Map<String, dynamic>);
-            update(['allPage','top']);
+            update(['top']);
           }
         }
         safePrint('Subscription event data received2: ${event.data}');
@@ -579,45 +581,60 @@ class DriverDashboardController extends GetxController
     }
   }
 
-  createRide() {
+  Future<String> createRide() async {
+    Completer<String> completer = Completer<String>();
     if (incomingBookingModel != null) {
-      Map<String, dynamic> postData = {
-        "bookingId":
-            incomingBookingModel?.incomingBooking?.bookingId ?? "EVIMAN_1",
-        "riderAssigned": riderIdNew ?? "41",
-        "vehicleAssigned": vehicleIdNew ?? "33",
-        "vehicleTypeId":  incomingBookingModel?.incomingBooking?.fareInfo??"",
-        "clientId": incomingBookingModel?.incomingBooking?.clientId ?? "28",
-        "pickupLat":
-            incomingBookingModel?.incomingBooking?.clientLat ?? "8.2522",
-        "pickupLng":
-            incomingBookingModel?.incomingBooking?.clientLng ?? "15.2656",
-        "dropLat":
-            incomingBookingModel?.incomingBooking?.destinationLat ?? "17.5455",
-        "dropLng":
-            incomingBookingModel?.incomingBooking?.destinationLng ?? "14.5222",
-        "pickupAddress": incomingBookingModel?.incomingBooking?.pickupAddress ??
-            "Angul, Odisha, India",
-        "dropAddress": incomingBookingModel?.incomingBooking?.dropAddress ??
-            "Bhubaneswar, Odisha"
-      };
-      print(">>>>>>>>>createRideData" + postData.toString());
-      MyWidgets.showLoading3();
-      Get.find<ConnectorController>().POSTMETHOD_TOKEN(
-          api: "https://backend.eviman.co.in/api/rides/v1/create-ride",
-          json: postData,
-          token: authToken ?? "",
-          fun: (map) {
-            Get.back();
-            if (map is Map &&
-                map.containsKey('success') &&
-                map['success'] == true) {
-            } else {
-              Snack.callError((map ?? "Something went wrong").toString());
-            }
-            print(">>>>>mapData create ride" + map.toString());
-          });
+      try{
+        Map<String, dynamic> postData = {
+          "bookingId":
+          incomingBookingModel?.incomingBooking?.bookingId ?? "EVIMAN_1",
+          "riderAssigned": riderIdNew ?? "41",
+          "vehicleAssigned": vehicleIdNew ?? "33",
+          "vehicleTypeId":  incomingBookingModel?.incomingBooking?.fareInfo??"",
+          "clientId": incomingBookingModel?.incomingBooking?.clientId ?? "28",
+          "pickupLat":
+          incomingBookingModel?.incomingBooking?.clientLat ?? "8.2522",
+          "pickupLng":
+          incomingBookingModel?.incomingBooking?.clientLng ?? "15.2656",
+          "dropLat":
+          incomingBookingModel?.incomingBooking?.destinationLat ?? "17.5455",
+          "dropLng":
+          incomingBookingModel?.incomingBooking?.destinationLng ?? "14.5222",
+          "pickupAddress": incomingBookingModel?.incomingBooking?.pickupAddress ??
+              "Angul, Odisha, India",
+          "dropAddress": incomingBookingModel?.incomingBooking?.dropAddress ??
+              "Bhubaneswar, Odisha"
+        };
+        print(">>>>>>>>>createRideData" + postData.toString());
+
+        MyWidgets.showLoading3();
+        await Get.find<ConnectorController>().POSTMETHOD_TOKEN(
+            api: "https://backend.eviman.co.in/api/rides/v1/create-ride",
+            json: postData,
+            token: authToken ?? "",
+            fun: (map) {
+              // Get.back();
+              closeDialogIfOpen();
+              if (map is Map &&
+                  map.containsKey('success') &&
+                  map['success'] == true) {
+                completer.complete("true");
+              } else {
+                completer.complete("false");
+                // Snack.callError((map ?? "Something went wrong").toString());
+              }
+              print(">>>>>mapData create ride" + map.toString());
+            });
+      }catch(e){
+        closeDialogIfOpen();
+        completer.complete("false");
+      }
+
     }
+    else{
+      completer.complete("false");
+    }
+    return completer.future;
   }
 
   subscriptionStatus() {
