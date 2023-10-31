@@ -610,7 +610,7 @@ class KycscreenController extends GetxController with Helper {
         currentStep = currentStep + 1;
       }
       update(['ref']);
-    } else if ((currentStep == 1) && !allValidation2()) {
+    } else if ((currentStep == 1) && allValidation2()) {
       completeReferral();
       // createProfile();
     } else if ((currentStep == 2) && allValidation3()) {
@@ -700,7 +700,7 @@ class KycscreenController extends GetxController with Helper {
         Snack.callError("Please verify referral code");
       }
     } else {
-      // createProfile();
+      createProfile();
     }
   }
 
