@@ -298,7 +298,7 @@ extension HelperController on DriverDashboardController {
         AlertDialog(
           content: Stack(children: [
             Container(
-              height: Get.height * 0.46,
+              height: Get.height * 0.5,
               width: screenSizeWidth,
               padding: const EdgeInsets.only(
                   left: 16, right: 16, top: 16, bottom: 16),
@@ -391,6 +391,7 @@ extension HelperController on DriverDashboardController {
                         .getBoldStyle()
                         .copyWith(color: Colors.white, fontSize: 16),
                   ),
+
                   const SizedBox(
                     height: 7,
                   ),
@@ -559,6 +560,20 @@ extension HelperController on DriverDashboardController {
                         ),
                       ],
                     ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                         "(Expected Price ₹${receiveData?['incomingBooking']['amount']??0.00})",
+                        style: TextStyles(context)
+                            .getBoldStyle()
+                            .copyWith(color: Colors.white, fontSize: 20),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 3,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,

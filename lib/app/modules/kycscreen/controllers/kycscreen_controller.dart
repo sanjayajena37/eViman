@@ -331,7 +331,8 @@ class KycscreenController extends GetxController with Helper {
       errorVehiclePin = '';
       errorVehicleCurrentCity = '';
       isValid = false;
-    } else if (chasisNumberController.text
+    }
+   /* else if (chasisNumberController.text
         .trim()
         .isEmpty) {
       errorChassis = 'Please enter your chassis number';
@@ -348,7 +349,8 @@ class KycscreenController extends GetxController with Helper {
       errorVehiclePin = '';
       errorVehicleCurrentCity = '';
       isValid = false;
-    } else if (engineNumberController.text
+    }
+    else if (engineNumberController.text
         .trim()
         .isEmpty) {
       errorChassis = '';
@@ -365,25 +367,8 @@ class KycscreenController extends GetxController with Helper {
       errorVehiclePin = '';
       errorVehicleCurrentCity = '';
       isValid = false;
-    } else if (ownerNumberController.text
-        .trim()
-        .isEmpty) {
-      errorChassis = '';
-      errorRegNo = '';
-      errorChassis = '';
-      errorEngineNum = '';
-      errorOwnerName = 'Please enter your owner name';
-      errorVehicleType = '';
-      errorVehicleSubType = '';
-      errorVehicleAddress1 = '';
-      errorVehicleAddress2 = '';
-      errorVehicleCity = '';
-      errorVehicleState = '';
-      errorVehicleCountry = '';
-      errorVehiclePin = '';
-      errorVehicleCurrentCity = '';
-      isValid = false;
-    } else if (vehicleNameController.text
+    }*/
+    else if (vehicleNameController.text
         .trim()
         .isEmpty) {
       errorChassis = '';
@@ -402,7 +387,27 @@ class KycscreenController extends GetxController with Helper {
       errorVehiclePin = '';
       errorVehicleCurrentCity = '';
       isValid = false;
-    } else if (image4 == null) {
+    }
+    else if (ownerNumberController.text
+        .trim()
+        .isEmpty) {
+      errorChassis = '';
+      errorRegNo = '';
+      errorChassis = '';
+      errorEngineNum = '';
+      errorOwnerName = 'Please enter your owner name';
+      errorVehicleType = '';
+      errorVehicleSubType = '';
+      errorVehicleAddress1 = '';
+      errorVehicleAddress2 = '';
+      errorVehicleCity = '';
+      errorVehicleState = '';
+      errorVehicleCountry = '';
+      errorVehiclePin = '';
+      errorVehicleCurrentCity = '';
+      isValid = false;
+    }
+    else if (image4 == null) {
       isValid = false;
       Snack.callError("Please upload your RC");
     } else if (image5 == null) {
@@ -775,6 +780,7 @@ class KycscreenController extends GetxController with Helper {
             if (currentStep < 2) {
               currentStep = currentStep + 1;
             }
+            helpStep = 2;
             authToken = map['authToken'];
             update(['ref']);
             Snack.callSuccess((map['message'] ?? "").toString());

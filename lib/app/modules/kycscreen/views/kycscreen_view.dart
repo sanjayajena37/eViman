@@ -1114,7 +1114,7 @@ class KycscreenView extends GetView<KycscreenController> {
                     onPressed: () {
                       controller.cancelStep();
                     },
-                    child: Text("Cancel")),
+                    child: Text("Back")),
               ),
               SizedBox(width: 10),
               Expanded(

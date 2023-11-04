@@ -310,6 +310,7 @@ class DriverDashboardController extends GetxController
               dropAddress
               pickupAddress
               status
+              amount
             }
           }
         """,

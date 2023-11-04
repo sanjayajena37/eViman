@@ -1171,7 +1171,8 @@ class DriverDashboardView extends StatelessWidget {
                                                               8.0),
                                                       child: Row(
                                                         children: [
-                                                          Expanded(
+                                                          (controllerX
+                                                              .otpVerifiedStatus == false)? Expanded(
                                                             child: CommonButton(
                                                               padding:
                                                                   const EdgeInsets
@@ -1189,7 +1190,7 @@ class DriverDashboardView extends StatelessWidget {
                                                               radius: 10,
                                                               height: 37,
                                                             ),
-                                                          ),
+                                                          ):Container(),
                                                           SizedBox(
                                                             width: 2,
                                                           ),

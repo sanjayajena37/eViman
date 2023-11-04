@@ -293,7 +293,7 @@ Future<void> onStart(ServiceInstance service) async {
                 .then((Position position) async {
               curentPosition = position;
               print("bg location ${position.latitude}");
-              Placemark? locationDetails;
+            /*  Placemark? locationDetails;
               List<Placemark> placeMarks = await placemarkFromCoordinates(
                   position.latitude, position.longitude);
               if (placeMarks.isNotEmpty) {
@@ -305,10 +305,10 @@ Future<void> onStart(ServiceInstance service) async {
                   }
                 }
 
-              }
+              }*/
               Map<String, dynamic> postData = {
-                "currentCity": await getLocality(position)?? locationDetails?.locality ?? "India",
-                "currentLocality": await getSubLocality(position)?? ((locationDetails?.subLocality != null && locationDetails?.subLocality != "")?(locationDetails?.subLocality ?? locationDetails?.locality ?? "India"):locationDetails?.locality),
+                "currentCity": await getLocality(position),
+                "currentLocality": await getSubLocality(position),
                 "lat": (position.latitude ?? 0).toString(),
                 "lng": (position.longitude ?? 0).toString()
               };
@@ -467,11 +467,13 @@ Future<String> getLocality(Position position) async {
 
       data = locationDetails.locality??"";
     }else{
-      data = locationDetails.subLocality ??"";
+      locationDetails = placeMarks.first;
+      data = locationDetails.locality?? locationDetails.subLocality ??"";
     }
     print(">>>>>>>>>>>>locality Gets${locationDetails.locality} >>> $data");
   }catch(e){
-    data = "";
+    Placemark? locationDetails = placeMarks.first;
+    data = (locationDetails.locality)??(locationDetails.subLocality)??"";
   }
   return data;
 }
@@ -489,16 +491,19 @@ Future<String> getSubLocality(Position position) async {
   try{
     Placemark? locationDetails = placeMarks.firstWhere((element) => element.subLocality != null &&
         (element.subLocality??"").toString().trim() != "" && element.subLocality != "null");
-    data = locationDetails.subLocality?? locationDetails.locality??"";
+    // data = locationDetails.subLocality?? locationDetails.locality??"";
 
     if(locationDetails != null && locationDetails.subLocality != null && locationDetails.subLocality != ""){
-      data = locationDetails.subLocality??"";
+      data = locationDetails.subLocality?? locationDetails.locality??"";
+      // data = locationDetails.subLocality??"";
     }else{
+      locationDetails = placeMarks.first;
       data = locationDetails.locality??"";
     }
     print(">>>>>>>>>>>>subLocality Gets${locationDetails.subLocality}   >>>  $data");
   }catch(e){
-    data = "";
+    Placemark? locationDetails = placeMarks.first;
+    data = locationDetails.locality??"";
   }
   return data;
 }
