@@ -731,7 +731,7 @@ extension HelperController on DriverDashboardController {
         'https://www.google.com/maps/search/?api=1&query=$latitude,$longitude';
 
     if (await canLaunchUrl(Uri.parse(url))) {
-      await launchUrl(Uri.parse(url));
+      await launchUrl(Uri.parse(url),mode:LaunchMode.externalApplication );
     } else {
       throw 'Could not launch Google Maps';
     }
