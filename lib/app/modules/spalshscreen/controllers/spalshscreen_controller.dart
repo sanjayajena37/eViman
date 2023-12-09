@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ui';
 
 import 'package:dateplan/app/constants/helper.dart';
@@ -10,10 +11,15 @@ import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../../constants/shared_preferences_keys.dart';
+import '../../../providers/Utils.dart';
 import '../../../routes/app_pages.dart';
 import 'package:geolocator/geolocator.dart' as geoLoc;
 
 import 'package:permission_handler/permission_handler.dart' as permission;
+
+import '../../../widgets/MyWidget.dart';
+import '../../../widgets/Snack.dart';
+import '../../ConnectorController.dart';
 class SpalshscreenController extends GetxController with Helper{
   //TODO: Implement SpalshscreenController
 
@@ -27,11 +33,26 @@ class SpalshscreenController extends GetxController with Helper{
   void onReady() {
     infoDialog2();
     askPermissions();
+    Timer.periodic(const Duration(seconds: 2), (timer) {
+      if(permissionAllow){
+        getLoginDetails();
+
+      /*  Utils.checkInternetConnectivity().then((value) {
+          if (value) {
+            getLoginDetails();
+          } else {
+            Snack.callError("Please turn on your internet");
+          }
+        });*/
+      }
+    });
     /*if(kDebugMode){
       FirebaseCrashlytics.instance.crash();
     }*/
     super.onReady();
   }
+
+
 
   @override
   void onClose() {
@@ -154,14 +175,53 @@ class SpalshscreenController extends GetxController with Helper{
     });
   }
 
+  Future<void> callOrStopServices() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    DartPluginRegistrant.ensureInitialized();
+    try {
+      final service = FlutterBackgroundService();
+      bool isRunning = await service.isRunning();
+      if (isRunning) {
+        service.invoke("stopService");
+      }
+      return;
+    } catch (e) {
+      print(">>>>>>\n\n" + e.toString());
+      return;
+    }
+  }
+
+  getOnlineDetails(String id) {
+    try{
+      MyWidgets.showLoading3();
+      Get.find<ConnectorController>().GETMETHODCALL(
+          api:
+          "https://backend.eviman.co.in/api/vehicles/v1/online-status/"+id,
+          fun: (map) {
+            Get.back();
+            if(map is Map && map['status'] != null && map['status'] == 0){
+              callOrStopServices();
+            }
+          });
+    }catch(e){
+      Get.back();
+    }
+
+  }
 
   getLoginDetails() async {
-    // callOrStopServices();
+
     String? isLogin = await SharedPreferencesKeys().getStringData(key: 'isLogin');
+    String? vehicleId = await SharedPreferencesKeys().getStringData(key: 'vehicleId');
     if(isLogin == "true"){
+      getOnlineDetails(vehicleId??"");
+      Get.delete<SpalshscreenController>();
       Get.offAllNamed(Routes.DRIVER_DASHBOARD);
+      permissionAllow = false;
     }else{
-      Get.toNamed(Routes.INTROSCREEN);
+      Get.delete<SpalshscreenController>();
+      Get.offAllNamed(Routes.INTROSCREEN);
+      permissionAllow = false;
     }
   }
 

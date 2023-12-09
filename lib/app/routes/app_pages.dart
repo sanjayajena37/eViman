@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 
 import '../modules/DocumentUpload/bindings/document_upload_binding.dart';
 import '../modules/DocumentUpload/views/document_upload_view.dart';
+import '../modules/ImageDetailsPage/bindings/image_details_page_binding.dart';
+import '../modules/ImageDetailsPage/views/image_details_page_view.dart';
 import '../modules/bluetoothscreen/bindings/bluetoothscreen_binding.dart';
 import '../modules/bluetoothscreen/views/bluetoothscreen_view.dart';
 import '../modules/driverDashboard/bindings/driver_dashboard_binding.dart';
@@ -12,6 +14,8 @@ import '../modules/driverprofile/bindings/driverprofile_binding.dart';
 import '../modules/driverprofile/views/driverprofile_view.dart';
 import '../modules/earningpage/bindings/earningpage_binding.dart';
 import '../modules/earningpage/views/earningpage_view.dart';
+import '../modules/galleryscreen/bindings/galleryscreen_binding.dart';
+import '../modules/galleryscreen/views/galleryscreen_view.dart';
 import '../modules/historyscreen/bindings/historyscreen_binding.dart';
 import '../modules/historyscreen/views/historyscreen_view.dart';
 import '../modules/home/bindings/home_binding.dart';
@@ -174,8 +178,18 @@ class AppPages {
       name: _Paths.EARNINGPAGE,
       transition: Transition.fadeIn,
       transitionDuration: const Duration(milliseconds: 1000),
-      page: () =>  EarningpageView(),
+      page: () => EarningpageView(),
       binding: EarningpageBinding(),
+    ),
+    GetPage(
+      name: _Paths.GALLERYSCREEN,
+      page: () => GalleryscreenView(),
+      binding: GalleryscreenBinding(),
+    ),
+    GetPage(
+      name: _Paths.IMAGE_DETAILS_PAGE,
+      page: () => const ImageDetailsPageView(),
+      binding: ImageDetailsPageBinding(),
     ),
   ];
 }

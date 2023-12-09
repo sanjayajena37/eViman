@@ -3,12 +3,12 @@ part of 'driver_dashboard_controller.dart';
 extension HelperController on DriverDashboardController {
   goOnline(bool val) {
     Map sendData = {
-      "status": (val) ? 1 : 0,
+      "online": (val) ? 1 : 0,
     };
     print(">>>>>update-online-status" + sendData.toString());
     Get.find<ConnectorController>().PATCH_METHOD_TOKEN(
-        api: "https://backend.eviman.co.in/api/riders/v1/update-online-status/" +
-            riderIdNew.toString(),
+        api: "https://backend.eviman.co.in/api/vehicles/v1/update-status/" +
+            vehicleIdNew.toString(),
         json: sendData,
         token: authToken ?? "",
         fun: (map) {
@@ -57,12 +57,12 @@ extension HelperController on DriverDashboardController {
 
     try{
       Map sendData = {
-        "status": (val) ? 1 : 0,
+        "online": (val) ? 1 : 0,
       };
       // print(">>>>>update-online-status" + sendData.toString());
       Get.find<ConnectorController>().PATCH_METHOD_TOKEN(
           api:
-          "https://backend.eviman.co.in/api/riders/v1/update-online-status/$riderIdNew",
+          "https://backend.eviman.co.in/api/vehicles/v1/update-status/$vehicleIdNew",
           json: sendData,
           token: authToken ?? "",
           fun: (map) {

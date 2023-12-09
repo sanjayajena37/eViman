@@ -589,18 +589,22 @@ class DriverDashboardController extends GetxController
         Map<String, dynamic> postData = {
           "bookingId":
           incomingBookingModel?.incomingBooking?.bookingId ?? "EVIMAN_1",
-          "riderAssigned": riderIdNew ?? "41",
-          "vehicleAssigned": vehicleIdNew ?? "33",
+          "riderAssigned": riderIdNew ?? "",
+          "vehicleAssigned": vehicleIdNew ?? "",
           "vehicleTypeId":  incomingBookingModel?.incomingBooking?.fareInfo??"",
-          "clientId": incomingBookingModel?.incomingBooking?.clientId ?? "28",
+          "clientId": incomingBookingModel?.incomingBooking?.clientId ?? "",
           "pickupLat":
-          incomingBookingModel?.incomingBooking?.clientLat ?? "8.2522",
+          incomingBookingModel?.incomingBooking?.clientLat ?? "",
           "pickupLng":
-          incomingBookingModel?.incomingBooking?.clientLng ?? "15.2656",
+          incomingBookingModel?.incomingBooking?.clientLng ?? "",
           "dropLat":
-          incomingBookingModel?.incomingBooking?.destinationLat ?? "17.5455",
+          incomingBookingModel?.incomingBooking?.destinationLat ?? "",
+          "pickupCoordinates":{"lat":(incomingBookingModel?.incomingBooking?.clientLat ?? ""),
+            "lng":( incomingBookingModel?.incomingBooking?.clientLng ?? "")},
+          "dropCoordinates":{"lat":(incomingBookingModel?.incomingBooking?.destinationLat ?? ""),
+            "lng":(incomingBookingModel?.incomingBooking?.destinationLng ?? "")},
           "dropLng":
-          incomingBookingModel?.incomingBooking?.destinationLng ?? "14.5222",
+          incomingBookingModel?.incomingBooking?.destinationLng ?? "",
           "pickupAddress": incomingBookingModel?.incomingBooking?.pickupAddress ??
               "Angul, Odisha, India",
           "dropAddress": incomingBookingModel?.incomingBooking?.dropAddress ??

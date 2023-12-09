@@ -393,6 +393,20 @@ class DriverDashboardView extends StatelessWidget {
                             .copyWith(fontSize: 15),
                       ),
                     ),
+                    ListTile(
+                      onTap: () {
+                        Get.toNamed(Routes.GALLERYSCREEN);
+                        // controllerX.openPlayStorePage();
+                      },
+                      leading: Icon(Icons.image,
+                          color: Theme.of(context).primaryColor),
+                      title: Text(
+                        'Gallery',
+                        style: TextStyles(context)
+                            .getRegularStyle()
+                            .copyWith(fontSize: 15),
+                      ),
+                    ),
               /*  ListTile(
                   onTap: () {
                     Get.toNamed(Routes.SETTINGSCREEN);

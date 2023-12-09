@@ -101,7 +101,7 @@ class SpalshscreenView extends GetView<SpalshscreenController> {
                         child: SizedBox(),
                       ),
 
-                      AnimatedOpacity(
+                      /*AnimatedOpacity(
                         opacity: 1.0,
                         duration: const Duration(milliseconds: 680),
                         child: CommonButton(
@@ -146,7 +146,7 @@ class SpalshscreenView extends GetView<SpalshscreenController> {
                             ),
                           ),
                         ),
-                      ),
+                      ),*/
                     ],
                   ),
                 ],
