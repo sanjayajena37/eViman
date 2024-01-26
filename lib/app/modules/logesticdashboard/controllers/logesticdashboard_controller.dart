@@ -1,73 +1,62 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:isolate';
-
 import 'dart:math';
 import 'dart:ui';
 import 'dart:developer' as dev;
+import 'package:flutter/material.dart';
+import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
+import 'package:flutter_isolate/flutter_isolate.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:get/get.dart';
+import 'package:linear_timer/linear_timer.dart';
+import 'package:sms_autofill/sms_autofill.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:vibration/vibration.dart';
+
+import '../../../../amplifyconfiguration.dart';
+import '../../../../models/ModelProvider.dart';
+import '../../../constants/helper.dart';
+import '../../../constants/shared_preferences_keys.dart';
+import '../../../constants/text_styles.dart';
+import '../../../routes/app_pages.dart';
+import '../../../widgets/CustomeTittleText.dart';
+import '../../../widgets/MyWidget.dart';
+import '../../../widgets/Snack.dart';
+import '../../../widgets/common_button.dart';
+import '../../ConnectorController.dart';
+import '../../driverDashboard/CheckStatusModel.dart';
+import '../../driverDashboard/IncomingBooikingModel.dart';
+import '../../driverDashboard/LocationService.dart';
+import '../../driverDashboard/SubscribeBookingDetailsModel.dart';
+import '../../driverDashboard/controllers/driver_dashboard_controller.dart';
+import '../../loginscreen/controllers/loginscreen_controller.dart';
+import '../../profilescreen/ProfileViewModel.dart';
+import 'package:geocoding/geocoding.dart' as geoc;
+import 'package:http/http.dart' as http;
+import 'package:amplify_core/src/types/api/graphql/graphql_response.dart' as gr;
+import 'package:geolocator/geolocator.dart' as geoLoc;
+
+import 'package:permission_handler/permission_handler.dart' as permission;
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-
-import 'package:dateplan/app/routes/app_pages.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
-import 'package:flutter_background_service/flutter_background_service.dart';
-import 'package:flutter_isolate/flutter_isolate.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-// import 'package:flutter_polyline_points_plus/flutter_polyline_points_plus.dart';
-import 'package:geolocator/geolocator.dart' as geoLoc;
-
-import 'package:permission_handler/permission_handler.dart' as permission;
-
-import 'package:get/get.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:iconsax/iconsax.dart';
-import 'package:linear_timer/linear_timer.dart';
 import 'package:location/location.dart';
-import 'package:sms_autofill/sms_autofill.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:vibration/vibration.dart';
-import 'package:workmanager/workmanager.dart';
 
-import '../../../../amplifyconfiguration.dart';
 
-import '../../../../models/ModelProvider.dart';
-import '../../../constants/helper.dart';
-import '../../../constants/shared_preferences_keys.dart';
-import '../../../constants/text_styles.dart';
-import '../../../widgets/CustomeTittleText.dart';
-import '../../../widgets/MyWidget.dart';
-import '../../../widgets/RoundedButtonWidget.dart';
-import '../../../widgets/Snack.dart';
-import '../../../widgets/common_button.dart';
-import '../../ConnectorController.dart';
-import '../../loginscreen/controllers/loginscreen_controller.dart';
-import '../../profilescreen/ProfileViewModel.dart';
-import '../CheckStatusModel.dart';
-import '../IncomingBooikingModel.dart';
-import '../IncomingBooking.dart';
-import 'package:amplify_core/src/types/api/graphql/graphql_response.dart' as gr;
-
-import '../LocationService.dart';
-import '../SubscribeBookingDetailsModel.dart';
-import 'AmplifyApiName.dart';
-import 'package:geocoding/geocoding.dart' as geoc;
-import 'package:http/http.dart' as http;
-
-import 'location_isolate.dart';
-part 'mapcontroller.dart';
-part 'appsyncController.dart';
 part 'helpercontroller.dart';
+part 'mapcontroller.dart';
 
 
-class DriverDashboardController extends GetxController
-    with Helper, WidgetsBindingObserver, GetSingleTickerProviderStateMixin {
+class LogesticdashboardController extends GetxController  with Helper, WidgetsBindingObserver ,GetSingleTickerProviderStateMixin
+{
   List<Map<String, double>> locationDataFromIsolate = [];
+  TextEditingController fromDateController = TextEditingController();
 
   FlutterIsolate? isolateField;
   late AdvancedDrawerController advancedDrawerController;
@@ -116,7 +105,7 @@ class DriverDashboardController extends GetxController
     MyWidgets.showLoading3();
     Get.find<ConnectorController>().GETMETHODCALL_TOKEN(
         api:
-            "https://backend.eviman.co.in/api/riders/v1/profile/${riderIdNew ?? 0}",
+        "https://backend.eviman.co.in/api/riders/v1/profile/${riderIdNew ?? 0}",
         token: authToken ?? "",
         fun: (map) {
           print(">>>>" + map.toString());
@@ -139,7 +128,7 @@ class DriverDashboardController extends GetxController
     MyWidgets.showLoading3();
     Get.find<ConnectorController>().GETMETHODCALL(
         api:
-            "https://backend.eviman.co.in/api/riders/v1/online-status/${riderIdNew ?? ""}",
+        "https://backend.eviman.co.in/api/riders/v1/online-status/${riderIdNew ?? ""}",
         fun: (map) {
           incomingBookingModel = null;
           print(">>>>>>>>>>>>>online-status" + map.toString());
@@ -154,65 +143,65 @@ class DriverDashboardController extends GetxController
                 checkStatusModel?.riderStatus != null &&
                 checkStatusModel?.riderStatus?.activeRide != null) {
               if (checkStatusModel?.riderStatus?.activeRide?.rideStatus
-                          .toString()
-                          .trim() ==
-                      "CONFIRMED" ||
+                  .toString()
+                  .trim() ==
+                  "CONFIRMED" ||
                   checkStatusModel?.riderStatus?.activeRide?.rideStatus
-                          .toString()
-                          .trim() ==
+                      .toString()
+                      .trim() ==
                       "OTP VERIFIED") {
                 incomingBookingModel = IncomingBooikingModel(
                     incomingBooking: IncomingBooking(
-                  bookingId:
+                      bookingId:
                       checkStatusModel?.riderStatus?.activeRide?.bookingId ??
                           "",
-                  clientLat:
+                      clientLat:
                       checkStatusModel?.riderStatus?.activeRide?.pickupLat ??
                           "",
-                  clientLng:
+                      clientLng:
                       checkStatusModel?.riderStatus?.activeRide?.pickupLng ??
                           "",
-                  destinationLng:
+                      destinationLng:
                       checkStatusModel?.riderStatus?.activeRide?.dropLng ?? "",
-                  destinationLat:
+                      destinationLat:
                       checkStatusModel?.riderStatus?.activeRide?.dropLat ?? "",
-                  dropAddress:
+                      dropAddress:
                       checkStatusModel?.riderStatus?.activeRide?.dropAddress ??
                           "",
-                  pickupAddress: checkStatusModel
+                      pickupAddress: checkStatusModel
                           ?.riderStatus?.activeRide?.pickupAddress ??
-                      "",
-                  clientId:
+                          "",
+                      clientId:
                       checkStatusModel?.riderStatus?.activeRide?.clientId ?? 0,
-                  // clientName: "",
-                  clientName:
+                      // clientName: "",
+                      clientName:
                       checkStatusModel?.riderStatus?.clientName ??
                           "JKS",
-                  clientPhone: checkStatusModel?.riderStatus?.clientPhone ?? "",
-                  fareInfo:
+                      clientPhone: checkStatusModel?.riderStatus?.clientPhone ?? "",
+                      fareInfo:
                       checkStatusModel?.riderStatus?.activeRide?.fareInfo ?? 0,
-                  status:
+                      status:
                       checkStatusModel?.riderStatus?.activeRide?.rideStatus ??
                           "",
-                  rider: int.tryParse(checkStatusModel
+                      rider: int.tryParse(checkStatusModel
                           ?.riderStatus?.activeRide?.riderAssigned ??
-                      "0"),
-                ));
+                          "0"),
+                    ));
                 subscribeBookingDetailsModel = SubscribeBookingDetailsModel(
                     subscribeBookingDetails: SubscribeBookingDetails(
-                  bookingId:
+                      bookingId:
                       checkStatusModel?.riderStatus?.activeRide?.bookingId ??
                           "",
-                  bookingStatus:
+                      bookingStatus:
                       checkStatusModel?.riderStatus?.activeRide?.rideStatus ??
                           "",
-                  otp: checkStatusModel?.riderStatus?.activeRide?.otp ?? 0000,
-                  riderId: int.tryParse(checkStatusModel
+                      otp: checkStatusModel?.riderStatus?.activeRide?.otp ?? 0000,
+                      riderId: int.tryParse(checkStatusModel
                           ?.riderStatus?.activeRide?.riderAssigned ??
-                      "0"),
-                  updatedById: int.tryParse(riderIdNew ?? "0"),
-                  vehicleId: int.tryParse(vehicleIdNew ?? "0"),
-                ));
+                          "0"),
+                      updatedById: int.tryParse(riderIdNew ?? "0"),
+                      vehicleId: int.tryParse(vehicleIdNew ?? "0"),
+                    ));
                 travelDist =
                     checkStatusModel?.riderStatus?.activeRide?.distance ?? "0";
                 maxChildSize = Rx<double>(0.7);
@@ -222,8 +211,8 @@ class DriverDashboardController extends GetxController
                 subscribeBookingDetails(
                     checkStatusModel?.riderStatus?.activeRide?.bookingId ?? "");
                 if (checkStatusModel?.riderStatus?.activeRide?.rideStatus
-                        .toString()
-                        .trim() ==
+                    .toString()
+                    .trim() ==
                     "OTP VERIFIED") {
                   otpVerifiedStatus = true;
                 }
@@ -258,7 +247,7 @@ class DriverDashboardController extends GetxController
   getRiderId() async {
     riderIdNew = await SharedPreferencesKeys().getStringData(key: 'riderId');
     vehicleIdNew =
-        await SharedPreferencesKeys().getStringData(key: 'vehicleId');
+    await SharedPreferencesKeys().getStringData(key: 'vehicleId');
     authToken = await SharedPreferencesKeys().getStringData(key: 'authToken');
     getProfileDetails();
     getRideAnalytics();
@@ -282,7 +271,7 @@ class DriverDashboardController extends GetxController
   }
 
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
+  FlutterLocalNotificationsPlugin();
   void subscribeIncomingBooking() {
     print(">>>>>>>>>>>>>>>>>riderId" + riderIdNew.toString());
     int riderId = int.parse((riderIdNew != null && riderIdNew != "")
@@ -320,7 +309,7 @@ class DriverDashboardController extends GetxController
     });
 
     subscription = operation.listen(
-      (event) {
+          (event) {
         if (event.data != null) {
           print(">>>>>>>>>>>>>>>>event.data"+event.data.toString());
           Map? receiveDataNewClose = jsonDecode(event.data as String) ?? {};
@@ -334,7 +323,7 @@ class DriverDashboardController extends GetxController
           else if (userDetails == "" && incomingBookingModel == null) {
             Map? receiveDataNew = jsonDecode(event.data as String) ?? {};
             // Booking Timeout
-             if (receiveDataNew != null &&
+            if (receiveDataNew != null &&
                 receiveDataNew['incomingBooking']['status'].toString().trim() ==
                     "Incoming Booking") {
               userDetails = (event.data ?? "").toString();
@@ -362,32 +351,32 @@ class DriverDashboardController extends GetxController
                         playSound: true)),
               );
               calculateDistanceUsingAPI(
-                      desLat: double.tryParse(
-                          receiveData?['incomingBooking']['clientLat'] ?? "0"),
-                      desLong: double.tryParse(
-                          receiveData?['incomingBooking']['clientLng'] ?? "0"),
-                      originLat: currentLocation?.latitude ?? 0,
-                      originLong: currentLocation?.longitude ?? 0)
+                  desLat: double.tryParse(
+                      receiveData?['incomingBooking']['clientLat'] ?? "0"),
+                  desLong: double.tryParse(
+                      receiveData?['incomingBooking']['clientLng'] ?? "0"),
+                  originLat: currentLocation?.latitude ?? 0,
+                  originLong: currentLocation?.longitude ?? 0)
                   .then((value1) {
                 calculateDistanceUsingAPI(
-                        desLat: double.tryParse(receiveData?['incomingBooking']
-                                ['destinationLat'] ??
+                    desLat: double.tryParse(receiveData?['incomingBooking']
+                    ['destinationLat'] ??
+                        "0"),
+                    desLong: double.tryParse(receiveData?['incomingBooking']
+                    ['destinationLng'] ??
+                        "0"),
+                    originLat: double.tryParse(
+                        receiveData?['incomingBooking']['clientLat'] ??
                             "0"),
-                        desLong: double.tryParse(receiveData?['incomingBooking']
-                                ['destinationLng'] ??
-                            "0"),
-                        originLat: double.tryParse(
-                            receiveData?['incomingBooking']['clientLat'] ??
-                                "0"),
-                        originLong: double.tryParse(
-                            receiveData?['incomingBooking']['clientLng'] ??
-                                "0"))
+                    originLong: double.tryParse(
+                        receiveData?['incomingBooking']['clientLng'] ??
+                            "0"))
                     .then((value2) {
                   showRideAcceptDialog(Get.context!, Get.width * 0.9,
                       dropAddress: receiveData?['incomingBooking']
-                          ['dropAddress'],
+                      ['dropAddress'],
                       pickupAddress: receiveData?['incomingBooking']
-                          ['pickupAddress'],
+                      ['pickupAddress'],
                       pickUpDistance: value1,
                       travelDistance: value2,
                       receiveData: receiveData);
@@ -444,21 +433,21 @@ class DriverDashboardController extends GetxController
     });
 
     subscription2 = operation.listen(
-      (event) {
+          (event) {
         if (event.data != null) {
           Map? receiveDataNew = jsonDecode(event.data as String) ?? {};
           if (receiveDataNew != null &&
               ((receiveDataNew['subscribeBookingDetails']['bookingStatus']
-                          .toString()
-                          .trim() ==
-                      "Booking Timeout") ||
+                  .toString()
+                  .trim() ==
+                  "Booking Timeout") ||
                   (receiveDataNew['subscribeBookingDetails']['bookingStatus']
-                          .toString()
-                          .trim() ==
+                      .toString()
+                      .trim() ==
                       "CANCELLED BY CUSTOMER") ||
                   (receiveDataNew['subscribeBookingDetails']['bookingStatus']
-                          .toString()
-                          .trim() ==
+                      .toString()
+                      .trim() ==
                       "CANCELLED BY RIDER"))) {
             userDetails = "";
             initialChildSize = Rx<double>(0.1);
@@ -652,7 +641,7 @@ class DriverDashboardController extends GetxController
   subscriptionStatus() {
     Amplify.Hub.listen(
       HubChannel.Api,
-      (ApiHubEvent event) {
+          (ApiHubEvent event) {
         if (event is SubscriptionHubEvent) {
           safePrint(event.status);
         }
@@ -676,9 +665,9 @@ class DriverDashboardController extends GetxController
 
       update(['drag', 'map']);
       upDateRideStatus("CANCELLED BY RIDER",
-              bookingId: subscribeBookingDetailsModel
-                      ?.subscribeBookingDetails?.bookingId ??
-                  "")
+          bookingId: subscribeBookingDetailsModel
+              ?.subscribeBookingDetails?.bookingId ??
+              "")
           .then((value) {
         unsubscribe2();
       });
@@ -702,7 +691,7 @@ class DriverDashboardController extends GetxController
         isYesOrNoPopup: false,
         filePath: "assets/json/done.json");
     if (isOk) {
-       goOnline(true);
+      goOnline(true);
     }
   }
 
@@ -712,10 +701,10 @@ class DriverDashboardController extends GetxController
     // var status2 = await permission.Permission.notification.status;
     print(">>>>>>>>>>>>>>status$status");
 
-     if (status.isDenied || status.isPermanentlyDenied || status1.isDenied || status1.isPermanentlyDenied ) {
+    if (status.isDenied || status.isPermanentlyDenied || status1.isDenied || status1.isPermanentlyDenied ) {
       bool isOk = await showCommonPopupNew6(
           (status.isDenied )?"This app collects location data to enable features like Live vehicle tracking ,Calculate ride price as per K.M and Time, even when the app is closed or not in use."
-          :"If you are not allowing the permission then you are not able to use the application features. To use this features go to App settings page and follow the instruction mentioned on the screen.",
+              :"If you are not allowing the permission then you are not able to use the application features. To use this features go to App settings page and follow the instruction mentioned on the screen.",
           "are you agree?",
           barrierDismissible: true,
           isYesOrNoPopup: true
@@ -749,7 +738,7 @@ class DriverDashboardController extends GetxController
     print(">>>>>>>>>>>>>>status$status");
     if (status.isDenied || status.isPermanentlyDenied ) {
       bool isOk = await showCommonPopupNew6(
-          // "eViman App need your run time location permission.It's required to give smooth less service to you",
+        // "eViman App need your run time location permission.It's required to give smooth less service to you",
           "This app collects location data to enable features like Live vehicle tracking ,Calculate ride price as per K.M and Time, even when the app is closed or not in use.",
           "are you agree?",
           barrierDismissible: true,
@@ -787,9 +776,9 @@ class DriverDashboardController extends GetxController
 
       update(['drag', 'map']);
       upDateRideStatusComplete("COMPLETED",
-              bookingId: subscribeBookingDetailsModel
-                      ?.subscribeBookingDetails?.bookingId ??
-                  "",amount)
+          bookingId: subscribeBookingDetailsModel
+              ?.subscribeBookingDetails?.bookingId ??
+              "",amount)
           .then((value) {
         unsubscribe2();
       });
@@ -834,10 +823,10 @@ class DriverDashboardController extends GetxController
             totalRides = (map['result']['totalRides']??"0.00").toString();
             update(['analytics','amt']);
           }else{
-             totalDistanceNew = "0.00";
-             totalAmount = "0.00";
-             totalRides = "0.00";
-             update(['analytics','amt']);
+            totalDistanceNew = "0.00";
+            totalAmount = "0.00";
+            totalRides = "0.00";
+            update(['analytics','amt']);
           }
         });
   }
@@ -847,7 +836,7 @@ class DriverDashboardController extends GetxController
     dev.log(">>>>>>>>>>>DISTLIST" + latLngList.toString());
     // MyWidgets.showLoading3();
     double totalDistance = 0;
-   /* if (latLngList.length > 1) {
+    /* if (latLngList.length > 1) {
       for (int i = 0; i < (latLngList.length - 1); i++) {
         await calculateDistanceUsingAPIReturnMeter(
                 originLong: latLngList[i]['longitude'],
@@ -867,7 +856,7 @@ class DriverDashboardController extends GetxController
 
     print(">>>>>>>>>>>>>>>>>travel distance$totalDistance");
     String? startDate =
-        await SharedPreferencesKeys().getStringData(key: 'startDate');
+    await SharedPreferencesKeys().getStringData(key: 'startDate');
     DateTime startDate1 = DateTime.parse(startDate!);
     DateTime endDate = DateTime.now();
     Duration duration = endDate.difference(startDate1);
@@ -889,8 +878,8 @@ class DriverDashboardController extends GetxController
     Completer<String> completer = Completer<String>();
     Map<String, dynamic> postData = {
       "rideBookingId":
-          subscribeBookingDetailsModel?.subscribeBookingDetails?.bookingId ??
-              "",
+      subscribeBookingDetailsModel?.subscribeBookingDetails?.bookingId ??
+          "",
       "distance": distance,
       "duration": duration
     };
@@ -937,7 +926,7 @@ class DriverDashboardController extends GetxController
   @override
   void onInit() {
     WidgetsBinding.instance.addObserver(this);
-     advancedDrawerController = AdvancedDrawerController();
+    advancedDrawerController = AdvancedDrawerController();
     connectivitySubscription = connectivity.onConnectivityChanged;
     animationController =  AnimationController(vsync: this, duration: Duration(milliseconds: 300));
     // getRiderId();

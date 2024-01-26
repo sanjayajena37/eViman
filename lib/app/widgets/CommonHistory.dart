@@ -12,8 +12,10 @@ class CommonHistoryWidget extends StatelessWidget {
   final String ?amount;
   final String ?driverName;
   final String ?status;
+  final String ?assetUrl;
+  final bool ?imgVisibility;
 
-   const CommonHistoryWidget({super.key,this.date,this.destination,this.source,this.amount,this.driverName,this.status = ""});
+   const CommonHistoryWidget({super.key,this.date,this.destination,this.source,this.amount,this.driverName,this.status = "",this.assetUrl,this.imgVisibility = true});
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +46,7 @@ class CommonHistoryWidget extends StatelessWidget {
                 const SizedBox(
                   height: 8,
                 ),
-                Container(
+                (imgVisibility == true)?Container(
                   width: double.infinity,
                   height: Get.height * 0.2,
                   decoration: BoxDecoration(
@@ -62,7 +64,7 @@ class CommonHistoryWidget extends StatelessWidget {
                       ),
                     ),
                   ),
-                ),
+                ):Container(),
                 const SizedBox(
                   height: 5,
                 ),

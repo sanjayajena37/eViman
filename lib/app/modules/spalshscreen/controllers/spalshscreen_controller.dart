@@ -20,6 +20,9 @@ import 'package:permission_handler/permission_handler.dart' as permission;
 import '../../../widgets/MyWidget.dart';
 import '../../../widgets/Snack.dart';
 import '../../ConnectorController.dart';
+import '../../driverDashboard/controllers/driver_dashboard_controller.dart';
+import '../../logesticdashboard/controllers/logesticdashboard_controller.dart';
+import '../../loginscreen/controllers/loginscreen_controller.dart';
 class SpalshscreenController extends GetxController with Helper{
   //TODO: Implement SpalshscreenController
 
@@ -213,16 +216,54 @@ class SpalshscreenController extends GetxController with Helper{
 
     String? isLogin = await SharedPreferencesKeys().getStringData(key: 'isLogin');
     String? vehicleId = await SharedPreferencesKeys().getStringData(key: 'vehicleId');
-    if(isLogin == "true"){
-      getOnlineDetails(vehicleId??"");
-      Get.delete<SpalshscreenController>();
-      Get.offAllNamed(Routes.DRIVER_DASHBOARD);
-      permissionAllow = false;
+    String? vehicleMode = await SharedPreferencesKeys().getStringData(key: 'vehicleMode');
+    String? loginTime = await SharedPreferencesKeys().getStringData(key: 'loginTime');
+    if(loginTime != null && loginTime != ""){
+      DateTime loginDate = DateTime.parse(loginTime);
+      print(">>>>>>>>>>difference${DateTime.now().difference(loginDate).inDays}");
+      if(DateTime.now().difference(loginDate).inDays >= 20){
+        await SharedPreferencesKeys().setStringData(key: "authToken", text: "");
+        await SharedPreferencesKeys()
+            .setStringData(key: "isLogin", text: "false");
+        await SharedPreferencesKeys().setStringData(key: "riderId", text: "");
+        callOrStopServices().then((value) {
+          Get.delete<LoginscreenController>();
+          Get.delete<DriverDashboardController>();
+          Get.delete<LogesticdashboardController>();
+          Get.offAndToNamed(Routes.LOGINSCREEN);
+        });
+        permissionAllow = false;
+        Snack.callError("Login Expired");
+      }else{
+        if(isLogin == "true"){
+
+          if(vehicleMode == "cab"){
+            getOnlineDetails(vehicleId??"");
+            Get.delete<SpalshscreenController>();
+            Get.offAllNamed(Routes.DRIVER_DASHBOARD);
+            permissionAllow = false;
+          }else if(vehicleMode == "logistic"){
+            Get.delete<SpalshscreenController>();
+            Get.offAllNamed(Routes.LOGESTICDASHBOARD);
+            permissionAllow = false;
+          }else{
+            Get.delete<SpalshscreenController>();
+            Get.offAllNamed(Routes.INTROSCREEN);
+            permissionAllow = false;
+          }
+        }
+        else{
+          Get.delete<SpalshscreenController>();
+          Get.offAllNamed(Routes.INTROSCREEN);
+          permissionAllow = false;
+        }
+      }
     }else{
       Get.delete<SpalshscreenController>();
       Get.offAllNamed(Routes.INTROSCREEN);
       permissionAllow = false;
     }
+
   }
 
 }

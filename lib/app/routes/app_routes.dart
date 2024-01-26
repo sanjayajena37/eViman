@@ -24,6 +24,7 @@ abstract class Routes {
   static const EARNINGPAGE = _Paths.EARNINGPAGE;
   static const GALLERYSCREEN = _Paths.GALLERYSCREEN;
   static const IMAGE_DETAILS_PAGE = _Paths.IMAGE_DETAILS_PAGE;
+  static const LOGESTICDASHBOARD = _Paths.LOGESTICDASHBOARD;
 }
 
 abstract class _Paths {
@@ -49,4 +50,5 @@ abstract class _Paths {
   static const EARNINGPAGE = '/earningpage';
   static const GALLERYSCREEN = '/galleryscreen';
   static const IMAGE_DETAILS_PAGE = '/image-details-page';
+  static const LOGESTICDASHBOARD = '/logesticdashboard';
 }

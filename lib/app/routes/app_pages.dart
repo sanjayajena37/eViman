@@ -28,6 +28,8 @@ import '../modules/keyscreen/bindings/keyscreen_binding.dart';
 import '../modules/keyscreen/views/keyscreen_view.dart';
 import '../modules/kycscreen/bindings/kycscreen_binding.dart';
 import '../modules/kycscreen/views/kycscreen_view.dart';
+import '../modules/logesticdashboard/bindings/logesticdashboard_binding.dart';
+import '../modules/logesticdashboard/views/logesticdashboard_view.dart';
 import '../modules/loginscreen/bindings/loginscreen_binding.dart';
 import '../modules/loginscreen/views/loginscreen_view.dart';
 import '../modules/otpscreen/bindings/otpscreen_binding.dart';
@@ -190,6 +192,11 @@ class AppPages {
       name: _Paths.IMAGE_DETAILS_PAGE,
       page: () => const ImageDetailsPageView(),
       binding: ImageDetailsPageBinding(),
+    ),
+    GetPage(
+      name: _Paths.LOGESTICDASHBOARD,
+      page: () =>  LogesticdashboardView(),
+      binding: LogesticdashboardBinding(),
     ),
   ];
 }

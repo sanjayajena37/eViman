@@ -49,7 +49,7 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  // await Upgrader.clearSavedSettings();
+  await Upgrader.clearSavedSettings();
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
   PlatformDispatcher.instance.onError = (error, stack) {
     FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);

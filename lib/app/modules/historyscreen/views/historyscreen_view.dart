@@ -38,7 +38,8 @@ class HistoryscreenView extends GetView<HistoryscreenController> {
                 assignId: true,
                 id: "his",
                 builder: (logic) {
-                  return ((controller.rideHistory).isEmpty)?Center(child: Text("Data Not Found")): ListView.builder(
+                  return ((controller.rideHistory).isEmpty)?Center(child: Text("Data Not Found")):
+                  ListView.builder(
                       itemCount: (controller.rideHistory).length,
                       physics: BouncingScrollPhysics(),
                       itemBuilder: (context, index) {
