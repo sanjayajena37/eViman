@@ -13,6 +13,8 @@ import 'app/data/BinderData.dart';
 import 'app/logic/controllers/theme_provider.dart';
 import 'app/routes/app_pages.dart';
 
+final navigatorKey = GlobalKey<NavigatorState>();
+
 class MainClass extends StatefulWidget {
   const MainClass({Key? key}) : super(key: key);
 
@@ -54,6 +56,7 @@ class _MainClassState extends State<MainClass> {
         final ThemeData theme = AppTheme.getThemeData;
         return GetMaterialApp(
           theme: theme,
+          navigatorKey: navigatorKey,
           themeMode:ThemeMode.light ,
           darkTheme:theme ,
             title: "Application",

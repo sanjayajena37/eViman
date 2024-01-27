@@ -10,4 +10,5 @@ class ApiFactory {
   static String CREATE_PROFILE =BASEURL+ "riders/v1/create-profile";
   static String UPDATE_PROFILE =BASEURL+ "riders/v1/update-profile/";
   static String GATE_PROFILE =BASEURL+ "riders/v1/profile/";
+  static String FCM_TOKEN =BASEURL+ "fcm/v1/add";
 }

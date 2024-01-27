@@ -35,441 +35,444 @@ class LogesticdashboardView extends GetView<LogesticdashboardController> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-        onWillPop: () async {
-          bool isOk = await controllerX.showCommonPopupNew4(
-              "What you want?", "Online or Offline",
-              barrierDismissible: false,
-              isYesOrNoPopup: true,
-              filePath: "assets/json/question.json");
-          bool sta = false;
-          if (isOk) {
-            await controllerX.goOnline1(true).then((value) {
-              sta = true;
-            });
-            Get.back();
-            return sta;
-          }
-          else {
-            await controllerX.goOnline1(false).then((value) {
-              sta = true;
-            });
-            Get.back();
-            return sta;
-          }
-        },
-        child: AdvancedDrawer(
-          backdrop: Container(
-            width: double.infinity,
-            height: double.infinity,
-          ),
-          controller: controllerX.advancedDrawerController,
-          animationCurve: Curves.easeInOut,
-          animationDuration: const Duration(milliseconds: 300),
-          animationController: controllerX.animationController,
-          animateChildDecoration: true,
-          key: GlobalKey(),
-          rtlOpening: false,
-          // openScale: 1.0,
-          disabledGestures: true,
-          backdropColor: Colors.white,
-          childDecoration: const BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(16)),
-            color: Colors.red,
-          ),
-          drawer: SafeArea(
-            child: Container(
-              child: ListTileTheme(
-                textColor: Colors.white,
-                iconColor: Colors.white,
-                child: ListView(
-                  padding: EdgeInsets.zero,
-                  children: [
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.22,
-                      child: DrawerHeader(
-                        // decoration: const BoxDecoration(color: Colors.),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            GetBuilder<LogesticdashboardController>(
-                              id: "prof",
-                              builder: (controllerX) {
-                                return Column(
+    return AdvancedDrawer(
+      backdrop: Container(
+        width: double.infinity,
+        height: double.infinity,
+      ),
+      controller: controllerX.advancedDrawerController,
+      animationCurve: Curves.easeInOut,
+      animationDuration: const Duration(milliseconds: 300),
+      animationController: controllerX.animationController,
+      animateChildDecoration: true,
+      key: GlobalKey(),
+      rtlOpening: false,
+      // openScale: 1.0,
+      disabledGestures: true,
+      backdropColor: Colors.white,
+      childDecoration: const BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(16)),
+        color: Colors.red,
+      ),
+      drawer: SafeArea(
+        child: Container(
+          child: ListTileTheme(
+            textColor: Colors.white,
+            iconColor: Colors.white,
+            child: ListView(
+              padding: EdgeInsets.zero,
+              children: [
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.22,
+                  child: DrawerHeader(
+                    // decoration: const BoxDecoration(color: Colors.),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        GetBuilder<LogesticdashboardController>(
+                          id: "prof",
+                          builder: (controllerX) {
+                            return Column(
+                              mainAxisAlignment:
+                              MainAxisAlignment. center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
                                   mainAxisAlignment:
-                                  MainAxisAlignment. center,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  MainAxisAlignment. spaceBetween,
                                   children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                      MainAxisAlignment. spaceBetween,
-                                      children: [
-                                        ClipOval(
-                                          child: SizedBox.fromSize(
-                                              size: const Size
-                                                  .fromRadius(
-                                                  40), // Image radius
-                                              child: (controllerX
+                                    ClipOval(
+                                      child: SizedBox.fromSize(
+                                          size: const Size
+                                              .fromRadius(
+                                              40), // Image radius
+                                          child: (controllerX
+                                              .profileViewModel
+                                              ?.riderData
+                                              ?.profile_image !=
+                                              null &&
+                                              controllerX
                                                   .profileViewModel
                                                   ?.riderData
-                                                  ?.profile_image !=
-                                                  null &&
-                                                  controllerX
-                                                      .profileViewModel
-                                                      ?.riderData
-                                                      ?.profile_image
-                                                      .toString()
-                                                      .trim() !=
-                                                      "")
-                                                  ? CachedNetworkImage(
-                                                imageUrl:
-                                                controllerX
-                                                    .profileViewModel
-                                                    ?.riderData
-                                                    ?.profile_image ??
-                                                    "",
-                                                imageBuilder:
-                                                    (context,
-                                                    imageProvider) =>
-                                                    Container(
-                                                      decoration:
-                                                      BoxDecoration(
-                                                          image: DecorationImage(
-                                                            image:
-                                                            imageProvider,
-                                                            fit:
-                                                            BoxFit.cover,),
-                                                          border: Border.all(color: Colors.red,width: 1,style: BorderStyle.solid),
-                                                          borderRadius: BorderRadius.all(Radius.circular(40))),
-                                                    ),
-                                                progressIndicatorBuilder: (context,
-                                                    url,
-                                                    downloadProgress) =>
-                                                    Column(
-                                                      mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .center,
-                                                      children: [
-                                                        SizedBox(
-                                                          height:
-                                                          Get.height * 0.04,
-                                                          width:
-                                                          Get.width * 0.15,
-                                                          child:
-                                                          Padding(
-                                                            padding:
-                                                            const EdgeInsets.all(18.0),
-                                                            child:
-                                                            CircularProgressIndicator(value: downloadProgress.progress),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                errorWidget: (context,
-                                                    url,
-                                                    error) =>
-                                                    Icon(Icons
-                                                        .error),
-                                              )
-                                                  : Image.asset(
-                                                'assets/images/man.jpg',
-                                                fit: BoxFit
-                                                    .cover,
-                                              )
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: 10,
-                                        ),
-                                        GetBuilder<LogesticdashboardController>(
-                                          id: "analytics",
-                                          builder: (controllerX) {
-                                            return Row(
-                                              mainAxisAlignment:
-                                              MainAxisAlignment.spaceAround,
-                                              children: [
-                                                // driverINfoWidget("assets/icon/time.png", "10.2", "Hours online"),
-                                                driverINfoWidget(
-                                                    "assets/icon/meter.png",
-                                                    controllerX.totalDistanceNew ?? "30 kM",
-                                                    "Total Distance"),
-                                                SizedBox(
-                                                  width: 10,
+                                                  ?.profile_image
+                                                  .toString()
+                                                  .trim() !=
+                                                  "")
+                                              ? CachedNetworkImage(
+                                            imageUrl:
+                                            controllerX
+                                                .profileViewModel
+                                                ?.riderData
+                                                ?.profile_image ??
+                                                "",
+                                            imageBuilder:
+                                                (context,
+                                                imageProvider) =>
+                                                Container(
+                                                  decoration:
+                                                  BoxDecoration(
+                                                      image: DecorationImage(
+                                                        image:
+                                                        imageProvider,
+                                                        fit:
+                                                        BoxFit.cover,),
+                                                      border: Border.all(color: Colors.red,width: 1,style: BorderStyle.solid),
+                                                      borderRadius: BorderRadius.all(Radius.circular(40))),
                                                 ),
-                                                driverINfoWidget(
-                                                    "assets/icon/jobs.png",
-                                                    controllerX.totalRides ?? "0",
-                                                    "Total Jobs"),
-                                              ],
-                                            );
-                                          },
-                                        )
-                                      ],
+                                            progressIndicatorBuilder: (context,
+                                                url,
+                                                downloadProgress) =>
+                                                Column(
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .center,
+                                                  children: [
+                                                    SizedBox(
+                                                      height:
+                                                      Get.height * 0.04,
+                                                      width:
+                                                      Get.width * 0.15,
+                                                      child:
+                                                      Padding(
+                                                        padding:
+                                                        const EdgeInsets.all(18.0),
+                                                        child:
+                                                        CircularProgressIndicator(value: downloadProgress.progress),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                            errorWidget: (context,
+                                                url,
+                                                error) =>
+                                                Icon(Icons
+                                                    .error),
+                                          )
+                                              : Image.asset(
+                                            'assets/images/man.jpg',
+                                            fit: BoxFit
+                                                .cover,
+                                          )
+                                      ),
                                     ),
                                     SizedBox(
-                                      height: 5,
+                                      width: 10,
                                     ),
-                                    Column(
-                                      crossAxisAlignment:
-                                      CrossAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                          // width: Get.width * 0.5,
-                                          child: Text(
-                                            "${controllerX.profileViewModel?.riderData?.firstName ?? ""} ${controllerX.profileViewModel?.riderData?.lastName ?? ""}",
-                                            style: TextStyles(context)
-                                                .getBoldStyle()
-                                                .copyWith(fontSize: 18),
-                                            maxLines: 2,
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          height: 05,
-                                        ),
-                                        Container(
-                                          // width: Get.width * 0.5,
-                                          child: Text(
-                                            controllerX.profileViewModel
-                                                ?.riderData?.email ??
-                                                "",
-                                            style: TextStyles(context)
-                                                .getBoldStyle()
-                                                .copyWith(fontSize: 12),
-                                            maxLines: 2,
-                                          ),
-                                        ),
-                                      ],
+                                    GetBuilder<LogesticdashboardController>(
+                                      id: "analytics",
+                                      builder: (controllerX) {
+                                        return Row(
+                                          mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                          children: [
+                                            // driverINfoWidget("assets/icon/time.png", "10.2", "Hours online"),
+                                            driverINfoWidget(
+                                                "assets/icon/meter.png",
+                                                controllerX.totalDistanceNew ?? "30 kM",
+                                                "Total Distance"),
+                                            SizedBox(
+                                              width: 10,
+                                            ),
+                                            driverINfoWidget(
+                                                "assets/icon/jobs.png",
+                                                controllerX.totalRides ?? "0",
+                                                "Total Jobs"),
+                                          ],
+                                        );
+                                      },
+                                    )
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 5,
+                                ),
+                                Column(
+                                  crossAxisAlignment:
+                                  CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      // width: Get.width * 0.5,
+                                      child: Text(
+                                        "${controllerX.profileViewModel?.riderData?.firstName ?? ""} ${controllerX.profileViewModel?.riderData?.lastName ?? ""}",
+                                        style: TextStyles(context)
+                                            .getBoldStyle()
+                                            .copyWith(fontSize: 18),
+                                        maxLines: 2,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 05,
+                                    ),
+                                    Container(
+                                      // width: Get.width * 0.5,
+                                      child: Text(
+                                        controllerX.profileViewModel
+                                            ?.riderData?.email ??
+                                            "",
+                                        style: TextStyles(context)
+                                            .getBoldStyle()
+                                            .copyWith(fontSize: 12),
+                                        maxLines: 2,
+                                      ),
                                     ),
                                   ],
-                                );
-                              },
-                            ),
-
-                          ],
+                                ),
+                              ],
+                            );
+                          },
                         ),
-                      ),
+
+                      ],
                     ),
-                    ListTile(
-                      onTap: () {
-                        controllerX.advancedDrawerController.hideDrawer();
-                      },
-                      leading: Icon(Icons.home,
-                          color: Theme.of(context).primaryColor),
-                      title: Text(
-                        'Home',
-                        style: TextStyles(context)
-                            .getRegularStyle()
-                            .copyWith(fontSize: 15),
-                      ),
-                    ),
-                    ListTile(
-                      onTap: () {
-                        Get.toNamed(Routes.PROFILESCREEN);
-                      },
-                      leading: Icon(Icons.account_circle_rounded,
-                          color: Theme.of(context).primaryColor),
-                      title: Text(
-                        'Profile',
-                        style: TextStyles(context)
-                            .getRegularStyle()
-                            .copyWith(fontSize: 15),
-                      ),
-                    ),
-                    ListTile(
-                      onTap: () {
-                        Get.toNamed(Routes.VEHICLE_DETAILS);
-                      },
-                      leading: Icon(Icons.electric_car,
-                          color: Theme.of(context).primaryColor),
-                      title: Text(
-                        'Vehicle Details',
-                        style: TextStyles(context)
-                            .getRegularStyle()
-                            .copyWith(fontSize: 15),
-                      ),
-                    ),
-                    ListTile(
-                      onTap: () {
-                        Get.toNamed(Routes.EARNINGPAGE);
-                      },
-                      leading: Icon(Icons.money,
-                          color: Theme.of(context).primaryColor),
-                      title: Text(
-                        'My Earning',
-                        style: TextStyles(context)
-                            .getRegularStyle()
-                            .copyWith(fontSize: 15),
-                      ),
-                    ),
-                    /* ListTile(
-                      onTap: () {
-                        Get.toNamed(Routes.WALETSCREEN);
-                      },
-                      leading: Icon(Icons.wallet,
-                          color: Theme.of(context).primaryColor),
-                      title: Text(
-                        'My Wallet',
-                        style: TextStyles(context)
-                            .getRegularStyle()
-                            .copyWith(fontSize: 15),
-                      ),
-                    ),*/
-                    ListTile(
-                      onTap: () {
-                        Get.toNamed(Routes.HISTORYSCREEN);
-                      },
-                      leading: Icon(Icons.history,
-                          color: Theme.of(context).primaryColor),
-                      title: Text(
-                        'History',
-                        style: TextStyles(context)
-                            .getRegularStyle()
-                            .copyWith(fontSize: 15),
-                      ),
-                    ),
-                    /* ListTile(
-                  onTap: () {},
-                  leading: Icon(Icons.notifications_active,
+                  ),
+                ),
+                ListTile(
+                  onTap: () {
+                    controllerX.advancedDrawerController.hideDrawer();
+                  },
+                  leading: Icon(Icons.home,
                       color: Theme.of(context).primaryColor),
                   title: Text(
-                    'Notification',
+                    'Home',
                     style: TextStyles(context)
                         .getRegularStyle()
                         .copyWith(fontSize: 15),
                   ),
-                ),*/
-                    ListTile(
-                      onTap: () {
-                        Get.toNamed(Routes.INVITESCREEN,arguments: (controllerX.profileViewModel?.riderData?.referralCode??"XXXXXXXXXXXXX"));
-                      },
-                      leading: Icon(Icons.card_giftcard_outlined,
-                          color: Theme.of(context).primaryColor),
-                      title: Text(
-                        'Refer and Earn',
-                        style: TextStyles(context)
-                            .getRegularStyle()
-                            .copyWith(fontSize: 15),
-                      ),
-                    ),
-                    ListTile(
-                      onTap: () {
-                        // Get.toNamed(Routes.INVITESCREEN);
-                        Share.share('Click this link 👉 https://play.google.com/store/apps/details?id=com.eviman.rider',
-                            subject: 'Look what I made!');
-                      },
-                      leading: Icon(Icons.share,
-                          color: Theme.of(context).primaryColor),
-                      title: Text(
-                        'Share',
-                        style: TextStyles(context)
-                            .getRegularStyle()
-                            .copyWith(fontSize: 15),
-                      ),
-                    ),
-                    ListTile(
-                      onTap: () {
-                        // Get.toNamed(Routes.INVITESCREEN);
-                        controllerX.openPlayStorePage();
-                      },
-                      leading: Icon(Icons.star_rate,
-                          color: Theme.of(context).primaryColor),
-                      title: Text(
-                        'Rate Us',
-                        style: TextStyles(context)
-                            .getRegularStyle()
-                            .copyWith(fontSize: 15),
-                      ),
-                    ),
-                    ListTile(
-                      onTap: () {
-                        Get.toNamed(Routes.GALLERYSCREEN);
-                        // controllerX.openPlayStorePage();
-                      },
-                      leading: Icon(Icons.image,
-                          color: Theme.of(context).primaryColor),
-                      title: Text(
-                        'Gallery',
-                        style: TextStyles(context)
-                            .getRegularStyle()
-                            .copyWith(fontSize: 15),
-                      ),
-                    ),
-                    /*  ListTile(
-                  onTap: () {
-                    Get.toNamed(Routes.SETTINGSCREEN);
-                  },
-                  leading: Icon(
-                    Icons.settings,
-                    color: Theme.of(context).primaryColor,
-                  ),
-                  title: Text(
-                    'Settings',
-                    style: TextStyles(context)
-                        .getRegularStyle()
-                        .copyWith(fontSize: 15),
-                  ),
-                ),*/
-                    ListTile(
-                      onTap: () {
-                        controllerX.gotoSplashScreen();
-                      },
-                      leading: Icon(Icons.logout,
-                          color: Theme.of(context).primaryColor),
-                      title: Text(
-                        'Logout',
-                        style: TextStyles(context)
-                            .getRegularStyle()
-                            .copyWith(fontSize: 15),
-                      ),
-                    ),
-                  ],
                 ),
+                ListTile(
+                  onTap: () {
+                    Get.toNamed(Routes.PROFILESCREEN);
+                  },
+                  leading: Icon(Icons.account_circle_rounded,
+                      color: Theme.of(context).primaryColor),
+                  title: Text(
+                    'Profile',
+                    style: TextStyles(context)
+                        .getRegularStyle()
+                        .copyWith(fontSize: 15),
+                  ),
+                ),
+                ListTile(
+                  onTap: () {
+                    Get.toNamed(Routes.VEHICLE_DETAILS);
+                  },
+                  leading: Icon(Icons.electric_car,
+                      color: Theme.of(context).primaryColor),
+                  title: Text(
+                    'Vehicle Details',
+                    style: TextStyles(context)
+                        .getRegularStyle()
+                        .copyWith(fontSize: 15),
+                  ),
+                ),
+                ListTile(
+                  onTap: () {
+                    Get.toNamed(Routes.EARNINGPAGE);
+                  },
+                  leading: Icon(Icons.money,
+                      color: Theme.of(context).primaryColor),
+                  title: Text(
+                    'My Earning',
+                    style: TextStyles(context)
+                        .getRegularStyle()
+                        .copyWith(fontSize: 15),
+                  ),
+                ),
+                /* ListTile(
+                  onTap: () {
+                    Get.toNamed(Routes.WALETSCREEN);
+                  },
+                  leading: Icon(Icons.wallet,
+                      color: Theme.of(context).primaryColor),
+                  title: Text(
+                    'My Wallet',
+                    style: TextStyles(context)
+                        .getRegularStyle()
+                        .copyWith(fontSize: 15),
+                  ),
+                ),*/
+                ListTile(
+                  onTap: () {
+                    Get.toNamed(Routes.HISTORYSCREEN);
+                  },
+                  leading: Icon(Icons.history,
+                      color: Theme.of(context).primaryColor),
+                  title: Text(
+                    'History',
+                    style: TextStyles(context)
+                        .getRegularStyle()
+                        .copyWith(fontSize: 15),
+                  ),
+                ),
+                /* ListTile(
+              onTap: () {},
+              leading: Icon(Icons.notifications_active,
+                  color: Theme.of(context).primaryColor),
+              title: Text(
+                'Notification',
+                style: TextStyles(context)
+                    .getRegularStyle()
+                    .copyWith(fontSize: 15),
               ),
+            ),*/
+                ListTile(
+                  onTap: () {
+                    Get.toNamed(Routes.INVITESCREEN,arguments: (controllerX.profileViewModel?.riderData?.referralCode??"XXXXXXXXXXXXX"));
+                  },
+                  leading: Icon(Icons.card_giftcard_outlined,
+                      color: Theme.of(context).primaryColor),
+                  title: Text(
+                    'Refer and Earn',
+                    style: TextStyles(context)
+                        .getRegularStyle()
+                        .copyWith(fontSize: 15),
+                  ),
+                ),
+                ListTile(
+                  onTap: () {
+                    // Get.toNamed(Routes.INVITESCREEN);
+                    Share.share('Click this link 👉 https://play.google.com/store/apps/details?id=com.eviman.rider',
+                        subject: 'Look what I made!');
+                  },
+                  leading: Icon(Icons.share,
+                      color: Theme.of(context).primaryColor),
+                  title: Text(
+                    'Share',
+                    style: TextStyles(context)
+                        .getRegularStyle()
+                        .copyWith(fontSize: 15),
+                  ),
+                ),
+                ListTile(
+                  onTap: () {
+                    // Get.toNamed(Routes.INVITESCREEN);
+                    controllerX.openPlayStorePage();
+                  },
+                  leading: Icon(Icons.star_rate,
+                      color: Theme.of(context).primaryColor),
+                  title: Text(
+                    'Rate Us',
+                    style: TextStyles(context)
+                        .getRegularStyle()
+                        .copyWith(fontSize: 15),
+                  ),
+                ),
+                ListTile(
+                  onTap: () {
+                    Get.toNamed(Routes.GALLERYSCREEN);
+                    // controllerX.openPlayStorePage();
+                  },
+                  leading: Icon(Icons.image,
+                      color: Theme.of(context).primaryColor),
+                  title: Text(
+                    'Gallery',
+                    style: TextStyles(context)
+                        .getRegularStyle()
+                        .copyWith(fontSize: 15),
+                  ),
+                ),
+                /*  ListTile(
+              onTap: () {
+                Get.toNamed(Routes.SETTINGSCREEN);
+              },
+              leading: Icon(
+                Icons.settings,
+                color: Theme.of(context).primaryColor,
+              ),
+              title: Text(
+                'Settings',
+                style: TextStyles(context)
+                    .getRegularStyle()
+                    .copyWith(fontSize: 15),
+              ),
+            ),*/
+                ListTile(
+                  onTap: () {
+                    controllerX.gotoSplashScreen();
+                  },
+                  leading: Icon(Icons.logout,
+                      color: Theme.of(context).primaryColor),
+                  title: Text(
+                    'Logout',
+                    style: TextStyles(context)
+                        .getRegularStyle()
+                        .copyWith(fontSize: 15),
+                  ),
+                ),
+              ],
             ),
           ),
-          child: Scaffold(
-            body: UpgradeAlert(
-              upgrader: Upgrader(dialogStyle: UpgradeDialogStyle.cupertino,canDismissDialog: false,),
-              child: StreamBuilder<ConnectivityResult>(
-                stream: controllerX.connectivitySubscription,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState ==
-                      ConnectionState.waiting) {
-                    try {
-                      Utils.checkInternetConnectivity().then((value) {
-                        if (value) {
-                          controllerX =
-                              Get.put<LogesticdashboardController>(
-                                  LogesticdashboardController());
-                          // controllerX.getCurrentLocation();
-                          return maiWidgetFun(context);
-                        } else {
-                          return const Center(
-                              child: CircularProgressIndicator());
-                        }
-                      });
-                    } catch (e) {
+        ),
+      ),
+      child: Scaffold(
+        body: UpgradeAlert(
+          upgrader: Upgrader(dialogStyle: UpgradeDialogStyle.cupertino,canDismissDialog: false,),
+          child: StreamBuilder<ConnectivityResult>(
+            stream: controllerX.connectivitySubscription,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState ==
+                  ConnectionState.waiting) {
+                try {
+                  Utils.checkInternetConnectivity().then((value) {
+                    if (value) {
+                      controllerX =
+                          Get.put<LogesticdashboardController>(
+                              LogesticdashboardController());
+                      // controllerX.getCurrentLocation();
+                      return maiWidgetFun(context);
+                    } else {
                       return const Center(
                           child: CircularProgressIndicator());
                     }
-                  }
-                  if (snapshot.hasError) {
-                    return Text('Error: ${snapshot.error}');
-                  }
-                  final connectivityResult = snapshot.data;
-                  String statusText = 'Unknown';
-                  if (connectivityResult == ConnectivityResult.mobile ||
-                      connectivityResult == ConnectivityResult.wifi ||
-                      connectivityResult ==
-                          ConnectivityResult.ethernet) {
-                    statusText = 'Mobile Data';
-                    controllerX = Get.put<LogesticdashboardController>(
-                        LogesticdashboardController());
+                  });
+                } catch (e) {
+                  return const Center(
+                      child: CircularProgressIndicator());
+                }
+              }
+              if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              }
+              final connectivityResult = snapshot.data;
+              String statusText = 'Unknown';
+              if (connectivityResult == ConnectivityResult.mobile ||
+                  connectivityResult == ConnectivityResult.wifi ||
+                  connectivityResult ==
+                      ConnectivityResult.ethernet) {
+                statusText = 'Mobile Data';
+                controllerX = Get.put<LogesticdashboardController>(
+                    LogesticdashboardController());
+                // controllerX.getCurrentLocation();
+                return maiWidgetFun(context);
+              } else if (connectivityResult ==
+                  ConnectivityResult.none) {
+                statusText = 'No Connection';
+                return Center(
+                  child: Container(
+                    foregroundDecoration:
+                    !Get.find<ThemeController>().isLightMode
+                        ? BoxDecoration(
+                        color: Theme.of(context)
+                            .backgroundColor
+                            .withOpacity(0.4))
+                        : null,
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height,
+                    child: lottie.Lottie.asset(
+                      'assets/json/offline.json',
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                );
+              } else {
+                Utils.checkInternetConnectivity().then((value) {
+                  if (value) {
+                    controllerX =
+                        Get.put<LogesticdashboardController>(
+                            LogesticdashboardController());
                     // controllerX.getCurrentLocation();
                     return maiWidgetFun(context);
-                  } else if (connectivityResult ==
-                      ConnectivityResult.none) {
-                    statusText = 'No Connection';
+                  } else {
                     return Center(
                       child: Container(
                         foregroundDecoration:
@@ -487,41 +490,15 @@ class LogesticdashboardView extends GetView<LogesticdashboardController> {
                         ),
                       ),
                     );
-                  } else {
-                    Utils.checkInternetConnectivity().then((value) {
-                      if (value) {
-                        controllerX =
-                            Get.put<LogesticdashboardController>(
-                                LogesticdashboardController());
-                        // controllerX.getCurrentLocation();
-                        return maiWidgetFun(context);
-                      } else {
-                        return Center(
-                          child: Container(
-                            foregroundDecoration:
-                            !Get.find<ThemeController>().isLightMode
-                                ? BoxDecoration(
-                                color: Theme.of(context)
-                                    .backgroundColor
-                                    .withOpacity(0.4))
-                                : null,
-                            width: MediaQuery.of(context).size.width,
-                            height: MediaQuery.of(context).size.height,
-                            child: lottie.Lottie.asset(
-                              'assets/json/offline.json',
-                              fit: BoxFit.contain,
-                            ),
-                          ),
-                        );
-                      }
-                    });
                   }
-                  return maiWidgetFun(context);
-                },
-              ),
-            ),
+                });
+              }
+              return maiWidgetFun(context);
+            },
           ),
-        ));
+        ),
+      ),
+    );
   }
 
   Widget maiWidgetFun(BuildContext context) {
@@ -606,10 +583,10 @@ class LogesticdashboardView extends GetView<LogesticdashboardController> {
                                   ),
                                 ),
                                 CupertinoSwitch(
-                                  value: controllerX.isDisappear.value,
+                                  value: true,
                                   dragStartBehavior: DragStartBehavior.start,
                                   onChanged: (value) {
-                                    controllerX.goOnline(value);
+                                    // controllerX.goOnline(value);
                                   },
                                 ),
                               ],

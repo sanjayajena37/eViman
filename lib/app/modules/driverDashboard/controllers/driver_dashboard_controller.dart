@@ -348,7 +348,7 @@ class DriverDashboardController extends GetxController
                 const NotificationDetails(
                     android: AndroidNotificationDetails(
                         "eViman-rider", "foregrounf service",
-                        icon: 'ic_bg_service_small',
+                        icon: '@mipmap/ic_launcher',
                         ongoing: true,
                         enableVibration: true,
                         importance: Importance.high,

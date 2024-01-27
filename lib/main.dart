@@ -23,6 +23,7 @@ import 'package:upgrader/upgrader.dart';
 import 'package:vibration/vibration.dart';
 
 import 'MainClass.dart';
+import 'app/Firebase/FirebaseApi.dart';
 import 'app/constants/shared_preferences_keys.dart';
 import 'app/data/BinderData.dart';
 import 'app/logic/controllers/theme_provider.dart';
@@ -49,6 +50,7 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  FirebaseApi().initNotifications();
   await Upgrader.clearSavedSettings();
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
   PlatformDispatcher.instance.onError = (error, stack) {

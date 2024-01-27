@@ -243,25 +243,33 @@ class SpalshscreenController extends GetxController with Helper{
             Get.offAllNamed(Routes.DRIVER_DASHBOARD);
             permissionAllow = false;
           }else if(vehicleMode == "logistic"){
-            Get.delete<SpalshscreenController>();
-            Get.offAllNamed(Routes.LOGESTICDASHBOARD);
-            permissionAllow = false;
+            callOrStopServices().then((value) {
+              Get.delete<SpalshscreenController>();
+              Get.offAllNamed(Routes.LOGESTICDASHBOARD);
+              permissionAllow = false;
+            });
           }else{
-            Get.delete<SpalshscreenController>();
-            Get.offAllNamed(Routes.INTROSCREEN);
-            permissionAllow = false;
+            callOrStopServices().then((value) {
+              Get.delete<SpalshscreenController>();
+              Get.offAllNamed(Routes.INTROSCREEN);
+              permissionAllow = false;
+            });
           }
         }
         else{
-          Get.delete<SpalshscreenController>();
-          Get.offAllNamed(Routes.INTROSCREEN);
-          permissionAllow = false;
+          callOrStopServices().then((value) {
+            Get.delete<SpalshscreenController>();
+            Get.offAllNamed(Routes.INTROSCREEN);
+            permissionAllow = false;
+          });
         }
       }
     }else{
-      Get.delete<SpalshscreenController>();
-      Get.offAllNamed(Routes.INTROSCREEN);
-      permissionAllow = false;
+      callOrStopServices().then((value) {
+        Get.delete<SpalshscreenController>();
+        Get.offAllNamed(Routes.INTROSCREEN);
+        permissionAllow = false;
+      });
     }
 
   }

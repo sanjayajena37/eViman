@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 import 'package:timer_count_down/timer_controller.dart';
 
+import '../../../Firebase/FirebaseApi.dart';
 import '../../../constants/helper.dart';
 import '../../../constants/shared_preferences_keys.dart';
 import '../../../data/ApiFactory.dart';
@@ -96,6 +97,20 @@ class OtpscreenController extends GetxController with CodeAutoFill, Helper {
         });
   }
 
+  postFCMToken({String? authToken}) {
+    if (authToken != null && authToken != "") {
+      Get.find<ConnectorController>()
+          .POSTMETHOD_TOKEN(api: ApiFactory.FCM_TOKEN,
+          json: {
+            "fcm_token":FirebaseApi().fcmToken??""
+          },
+          fun: (map) {
+            print(">>>>>>>>>>>>>>>>>>fcmToken${FirebaseApi().fcmToken} >>>>>>mapres  $map");
+
+      }, token: authToken ?? '');
+    }
+  }
+
   void verifyOtp(String otp) async {
     WidgetsFlutterBinding.ensureInitialized();
     Map sendData = {"otpToken": mapData['otpToken'] ?? "", "otp": otp ?? ""};
@@ -143,7 +158,6 @@ class OtpscreenController extends GetxController with CodeAutoFill, Helper {
                       key: "vehicleMode",
                       text: (map['vehicleMode'] ?? "").toString());
 
-
                   log(">>>>>>>>>>>authToken" + authToken.toString());
 
                   showUnderProcess(map);
@@ -164,8 +178,7 @@ class OtpscreenController extends GetxController with CodeAutoFill, Helper {
                       text: (map['vehicleMode'] ?? "").toString());
 
                   await SharedPreferencesKeys().setStringData(
-                      key: "loginTime",
-                      text: (DateTime.now()).toString());
+                      key: "loginTime", text: (DateTime.now()).toString());
 
                   Get.delete<OtpscreenController>();
                   Get.offAllNamed(Routes.DRIVER_DASHBOARD);
@@ -189,9 +202,8 @@ class OtpscreenController extends GetxController with CodeAutoFill, Helper {
                     text: (map['vehicleMode'] ?? "").toString());
 
                 await SharedPreferencesKeys().setStringData(
-                    key: "loginTime",
-                    text: (DateTime.now()).toString());
-
+                    key: "loginTime", text: (DateTime.now()).toString());
+                postFCMToken(authToken: map['authToken']);
                 Get.delete<OtpscreenController>();
                 Get.offAllNamed(Routes.LOGESTICDASHBOARD);
               }
