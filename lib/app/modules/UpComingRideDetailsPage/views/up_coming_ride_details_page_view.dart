@@ -295,7 +295,7 @@ class UpComingRideDetailsPageView
                                   buttonText: "Cancel",
                                   onTap: () {
                                     controllerX.upDateRideStatusComplete
-                                      ("CANCEL BY RIDER",controllerX.ridesData?.totalAmount??"",
+                                      ("CANCEL BY RIDER",(controllerX.ridesData?.totalAmount??"0.00").toString(),
                                         bookingId: controllerX.ridesData?.bookingId??"");
                                   },
                                   radius: 6,
@@ -339,7 +339,7 @@ class UpComingRideDetailsPageView
                                   buttonText: "Complete",
                                   onTap: () {
                                     controllerX.upDateRideStatusComplete
-                                      ("COMPLETED",controllerX.ridesData?.totalAmount??"",
+                                      ("COMPLETED",(controllerX.ridesData?.totalAmount??"0.00").toString(),
                                         bookingId: controllerX.ridesData?.bookingId??"");
                                   },
                                   radius: 6,

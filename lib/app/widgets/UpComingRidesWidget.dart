@@ -18,11 +18,12 @@ class UpComingRidesWidget extends StatelessWidget {
   final String ?status;
   final String ?assetUrl;
   final bool ?imgVisibility;
-  final Function ? onTap;
+  final Function ? onTapAccept;
+  final Function ? onTapCancel;
 
  const UpComingRidesWidget(
       {super.key, this.fromDate, this.toDate, this.destination, this.source, this.totalAmount, this.paidAmount, this.driverName,
-        this.status = "", this.assetUrl, this.imgVisibility = true, this.onTap});
+        this.status = "", this.assetUrl, this.imgVisibility = true, this.onTapAccept,this.onTapCancel});
 
 
 
@@ -75,8 +76,8 @@ class UpComingRidesWidget extends StatelessWidget {
 
                           onTap: () {
 
-                            if (onTap != null) {
-                              onTap!();
+                            if (onTapAccept != null) {
+                              onTapAccept!();
                             }
                             isClick.value = true;
                             isClick.refresh();
@@ -87,7 +88,8 @@ class UpComingRidesWidget extends StatelessWidget {
                           // isIcon: true,
                           // icon: Icons.refresh,
                         ),
-                      ) : Lottie.asset(
+                      ) :
+                      Lottie.asset(
                           "assets/json/done.json",
                           fit: BoxFit.contain, height: 60
                       );

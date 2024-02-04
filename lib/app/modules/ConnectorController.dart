@@ -192,7 +192,7 @@ class ConnectorController extends GetConnect {
       required String token,
       required Function fun}) async {
     print("<<>>>>>API CALL>>>>>>\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n" + api);
-    print("Token NAME:>" + token);
+    // print("Token NAME:>" + token);
     try {
       service.Response response = await dio.get(
         api,

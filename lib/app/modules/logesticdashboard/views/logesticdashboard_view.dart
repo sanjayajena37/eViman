@@ -675,13 +675,13 @@ class LogesticdashboardView extends GetView<LogesticdashboardController> {
                                                     arguments:controllerX.upComingRidesModel?.rides?[index].toJson() );
                                               },
                                               child: UpComingRidesWidget(
-                                                  totalAmount:controllerX.upComingRidesModel?.rides?[index].totalAmount?? "",
-                                                  paidAmount: controllerX.upComingRidesModel?.rides?[index].amountPaid??"",
+                                                  totalAmount:(controllerX.upComingRidesModel?.rides?[index].totalAmount?? "0.00").toString(),
+                                                  paidAmount: (controllerX.upComingRidesModel?.rides?[index].amountPaid??"0").toString(),
                                                   status: "Waiting...",
                                                   fromDate:controllerX.upComingRidesModel?.rides?[index].fromDate?? "",
                                                   toDate:controllerX.upComingRidesModel?.rides?[index].toDate?? "",
                                                   imgVisibility: false,
-                                                  onTap: (){
+                                                  onTapAccept: (){
                                                     print(">>>>>>>>>>>>>Index${index}");
 
                                                   },

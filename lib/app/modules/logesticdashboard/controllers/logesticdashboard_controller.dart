@@ -202,10 +202,10 @@ class LogesticdashboardController extends GetxController
 
   getUpComingBookings(){
     Get.find<ConnectorController>().GETMETHODCALL_TOKEN(
-        api: "https://backend.eviman.co.in/api/rides/v1/logistics/upcoming",
+        api: "https://backend.eviman.co.in/api/rides/v1/logistics/pending-requests",
         token: authToken ?? "",
         fun: (map) {
-          print(">>>>>>>>>>>upcoming$map");
+          dev.log(">>>>>>>>>>>upcoming${jsonEncode(map)}");
           if(map['success'] == true){
             upComingRidesModel = UpComingRidesModel.fromJson(map as Map<String,dynamic>);
             update(['lst']);

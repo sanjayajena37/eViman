@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
@@ -39,19 +40,26 @@ class FirebaseApi {
 
   void onTokenRefresh(String token, {String? authToken}) {
     _firebaseMessaging.onTokenRefresh.listen((token) async {
-      if (fcmToken != token) {
-        print('token refresh: ' + token);
-        if (authToken != null && authToken != "") {
-          Get.find<ConnectorController>().POSTMETHOD_TOKEN(
-              api: ApiFactory.FCM_TOKEN,
-              json: {"fcm_token": FirebaseApi().fcmToken ?? ""},
-              fun: (map) {
-                print(
-                    ">>>>>>>>>>>>>>>>>>fcmToken${FirebaseApi().fcmToken} >>>>>>mapres  $map");
-              },
-              token: authToken ?? '');
+      try{
+        if (fcmToken != token) {
+          print('token refresh: ' + token);
+          if (authToken != null && authToken != "") {
+            Get.find<ConnectorController>().POSTMETHOD_TOKEN(
+                api: ApiFactory.FCM_TOKEN,
+                json: {"fcm_token": FirebaseApi().fcmToken ?? ""},
+                fun: (map) {
+                  print(
+                      ">>>>>>>>>>>>>>>>>>fcmToken${FirebaseApi().fcmToken} >>>>>>mapres  $map");
+                },
+                token: authToken ?? '');
+          }
+        }
+      }catch(e){
+        if (kDebugMode) {
+          print(">>>>>>>>execption$e");
         }
       }
+
     });
   }
 
