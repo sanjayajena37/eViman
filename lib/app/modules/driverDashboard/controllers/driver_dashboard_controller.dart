@@ -586,7 +586,7 @@ class DriverDashboardController extends GetxController
       try{
         Map<String, dynamic> postData = {
           "bookingId":
-          incomingBookingModel?.incomingBooking?.bookingId ?? "EVIMAN_1",
+          incomingBookingModel?.incomingBooking?.bookingId ?? "",
           "riderAssigned": riderIdNew ?? "",
           "vehicleAssigned": vehicleIdNew ?? "",
           "vehicleTypeId":  incomingBookingModel?.incomingBooking?.fareInfo??"",

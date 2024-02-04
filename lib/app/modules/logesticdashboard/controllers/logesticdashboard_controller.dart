@@ -48,6 +48,8 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:location/location.dart';
 
+import '../UpComingRidesModel.dart';
+
 part 'helpercontroller.dart';
 // part 'mapcontroller.dart';
 
@@ -196,13 +198,21 @@ class LogesticdashboardController extends GetxController
       Get.back();
     }
   }
+  UpComingRidesModel ?upComingRidesModel;
 
   getUpComingBookings(){
     Get.find<ConnectorController>().GETMETHODCALL_TOKEN(
         api: "https://backend.eviman.co.in/api/rides/v1/logistics/upcoming",
         token: authToken ?? "",
         fun: (map) {
-          print(">>>>>>>>>>>upcoming" + map.toString());
+          print(">>>>>>>>>>>upcoming$map");
+          if(map['success'] == true){
+            upComingRidesModel = UpComingRidesModel.fromJson(map as Map<String,dynamic>);
+            update(['lst']);
+          }else{
+            upComingRidesModel = null;
+            update(['lst']);
+          }
         });
   }
 

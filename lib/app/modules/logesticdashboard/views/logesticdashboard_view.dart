@@ -21,6 +21,7 @@ import '../../../routes/app_pages.dart';
 import '../../../widgets/CommonHistory.dart';
 import '../../../widgets/DateTime/DateWithThreeTextField.dart';
 import '../../../widgets/MovableContainer.dart';
+import '../../../widgets/UpComingRidesWidget.dart';
 import '../../../widgets/common_button.dart';
 import '../../../widgets/remove_focuse.dart';
 import '../../driverDashboard/views/driver_dashboard_view.dart';
@@ -73,87 +74,85 @@ class LogesticdashboardView extends GetView<LogesticdashboardController> {
                           id: "prof",
                           builder: (controllerX) {
                             return Column(
-                              mainAxisAlignment:
-                              MainAxisAlignment. center,
+                              mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Row(
                                   mainAxisAlignment:
-                                  MainAxisAlignment. spaceBetween,
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     ClipOval(
                                       child: SizedBox.fromSize(
-                                          size: const Size
-                                              .fromRadius(
+                                          size: const Size.fromRadius(
                                               40), // Image radius
                                           child: (controllerX
-                                              .profileViewModel
-                                              ?.riderData
-                                              ?.profile_image !=
-                                              null &&
-                                              controllerX
-                                                  .profileViewModel
-                                                  ?.riderData
-                                                  ?.profile_image
-                                                  .toString()
-                                                  .trim() !=
-                                                  "")
+                                                          .profileViewModel
+                                                          ?.riderData
+                                                          ?.profile_image !=
+                                                      null &&
+                                                  controllerX
+                                                          .profileViewModel
+                                                          ?.riderData
+                                                          ?.profile_image
+                                                          .toString()
+                                                          .trim() !=
+                                                      "")
                                               ? CachedNetworkImage(
-                                            imageUrl:
-                                            controllerX
-                                                .profileViewModel
-                                                ?.riderData
-                                                ?.profile_image ??
-                                                "",
-                                            imageBuilder:
-                                                (context,
-                                                imageProvider) =>
-                                                Container(
-                                                  decoration:
-                                                  BoxDecoration(
-                                                      image: DecorationImage(
-                                                        image:
-                                                        imageProvider,
-                                                        fit:
-                                                        BoxFit.cover,),
-                                                      border: Border.all(color: Colors.red,width: 1,style: BorderStyle.solid),
-                                                      borderRadius: BorderRadius.all(Radius.circular(40))),
-                                                ),
-                                            progressIndicatorBuilder: (context,
-                                                url,
-                                                downloadProgress) =>
-                                                Column(
-                                                  mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .center,
-                                                  children: [
-                                                    SizedBox(
-                                                      height:
-                                                      Get.height * 0.04,
-                                                      width:
-                                                      Get.width * 0.15,
-                                                      child:
-                                                      Padding(
-                                                        padding:
-                                                        const EdgeInsets.all(18.0),
-                                                        child:
-                                                        CircularProgressIndicator(value: downloadProgress.progress),
+                                                  imageUrl: controllerX
+                                                          .profileViewModel
+                                                          ?.riderData
+                                                          ?.profile_image ??
+                                                      "",
+                                                  imageBuilder: (context,
+                                                          imageProvider) =>
+                                                      Container(
+                                                    decoration: BoxDecoration(
+                                                        image: DecorationImage(
+                                                          image: imageProvider,
+                                                          fit: BoxFit.cover,
+                                                        ),
+                                                        border: Border.all(
+                                                            color: Colors.red,
+                                                            width: 1,
+                                                            style: BorderStyle
+                                                                .solid),
+                                                        borderRadius:
+                                                            BorderRadius.all(
+                                                                Radius.circular(
+                                                                    40))),
+                                                  ),
+                                                  progressIndicatorBuilder:
+                                                      (context, url,
+                                                              downloadProgress) =>
+                                                          Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      SizedBox(
+                                                        height:
+                                                            Get.height * 0.04,
+                                                        width: Get.width * 0.15,
+                                                        child: Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(18.0),
+                                                          child: CircularProgressIndicator(
+                                                              value:
+                                                                  downloadProgress
+                                                                      .progress),
+                                                        ),
                                                       ),
-                                                    ),
-                                                  ],
-                                                ),
-                                            errorWidget: (context,
-                                                url,
-                                                error) =>
-                                                Icon(Icons
-                                                    .error),
-                                          )
+                                                    ],
+                                                  ),
+                                                  errorWidget:
+                                                      (context, url, error) =>
+                                                          Icon(Icons.error),
+                                                )
                                               : Image.asset(
-                                            'assets/images/man.jpg',
-                                            fit: BoxFit
-                                                .cover,
-                                          )
-                                      ),
+                                                  'assets/images/man.jpg',
+                                                  fit: BoxFit.cover,
+                                                )),
                                     ),
                                     SizedBox(
                                       width: 10,
@@ -163,12 +162,13 @@ class LogesticdashboardView extends GetView<LogesticdashboardController> {
                                       builder: (controllerX) {
                                         return Row(
                                           mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
+                                              MainAxisAlignment.spaceAround,
                                           children: [
                                             // driverINfoWidget("assets/icon/time.png", "10.2", "Hours online"),
                                             driverINfoWidget(
                                                 "assets/icon/meter.png",
-                                                controllerX.totalDistanceNew ?? "30 kM",
+                                                controllerX.totalDistanceNew ??
+                                                    "30 kM",
                                                 "Total Distance"),
                                             SizedBox(
                                               width: 10,
@@ -187,8 +187,7 @@ class LogesticdashboardView extends GetView<LogesticdashboardController> {
                                   height: 5,
                                 ),
                                 Column(
-                                  crossAxisAlignment:
-                                  CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Container(
                                       // width: Get.width * 0.5,
@@ -206,8 +205,8 @@ class LogesticdashboardView extends GetView<LogesticdashboardController> {
                                     Container(
                                       // width: Get.width * 0.5,
                                       child: Text(
-                                        controllerX.profileViewModel
-                                            ?.riderData?.email ??
+                                        controllerX.profileViewModel?.riderData
+                                                ?.email ??
                                             "",
                                         style: TextStyles(context)
                                             .getBoldStyle()
@@ -221,7 +220,6 @@ class LogesticdashboardView extends GetView<LogesticdashboardController> {
                             );
                           },
                         ),
-
                       ],
                     ),
                   ),
@@ -230,8 +228,8 @@ class LogesticdashboardView extends GetView<LogesticdashboardController> {
                   onTap: () {
                     controllerX.advancedDrawerController.hideDrawer();
                   },
-                  leading: Icon(Icons.home,
-                      color: Theme.of(context).primaryColor),
+                  leading:
+                      Icon(Icons.home, color: Theme.of(context).primaryColor),
                   title: Text(
                     'Home',
                     style: TextStyles(context)
@@ -269,8 +267,8 @@ class LogesticdashboardView extends GetView<LogesticdashboardController> {
                   onTap: () {
                     Get.toNamed(Routes.EARNINGPAGE);
                   },
-                  leading: Icon(Icons.money,
-                      color: Theme.of(context).primaryColor),
+                  leading:
+                      Icon(Icons.money, color: Theme.of(context).primaryColor),
                   title: Text(
                     'My Earning',
                     style: TextStyles(context)
@@ -317,7 +315,10 @@ class LogesticdashboardView extends GetView<LogesticdashboardController> {
             ),*/
                 ListTile(
                   onTap: () {
-                    Get.toNamed(Routes.INVITESCREEN,arguments: (controllerX.profileViewModel?.riderData?.referralCode??"XXXXXXXXXXXXX"));
+                    Get.toNamed(Routes.INVITESCREEN,
+                        arguments: (controllerX
+                                .profileViewModel?.riderData?.referralCode ??
+                            "XXXXXXXXXXXXX"));
                   },
                   leading: Icon(Icons.card_giftcard_outlined,
                       color: Theme.of(context).primaryColor),
@@ -331,11 +332,12 @@ class LogesticdashboardView extends GetView<LogesticdashboardController> {
                 ListTile(
                   onTap: () {
                     // Get.toNamed(Routes.INVITESCREEN);
-                    Share.share('Click this link 👉 https://play.google.com/store/apps/details?id=com.eviman.rider',
+                    Share.share(
+                        'Click this link 👉 https://play.google.com/store/apps/details?id=com.eviman.rider',
                         subject: 'Look what I made!');
                   },
-                  leading: Icon(Icons.share,
-                      color: Theme.of(context).primaryColor),
+                  leading:
+                      Icon(Icons.share, color: Theme.of(context).primaryColor),
                   title: Text(
                     'Share',
                     style: TextStyles(context)
@@ -362,8 +364,8 @@ class LogesticdashboardView extends GetView<LogesticdashboardController> {
                     Get.toNamed(Routes.GALLERYSCREEN);
                     // controllerX.openPlayStorePage();
                   },
-                  leading: Icon(Icons.image,
-                      color: Theme.of(context).primaryColor),
+                  leading:
+                      Icon(Icons.image, color: Theme.of(context).primaryColor),
                   title: Text(
                     'Gallery',
                     style: TextStyles(context)
@@ -390,8 +392,8 @@ class LogesticdashboardView extends GetView<LogesticdashboardController> {
                   onTap: () {
                     controllerX.gotoSplashScreen();
                   },
-                  leading: Icon(Icons.logout,
-                      color: Theme.of(context).primaryColor),
+                  leading:
+                      Icon(Icons.logout, color: Theme.of(context).primaryColor),
                   title: Text(
                     'Logout',
                     style: TextStyles(context)
@@ -406,28 +408,27 @@ class LogesticdashboardView extends GetView<LogesticdashboardController> {
       ),
       child: Scaffold(
         body: UpgradeAlert(
-          upgrader: Upgrader(dialogStyle: UpgradeDialogStyle.cupertino,canDismissDialog: false,),
+          upgrader: Upgrader(
+            dialogStyle: UpgradeDialogStyle.cupertino,
+            canDismissDialog: false,
+          ),
           child: StreamBuilder<ConnectivityResult>(
             stream: controllerX.connectivitySubscription,
             builder: (context, snapshot) {
-              if (snapshot.connectionState ==
-                  ConnectionState.waiting) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
                 try {
                   Utils.checkInternetConnectivity().then((value) {
                     if (value) {
-                      controllerX =
-                          Get.put<LogesticdashboardController>(
-                              LogesticdashboardController());
+                      controllerX = Get.put<LogesticdashboardController>(
+                          LogesticdashboardController());
                       // controllerX.getCurrentLocation();
                       return maiWidgetFun(context);
                     } else {
-                      return const Center(
-                          child: CircularProgressIndicator());
+                      return const Center(child: CircularProgressIndicator());
                     }
                   });
                 } catch (e) {
-                  return const Center(
-                      child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 }
               }
               if (snapshot.hasError) {
@@ -437,25 +438,23 @@ class LogesticdashboardView extends GetView<LogesticdashboardController> {
               String statusText = 'Unknown';
               if (connectivityResult == ConnectivityResult.mobile ||
                   connectivityResult == ConnectivityResult.wifi ||
-                  connectivityResult ==
-                      ConnectivityResult.ethernet) {
+                  connectivityResult == ConnectivityResult.ethernet) {
                 statusText = 'Mobile Data';
                 controllerX = Get.put<LogesticdashboardController>(
                     LogesticdashboardController());
                 // controllerX.getCurrentLocation();
                 return maiWidgetFun(context);
-              } else if (connectivityResult ==
-                  ConnectivityResult.none) {
+              } else if (connectivityResult == ConnectivityResult.none) {
                 statusText = 'No Connection';
                 return Center(
                   child: Container(
                     foregroundDecoration:
-                    !Get.find<ThemeController>().isLightMode
-                        ? BoxDecoration(
-                        color: Theme.of(context)
-                            .backgroundColor
-                            .withOpacity(0.4))
-                        : null,
+                        !Get.find<ThemeController>().isLightMode
+                            ? BoxDecoration(
+                                color: Theme.of(context)
+                                    .backgroundColor
+                                    .withOpacity(0.4))
+                            : null,
                     width: MediaQuery.of(context).size.width,
                     height: MediaQuery.of(context).size.height,
                     child: lottie.Lottie.asset(
@@ -467,21 +466,20 @@ class LogesticdashboardView extends GetView<LogesticdashboardController> {
               } else {
                 Utils.checkInternetConnectivity().then((value) {
                   if (value) {
-                    controllerX =
-                        Get.put<LogesticdashboardController>(
-                            LogesticdashboardController());
+                    controllerX = Get.put<LogesticdashboardController>(
+                        LogesticdashboardController());
                     // controllerX.getCurrentLocation();
                     return maiWidgetFun(context);
                   } else {
                     return Center(
                       child: Container(
                         foregroundDecoration:
-                        !Get.find<ThemeController>().isLightMode
-                            ? BoxDecoration(
-                            color: Theme.of(context)
-                                .backgroundColor
-                                .withOpacity(0.4))
-                            : null,
+                            !Get.find<ThemeController>().isLightMode
+                                ? BoxDecoration(
+                                    color: Theme.of(context)
+                                        .backgroundColor
+                                        .withOpacity(0.4))
+                                : null,
                         width: MediaQuery.of(context).size.width,
                         height: MediaQuery.of(context).size.height,
                         child: lottie.Lottie.asset(
@@ -521,24 +519,28 @@ class LogesticdashboardView extends GetView<LogesticdashboardController> {
                               children: [
                                 Card(
                                   shape: RoundedRectangleBorder(
-                                    borderRadius:
-                                    BorderRadius.circular(5.0), //<-- SEE HERE
+                                    borderRadius: BorderRadius.circular(
+                                        5.0), //<-- SEE HERE
                                   ),
                                   margin: EdgeInsets.all(2),
                                   elevation: 5,
                                   child: IconButton(
-                                    onPressed: controllerX.handleMenuButtonPressed,
+                                    onPressed:
+                                        controllerX.handleMenuButtonPressed,
                                     padding: EdgeInsets.all(2),
-                                    visualDensity:
-                                    VisualDensity(horizontal: -4, vertical: -4),
-                                    icon: ValueListenableBuilder<AdvancedDrawerValue>(
+                                    visualDensity: VisualDensity(
+                                        horizontal: -4, vertical: -4),
+                                    icon: ValueListenableBuilder<
+                                        AdvancedDrawerValue>(
                                       valueListenable:
-                                      controllerX.advancedDrawerController,
+                                          controllerX.advancedDrawerController,
                                       builder: (_, value, __) {
                                         return AnimatedSwitcher(
                                           duration: Duration(milliseconds: 250),
                                           child: Icon(
-                                            value.visible ? Icons.clear : Icons.menu,
+                                            value.visible
+                                                ? Icons.clear
+                                                : Icons.menu,
                                             key: ValueKey<bool>(value.visible),
                                           ),
                                         );
@@ -550,32 +552,43 @@ class LogesticdashboardView extends GetView<LogesticdashboardController> {
                                   onTap: () {
                                     controllerX.getRideAnalytics();
                                   },
-                                  child: GetBuilder<LogesticdashboardController>(
+                                  child:
+                                      GetBuilder<LogesticdashboardController>(
                                     id: "amt",
                                     builder: (controllerX) {
                                       return Card(
                                           elevation: 5,
                                           color: Theme.of(context).cardColor,
                                           shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(8.0),
+                                            borderRadius:
+                                                BorderRadius.circular(8.0),
                                           ),
                                           child: Row(
                                             children: [
                                               Padding(
-                                                padding: const EdgeInsets.all(8.0),
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
                                                 child: Text(
-                                                  "₹${double.parse(controllerX.totalAmount??"0").toStringAsFixed(2)}",
+                                                  "₹${double.parse(controllerX.totalAmount ?? "0").toStringAsFixed(2)}",
                                                   style: Theme.of(context)
                                                       .textTheme
                                                       .headline5!
                                                       .copyWith(
-                                                      fontSize: 25,
-                                                      color: Colors.white),
+                                                          fontSize: 25,
+                                                          color: Colors.white),
                                                 ),
                                               ),
                                               const Padding(
-                                                padding: EdgeInsets.only(right: 5.0,left: 0,top: 0,bottom: 0),
-                                                child: Icon(Icons.refresh,color: Colors.white,size: 15,),
+                                                padding: EdgeInsets.only(
+                                                    right: 5.0,
+                                                    left: 0,
+                                                    top: 0,
+                                                    bottom: 0),
+                                                child: Icon(
+                                                  Icons.refresh,
+                                                  color: Colors.white,
+                                                  size: 15,
+                                                ),
                                               )
                                             ],
                                           ));
@@ -592,68 +605,96 @@ class LogesticdashboardView extends GetView<LogesticdashboardController> {
                               ],
                             ),
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(left: 8.0),
-                                child: DateWithThreeTextField(
-                                  title: "From Date",
-                                  mainTextController:controllerX.fromDateController,
-                                  widthRation: .3,
-
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "UpComing Rides",
+                                  style: TextStyles(context)
+                                      .getBoldStyle()
+                                      .copyWith(fontSize: 20),
                                 ),
-                              ),
-                              DateWithThreeTextField(
-                                title: "To Date",
-                                mainTextController:TextEditingController(),
-                                widthRation: .3,
-                              ),
-                              SizedBox(
-                                width:MediaQuery.of(context).size.width*0.22 ,
-                                child: CommonButton(
-                                  padding: const EdgeInsets.only(
-                                      left: 1, right: 8, bottom: 0,top: 14),
+                                SizedBox(
+                                  width: MediaQuery.of(context).size.width * 0.22,
+                                  child: CommonButton(
+                                    padding: const EdgeInsets.only(
+                                        left: 1, right: 5, bottom: 0, top: 1),
+                                    buttonText: "Refresh",
 
-                                  buttonText: "Refresh",
-
-                                  onTap: () {
-
-                                  },radius: 6,
-                                  height: 30,
-                                  // isIcon: true,
-                                  // icon: Icons.refresh,
+                                    onTap: () {},
+                                    radius: 6,
+                                    height: 30,
+                                    // isIcon: true,
+                                    // icon: Icons.refresh,
+                                  ),
                                 ),
-                              ),
-
-                            ],
+                              ],
+                            ),
                           ),
-                          Row(
+                        /*  Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text("UpComing Rides",style: TextStyles(context).getBoldStyle().copyWith(fontSize: 20),)
+                              Text(
+                                "UpComing Rides",
+                                style: TextStyles(context)
+                                    .getBoldStyle()
+                                    .copyWith(fontSize: 20),
+                              )
                             ],
-                          ),
-                          SizedBox(
-                            height:MediaQuery.of(context).size.height*0.75,
-                            child: ListView.builder(
-                                itemCount:100,
-                                physics: BouncingScrollPhysics(),
-                                itemBuilder: (context, index) {
-                                  return const Padding(
-                                    padding: EdgeInsets.only(left: 8.0,
-                                        right: 8,
-                                        bottom: 5,
-                                        top: 2),
-                                    child: CommonHistoryWidget(amount: "1000",
-                                        status:"Pending" ,
-                                        date:"Today, 10:30 AM",
-                                        imgVisibility: false,
-                                        destination:"Nyapalli,BeheraSahi BBSR",
-                                        source: "Korua, L.N. College",
-                                        driverName: "eVIMAN"),
-                                  );
-                                }),
+                          ),*/
+                          GetBuilder<LogesticdashboardController>(
+                            assignId: true,
+                            id: "lst",
+                            builder: (controllerX) {
+                              return SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.75,
+                                child: (controllerX.upComingRidesModel !=
+                                            null &&
+                                        controllerX.upComingRidesModel?.rides !=
+                                            null &&
+                                        (controllerX.upComingRidesModel?.rides
+                                                    ?.length ??
+                                                0) >
+                                            0)
+                                    ? ListView.builder(
+                                        itemCount: controllerX.upComingRidesModel?.rides?.length,
+                                        physics: const BouncingScrollPhysics(),
+                                        itemBuilder: (context, index) {
+                                          return  Padding(
+                                            padding: EdgeInsets.only(
+                                                left: 8.0,
+                                                right: 8,
+                                                bottom: 5,
+                                                top: 2),
+                                            child: InkWell(
+                                              onTap: (){
+                                                Get.toNamed(Routes.UP_COMING_RIDE_DETAILS_PAGE,
+                                                    arguments:controllerX.upComingRidesModel?.rides?[index].toJson() );
+                                              },
+                                              child: UpComingRidesWidget(
+                                                  totalAmount:controllerX.upComingRidesModel?.rides?[index].totalAmount?? "",
+                                                  paidAmount: controllerX.upComingRidesModel?.rides?[index].amountPaid??"",
+                                                  status: "Waiting...",
+                                                  fromDate:controllerX.upComingRidesModel?.rides?[index].fromDate?? "",
+                                                  toDate:controllerX.upComingRidesModel?.rides?[index].toDate?? "",
+                                                  imgVisibility: false,
+                                                  onTap: (){
+                                                    print(">>>>>>>>>>>>>Index${index}");
+
+                                                  },
+                                                  destination:
+                                                  controllerX.upComingRidesModel?.rides?[index].dropAddress?? "",
+                                                  source:  controllerX.upComingRidesModel?.rides?[index].pickupAddress??"Korua, L.N. College",
+                                                  driverName: "eVIMAN"),
+                                            ),
+                                          );
+                                        })
+                                    : Container(),
+                              );
+                            },
                           )
                         ],
                       ),

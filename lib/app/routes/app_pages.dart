@@ -6,6 +6,8 @@ import '../modules/DocumentUpload/bindings/document_upload_binding.dart';
 import '../modules/DocumentUpload/views/document_upload_view.dart';
 import '../modules/ImageDetailsPage/bindings/image_details_page_binding.dart';
 import '../modules/ImageDetailsPage/views/image_details_page_view.dart';
+import '../modules/UpComingRideDetailsPage/bindings/up_coming_ride_details_page_binding.dart';
+import '../modules/UpComingRideDetailsPage/views/up_coming_ride_details_page_view.dart';
 import '../modules/bluetoothscreen/bindings/bluetoothscreen_binding.dart';
 import '../modules/bluetoothscreen/views/bluetoothscreen_view.dart';
 import '../modules/driverDashboard/bindings/driver_dashboard_binding.dart';
@@ -195,8 +197,13 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.LOGESTICDASHBOARD,
-      page: () =>  LogesticdashboardView(),
+      page: () => LogesticdashboardView(),
       binding: LogesticdashboardBinding(),
+    ),
+    GetPage(
+      name: _Paths.UP_COMING_RIDE_DETAILS_PAGE,
+      page: () =>  UpComingRideDetailsPageView(),
+      binding: UpComingRideDetailsPageBinding(),
     ),
   ];
 }

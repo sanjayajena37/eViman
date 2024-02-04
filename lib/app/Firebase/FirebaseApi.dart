@@ -6,6 +6,8 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 
 import '../../MainClass.dart';
+import '../data/ApiFactory.dart';
+import '../modules/ConnectorController.dart';
 
 Future<void> handleBackgroundMessage(RemoteMessage? message) async {}
 
@@ -15,7 +17,7 @@ class FirebaseApi {
 
   // The single instance of the class.
   static final FirebaseApi _instance = FirebaseApi._privateConstructor();
-   String? fcmToken;
+  String? fcmToken;
 // Getter to access the instance.
   factory FirebaseApi() {
     return _instance;
@@ -33,6 +35,24 @@ class FirebaseApi {
   getFCMToken() async {
     fcmToken = await _firebaseMessaging.getToken();
     print(">>>>>>>>>>>>>>>>>>>Token$fcmToken");
+  }
+
+  void onTokenRefresh(String token, {String? authToken}) {
+    _firebaseMessaging.onTokenRefresh.listen((token) async {
+      if (fcmToken != token) {
+        print('token refresh: ' + token);
+        if (authToken != null && authToken != "") {
+          Get.find<ConnectorController>().POSTMETHOD_TOKEN(
+              api: ApiFactory.FCM_TOKEN,
+              json: {"fcm_token": FirebaseApi().fcmToken ?? ""},
+              fun: (map) {
+                print(
+                    ">>>>>>>>>>>>>>>>>>fcmToken${FirebaseApi().fcmToken} >>>>>>mapres  $map");
+              },
+              token: authToken ?? '');
+        }
+      }
+    });
   }
 
   // function to initialize notification

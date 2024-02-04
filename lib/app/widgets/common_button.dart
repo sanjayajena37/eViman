@@ -59,7 +59,7 @@ class CommonButton extends StatelessWidget {
                           fontWeight: FontWeight.bold
                       ),
                     ),
-                Icon(icon,color: Colors.white,)
+                Icon(icon,color: Colors.white,size: 15,)
               ],
             ): Center(
               child: buttonTextWidget ??

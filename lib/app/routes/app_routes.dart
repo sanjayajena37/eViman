@@ -25,6 +25,7 @@ abstract class Routes {
   static const GALLERYSCREEN = _Paths.GALLERYSCREEN;
   static const IMAGE_DETAILS_PAGE = _Paths.IMAGE_DETAILS_PAGE;
   static const LOGESTICDASHBOARD = _Paths.LOGESTICDASHBOARD;
+  static const UP_COMING_RIDE_DETAILS_PAGE = _Paths.UP_COMING_RIDE_DETAILS_PAGE;
 }
 
 abstract class _Paths {
@@ -51,4 +52,5 @@ abstract class _Paths {
   static const GALLERYSCREEN = '/galleryscreen';
   static const IMAGE_DETAILS_PAGE = '/image-details-page';
   static const LOGESTICDASHBOARD = '/logesticdashboard';
+  static const UP_COMING_RIDE_DETAILS_PAGE = '/up-coming-ride-details-page';
 }
