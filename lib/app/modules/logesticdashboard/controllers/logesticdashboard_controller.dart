@@ -4,6 +4,7 @@ import 'dart:isolate';
 import 'dart:math';
 import 'dart:ui';
 import 'dart:developer' as dev;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
@@ -54,7 +55,7 @@ part 'helpercontroller.dart';
 // part 'mapcontroller.dart';
 
 class LogesticdashboardController extends GetxController
-    with Helper, WidgetsBindingObserver, GetSingleTickerProviderStateMixin {
+    with Helper, WidgetsBindingObserver, GetTickerProviderStateMixin {
   List<Map<String, double>> locationDataFromIsolate = [];
   TextEditingController fromDateController = TextEditingController();
 
@@ -80,6 +81,7 @@ class LogesticdashboardController extends GetxController
   String? riderIdNew;
   String? vehicleIdNew;
   String? authToken;
+  TabController? tabController;
 
   // geoc.Placemark? locationDetailsUser;
   IncomingBooikingModel? incomingBookingModel;
@@ -90,17 +92,13 @@ class LogesticdashboardController extends GetxController
   getProfileDetails() {
     MyWidgets.showLoading3();
     Get.find<ConnectorController>().GETMETHODCALL_TOKEN(
-        api:
-            "https://backend.eviman.co.in/api/riders/v1/profile/${riderIdNew ?? 0}",
+        api: "https://backend.eviman.co.in/api/riders/v1/profile/${riderIdNew ?? 0}",
         token: authToken ?? "",
         fun: (map) {
           print(">>>>" + map.toString());
           Get.back();
-          if (map is Map &&
-              map.containsKey("success") &&
-              map['success'] == true) {
-            profileViewModel =
-                ProfileViewModel.fromJson(map as Map<String, dynamic>);
+          if (map is Map && map.containsKey("success") && map['success'] == true) {
+            profileViewModel = ProfileViewModel.fromJson(map as Map<String, dynamic>);
             update(['prof']);
           } else {
             profileViewModel = null;
@@ -112,12 +110,12 @@ class LogesticdashboardController extends GetxController
 
   getRiderId() async {
     riderIdNew = await SharedPreferencesKeys().getStringData(key: 'riderId');
-    vehicleIdNew =
-        await SharedPreferencesKeys().getStringData(key: 'vehicleId');
+    vehicleIdNew = await SharedPreferencesKeys().getStringData(key: 'vehicleId');
     authToken = await SharedPreferencesKeys().getStringData(key: 'authToken');
     getProfileDetails();
     getRideAnalytics();
-    getUpComingBookings();
+    getPendingRides();
+    getUpcomingRides();
   }
 
   Future<String> createRide() async {
@@ -125,33 +123,26 @@ class LogesticdashboardController extends GetxController
     if (incomingBookingModel != null) {
       try {
         Map<String, dynamic> postData = {
-          "bookingId":
-              incomingBookingModel?.incomingBooking?.bookingId ?? "EVIMAN_1",
+          "bookingId": incomingBookingModel?.incomingBooking?.bookingId ?? "EVIMAN_1",
           "riderAssigned": riderIdNew ?? "",
           "vehicleAssigned": vehicleIdNew ?? "",
-          "vehicleTypeId":
-              incomingBookingModel?.incomingBooking?.fareInfo ?? "",
+          "vehicleTypeId": incomingBookingModel?.incomingBooking?.fareInfo ?? "",
           "clientId": incomingBookingModel?.incomingBooking?.clientId ?? "",
           "pickupLat": incomingBookingModel?.incomingBooking?.clientLat ?? "",
           "pickupLng": incomingBookingModel?.incomingBooking?.clientLng ?? "",
-          "dropLat":
-              incomingBookingModel?.incomingBooking?.destinationLat ?? "",
+          "dropLat": incomingBookingModel?.incomingBooking?.destinationLat ?? "",
           "pickupCoordinates": {
             "lat": (incomingBookingModel?.incomingBooking?.clientLat ?? ""),
             "lng": (incomingBookingModel?.incomingBooking?.clientLng ?? "")
           },
           "dropCoordinates": {
-            "lat":
-                (incomingBookingModel?.incomingBooking?.destinationLat ?? ""),
+            "lat": (incomingBookingModel?.incomingBooking?.destinationLat ?? ""),
             "lng": (incomingBookingModel?.incomingBooking?.destinationLng ?? "")
           },
-          "dropLng":
-              incomingBookingModel?.incomingBooking?.destinationLng ?? "",
+          "dropLng": incomingBookingModel?.incomingBooking?.destinationLng ?? "",
           "pickupAddress":
-              incomingBookingModel?.incomingBooking?.pickupAddress ??
-                  "Angul, Odisha, India",
-          "dropAddress": incomingBookingModel?.incomingBooking?.dropAddress ??
-              "Bhubaneswar, Odisha"
+              incomingBookingModel?.incomingBooking?.pickupAddress ?? "Angul, Odisha, India",
+          "dropAddress": incomingBookingModel?.incomingBooking?.dropAddress ?? "Bhubaneswar, Odisha"
         };
         print(">>>>>>>>>createRideData" + postData.toString());
 
@@ -163,9 +154,7 @@ class LogesticdashboardController extends GetxController
             fun: (map) {
               // Get.back();
               closeDialogIfOpen();
-              if (map is Map &&
-                  map.containsKey('success') &&
-                  map['success'] == true) {
+              if (map is Map && map.containsKey('success') && map['success'] == true) {
                 completer.complete("true");
               } else {
                 completer.complete("false");
@@ -184,8 +173,7 @@ class LogesticdashboardController extends GetxController
   }
 
   void openPlayStorePage() async {
-    const url =
-        'https://play.google.com/store/apps/details?id=com.eviman.rider';
+    const url = 'https://play.google.com/store/apps/details?id=com.eviman.rider';
     if (await canLaunch(url)) {
       await launch(url);
     } else {
@@ -198,20 +186,37 @@ class LogesticdashboardController extends GetxController
       Get.back();
     }
   }
-  UpComingRidesModel ?upComingRidesModel;
 
-  getUpComingBookings(){
+  UpComingRidesModel? upComingRidesModel;
+
+  getPendingRides() {
     Get.find<ConnectorController>().GETMETHODCALL_TOKEN(
         api: "https://backend.eviman.co.in/api/rides/v1/logistics/pending-requests",
         token: authToken ?? "",
         fun: (map) {
-          dev.log(">>>>>>>>>>>upcoming${jsonEncode(map)}");
-          if(map['success'] == true){
-            upComingRidesModel = UpComingRidesModel.fromJson(map as Map<String,dynamic>);
+          dev.log(">>>>>>>>>>>pending${jsonEncode(map)}");
+          if (map['success'] == true) {
+            upComingRidesModel = UpComingRidesModel.fromJson(map as Map<String, dynamic>);
             update(['lst']);
-          }else{
+          } else {
             upComingRidesModel = null;
             update(['lst']);
+          }
+        });
+  }
+
+  getUpcomingRides() {
+    Get.find<ConnectorController>().GETMETHODCALL_TOKEN(
+        api: "https://backend.eviman.co.in/api/rides/v1/logistics/upcoming",
+        token: authToken ?? "",
+        fun: (map) {
+          dev.log(">>>>>>>>>>>upcoming${jsonEncode(map)}");
+          if (map['success'] == true) {
+            // upComingRidesModel = UpComingRidesModel.fromJson(map as Map<String, dynamic>);
+            // update(['lst']);
+          } else {
+            upComingRidesModel = null;
+            // update(['lst']);
           }
         });
   }
@@ -226,11 +231,8 @@ class LogesticdashboardController extends GetxController
         token: authToken ?? "",
         fun: (map) {
           print(">>>>>>>>>>>rides-analytics" + map.toString());
-          if (map is Map &&
-              map.containsKey("result") &&
-              map['result'] != null) {
-            totalDistanceNew =
-                (map['result']['totalDistance'] ?? "0.00").toString();
+          if (map is Map && map.containsKey("result") && map['result'] != null) {
+            totalDistanceNew = (map['result']['totalDistance'] ?? "0.00").toString();
             totalAmount = (map['result']['totalAmount'] ?? "0.00").toString();
             totalRides = (map['result']['totalRides'] ?? "0.00").toString();
             update(['analytics', 'amt']);
@@ -261,15 +263,55 @@ class LogesticdashboardController extends GetxController
     }
   }
 
+  Future<bool> upDateRideStatusComplete(String? sta, {String? riderId, String? bookingId}) async {
+    Completer<bool> completer = Completer<bool>();
+    try {
+      MyWidgets.showLoading3();
+      Map<String, dynamic> postData = {
+        "rideId": riderId ?? "",
+        "action": sta ?? "",
+        "bookingId": bookingId ?? ""
+      };
+      if (kDebugMode) {
+        print(">>>>>>>>>>>>>>>complete$postData");
+      }
+      Get.find<ConnectorController>().PATCH_METHOD_TOKEN(
+          api: "https://backend.eviman.co.in/api/rides/v1/logistics/ride/accept-reject?rideId=$bookingId&action=$sta",
+          token: authToken ?? "token",
+          // json: postData,
+          fun: (map) {
+            closeDialogIfOpen();
+            print(">>>>>>>>>>>>>>>>>>>>>map$map");
+            completer.complete(true);
+            // Get.back();
+          });
+    } catch (e) {
+      closeDialogIfOpen();
+      completer.complete(false);
+    }
+
+    return completer.future;
+  }
+  int ? selectedIndex = 0;
   @override
   void onInit() {
     WidgetsBinding.instance.addObserver(this);
     advancedDrawerController = AdvancedDrawerController();
     connectivitySubscription = connectivity.onConnectivityChanged;
-    animationController =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 300));
+    animationController = AnimationController(vsync: this, duration: Duration(milliseconds: 300));
+    tabController = TabController(length: 2, vsync: this);
+    tabController?.addListener(() {
+      selectedIndex = tabController?.index;
+      print("Selected Index: " + (tabController?.index).toString());
+    });
     // getRiderId();
     super.onInit();
+
+
+
+
+
+
   }
 
   requestForNotification() async {
@@ -314,6 +356,7 @@ class LogesticdashboardController extends GetxController
     // advancedDrawerController.dispose();
     // mapControl = Completer<GoogleMapController>();
     positionStream?.cancel();
+    tabController?.dispose();
     // timerController?.dispose();
     // unsubscribe();
     // locationUpdateTimer?.cancel();
@@ -327,14 +370,5 @@ class LogesticdashboardController extends GetxController
 
   geoc.Placemark? locationDetails;
 
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    print(">>>>>>>>>>>>>>>>jks" + state.toString());
-    /*if(state == AppLifecycleState.paused){
-      getRiderId();
-    }*/
-    if (state == AppLifecycleState.detached) {
-      // locationService.stopLocationUpdates();
-    }
-  }
+
 }

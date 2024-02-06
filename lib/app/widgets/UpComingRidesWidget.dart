@@ -8,38 +8,53 @@ import '../constants/text_styles.dart';
 import 'common_button.dart';
 
 class UpComingRidesWidget extends StatelessWidget {
-  final String ?fromDate;
-  final String ?toDate;
-  final String ?destination;
-  final String ?source;
-  final String ?totalAmount;
-  final String ?paidAmount;
-  final String ?driverName;
-  final String ?status;
-  final String ?assetUrl;
-  final bool ?imgVisibility;
-  final Function ? onTapAccept;
-  final Function ? onTapCancel;
+  final String? fromDate;
+  final String? toDate;
+  final String? destination;
+  final String? source;
+  final String? totalAmount;
+  final String? paidAmount;
+  final String? driverName;
+  final String? status;
+  final String? assetUrl;
+  final bool? imgVisibility;
+  final bool? acceptClick;
+  final bool? rejectClick;
+  final Function? onTapAccept;
+  final Function? onTapCancel;
 
- const UpComingRidesWidget(
-      {super.key, this.fromDate, this.toDate, this.destination, this.source, this.totalAmount, this.paidAmount, this.driverName,
-        this.status = "", this.assetUrl, this.imgVisibility = true, this.onTapAccept,this.onTapCancel});
-
-
+  const UpComingRidesWidget(
+      {
+      this.fromDate,
+      this.toDate,
+      this.destination,
+      this.source,
+      this.totalAmount,
+      this.paidAmount,
+      this.driverName,
+      this.status = "",
+      this.assetUrl,
+      this.imgVisibility = true,
+      this.onTapAccept,
+      this.onTapCancel,
+      this.acceptClick = false,
+      this.rejectClick = false});
 
   @override
   Widget build(BuildContext context) {
-    Rx<bool> isClick = Rx<bool>(false);
+    // Rx<bool> isClick = Rx<bool>(false);
     return Stack(
       children: [
-        Positioned(top: 10,
+        Positioned(
+            top: 10,
             right: 6,
             left: 266,
             child: Text(
-              (status ?? ""), style: TextStyles(context).getBoldStyle().
-            copyWith(fontSize: 10,
-                fontWeight: FontWeight.bold,
-                color: Colors.black),)),
+              (status ?? ""),
+              style: TextStyles(context)
+                  .getBoldStyle()
+                  .copyWith(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.black),
+            )),
         Container(
           decoration: BoxDecoration(
             color: Colors.white.withOpacity(0.8),
@@ -57,43 +72,64 @@ class UpComingRidesWidget extends StatelessWidget {
               Positioned.fill(
                 child: Align(
                   alignment: Alignment.bottomRight,
-                  child:
-                  Padding(
-                    padding: const EdgeInsets.only(
-                        left: 8.0, right: 8, bottom: 4, top: 1),
-                    child: Obx(() {
-                      return (isClick.value == false) ?
-                      SizedBox(
-                        width: MediaQuery
-                            .of(context)
-                            .size
-                            .width * 0.2,
-                        child: CommonButton(
-                          padding: const EdgeInsets.only(
-                              left: 0, right: 0, bottom: 0, top: 0),
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 8.0, right: 8, bottom: 4, top: 1),
+                    child: (acceptClick == false && rejectClick == false)
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.2,
+                                child: CommonButton(
+                                  padding:
+                                      const EdgeInsets.only(left: 0, right: 0, bottom: 0, top: 0),
 
-                          buttonText: "Accept",
+                                  buttonText: "Reject",
 
-                          onTap: () {
+                                  onTap: () {
+                                    if (onTapCancel != null) {
+                                      onTapCancel!();
+                                    }
+                                    // isClick.value = true;
+                                    // isClick.refresh();
+                                  },
+                                  radius: 6,
+                                  height: 25,
+                                  backgroundColor: Colors.red,
+                                  // isIcon: true,
+                                  // icon: Icons.refresh,
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 8,
+                              ),
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.2,
+                                child: CommonButton(
+                                  padding:
+                                      const EdgeInsets.only(left: 0, right: 0, bottom: 0, top: 0),
 
-                            if (onTapAccept != null) {
-                              onTapAccept!();
-                            }
-                            isClick.value = true;
-                            isClick.refresh();
-                          },
-                          radius: 6,
-                          height: 25,
-                          backgroundColor: Colors.green,
-                          // isIcon: true,
-                          // icon: Icons.refresh,
-                        ),
-                      ) :
-                      Lottie.asset(
-                          "assets/json/done.json",
-                          fit: BoxFit.contain, height: 60
-                      );
-                    }),
+                                  buttonText: "Accept",
+
+                                  onTap: () {
+                                    if (onTapAccept != null) {
+                                      onTapAccept!();
+                                    }
+                                    // isClick.value = true;
+                                    // isClick.refresh();
+                                  },
+                                  radius: 6,
+                                  height: 25,
+                                  backgroundColor: Colors.green,
+                                  // isIcon: true,
+                                  // icon: Icons.refresh,
+                                ),
+                              ),
+                            ],
+                          )
+                        : (rejectClick == false)
+                            ? Lottie.asset("assets/json/done.json", fit: BoxFit.contain, height: 60)
+                            : Lottie.asset("assets/json/reject.json", fit: BoxFit.contain, height: 60),
                   ),
                 ),
               ),
@@ -111,27 +147,23 @@ class UpComingRidesWidget extends StatelessWidget {
                     const SizedBox(
                       height: 8,
                     ),
-                    (imgVisibility == true) ?
-                    Container(
-                      width: double.infinity,
-                      height: Get.height * 0.2,
-                      decoration: BoxDecoration(
-                          borderRadius:
-                          BorderRadius.circular(15)),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(
-                            15),
-                        child: SizedBox.fromSize(
-                          size: const Size.fromRadius(
-                              48), // Image radius
-                          child: Image.asset(
-                            'assets/images/mapHistory.jpg',
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                    ) :
-                    Container(),
+                    (imgVisibility == true)
+                        ? Container(
+                            width: double.infinity,
+                            height: Get.height * 0.2,
+                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(15)),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(15),
+                              child: SizedBox.fromSize(
+                                size: const Size.fromRadius(48), // Image radius
+                                child: Image.asset(
+                                  'assets/images/mapHistory.jpg',
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                          )
+                        : Container(),
                     const SizedBox(
                       height: 5,
                     ),
@@ -154,8 +186,7 @@ class UpComingRidesWidget extends StatelessWidget {
                                       height: 8,
                                       width: 8,
                                       decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(
-                                            8 / 2),
+                                        borderRadius: BorderRadius.circular(8 / 2),
                                         color: Colors.black,
                                       ),
                                     ),
@@ -167,9 +198,7 @@ class UpComingRidesWidget extends StatelessWidget {
                                       child: ListView.builder(
                                           shrinkWrap: true,
                                           itemCount: 11,
-                                          itemBuilder:
-                                              (BuildContext context,
-                                              int index) {
+                                          itemBuilder: (BuildContext context, int index) {
                                             return Column(
                                               children: <Widget>[
                                                 SizedBox(
@@ -179,9 +208,7 @@ class UpComingRidesWidget extends StatelessWidget {
                                                   height: 2,
                                                   width: 2,
                                                   decoration: BoxDecoration(
-                                                      borderRadius:
-                                                      BorderRadius.circular(
-                                                          2 / 2),
+                                                      borderRadius: BorderRadius.circular(2 / 2),
                                                       color: Colors.black),
                                                 ),
                                               ],
@@ -195,8 +222,7 @@ class UpComingRidesWidget extends StatelessWidget {
                                       height: 8,
                                       width: 8,
                                       decoration: BoxDecoration(
-                                          borderRadius:
-                                          BorderRadius.circular(8 / 2),
+                                          borderRadius: BorderRadius.circular(8 / 2),
                                           color: Colors.red),
                                     ),
                                   ],
@@ -211,8 +237,8 @@ class UpComingRidesWidget extends StatelessWidget {
                                     child: SizedBox(
                                         width: Get.width * 0.5,
                                         child: Text(source ?? "",
-                                            style: TextStyles(context)
-                                                .getBoldStyle(), maxLines: 2)),
+                                            style: TextStyles(context).getBoldStyle(),
+                                            maxLines: 2)),
                                   ),
                                   SizedBox(
                                     height: 21,
@@ -222,22 +248,22 @@ class UpComingRidesWidget extends StatelessWidget {
                                     child: SizedBox(
                                         width: Get.width * 0.5,
                                         child: Text(destination ?? "",
-                                            style: TextStyles(context)
-                                                .getBoldStyle(), maxLines: 2)),
+                                            style: TextStyles(context).getBoldStyle(),
+                                            maxLines: 2)),
                                   ),
                                 ],
                               ),
                             )
                           ],
                         ),
-                        Obx(() {
-                          return Container(
-                            child: (isClick.value == false) ? Lottie.asset(
-                                "assets/json/active.json",
-                                fit: BoxFit.contain, height: 60
-                            ) : Container(),
-                          );
-                        }),
+                        (acceptClick == true)
+                            ? Container()
+                            : (rejectClick == true)
+                                ? Container()
+                                : Container(
+                                    child: Lottie.asset("assets/json/active.json",
+                                            fit: BoxFit.contain, height: 60),
+                                  ),
                       ],
                     ),
                     /*  Text(source??"",style: TextStyles(context).getBoldStyle()),
@@ -255,16 +281,18 @@ class UpComingRidesWidget extends StatelessWidget {
                             SizedBox(
                                 width: Get.width * 0.25,
                                 child: Text("Total Amount: ",
-                                    style: TextStyles(context)
-                                        .getDescriptionStyle())),
+                                    style: TextStyles(context).getDescriptionStyle())),
                             SizedBox(
                                 width: Get.width * 0.2,
                                 height: Get.height * 0.02,
                                 child: FittedBox(
                                   fit: BoxFit.scaleDown,
-                                  child: Text("₹ ${totalAmount ?? 0}", style:
-                                  TextStyles(context).getBoldStyle().copyWith(
-                                      color: Colors.blue, fontSize: 10),),
+                                  child: Text(
+                                    "₹ ${totalAmount ?? 0}",
+                                    style: TextStyles(context)
+                                        .getBoldStyle()
+                                        .copyWith(color: Colors.blue, fontSize: 10),
+                                  ),
                                 ))
                           ],
                         ),
@@ -280,16 +308,18 @@ class UpComingRidesWidget extends StatelessWidget {
                             SizedBox(
                                 width: Get.width * 0.25,
                                 child: Text("Amount Paid: ",
-                                    style: TextStyles(context)
-                                        .getDescriptionStyle())),
+                                    style: TextStyles(context).getDescriptionStyle())),
                             SizedBox(
                                 width: Get.width * 0.2,
                                 height: Get.height * 0.02,
                                 child: FittedBox(
                                   fit: BoxFit.scaleDown,
-                                  child: Text("₹ ${paidAmount ?? 0}", style:
-                                  TextStyles(context).getBoldStyle().copyWith(
-                                      color: Colors.blue, fontSize: 10),),
+                                  child: Text(
+                                    "₹ ${paidAmount ?? 0}",
+                                    style: TextStyles(context)
+                                        .getBoldStyle()
+                                        .copyWith(color: Colors.blue, fontSize: 10),
+                                  ),
                                 ))
                           ],
                         ),

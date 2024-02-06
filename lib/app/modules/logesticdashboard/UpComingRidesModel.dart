@@ -69,10 +69,15 @@ class Rides {
   String? ride;
   String? fromDate;
   String? toDate;
+   bool ?acceptClick;
+   bool ?rejectClick;
   List<int>? riders;
 
   Rides(
-      {this.id,
+      {
+        this.id,
+        this.acceptClick =  false,
+        this.rejectClick = false,
         this.bookingId,
         this.clientId,
         this.vehicleAssigned,
@@ -117,6 +122,8 @@ class Rides {
 
   Rides.fromJson(Map<String, dynamic> json) {
     id = json['id'];
+    acceptClick = json['acceptClick'];
+    rejectClick = json['rejectClick'];
     bookingId = json['booking_id'];
     clientId = json['client_id'];
     vehicleAssigned = json['vehicle_assigned'];
@@ -163,6 +170,8 @@ class Rides {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
+    data['acceptClick'] = this.acceptClick;
+    data['rejectClick'] = this.rejectClick;
     data['booking_id'] = this.bookingId;
     data['client_id'] = this.clientId;
     data['vehicle_assigned'] = this.vehicleAssigned;

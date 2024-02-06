@@ -28,11 +28,11 @@ import '../../driverDashboard/views/driver_dashboard_view.dart';
 import '../controllers/logesticdashboard_controller.dart';
 import 'package:lottie/lottie.dart' as lottie;
 
-class LogesticdashboardView extends GetView<LogesticdashboardController> {
+class LogesticdashboardView extends StatelessWidget {
   LogesticdashboardView({Key? key}) : super(key: key);
 
   LogesticdashboardController controllerX =
-      Get.put<LogesticdashboardController>(LogesticdashboardController());
+  Get.put<LogesticdashboardController>(LogesticdashboardController());
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +64,10 @@ class LogesticdashboardView extends GetView<LogesticdashboardController> {
               padding: EdgeInsets.zero,
               children: [
                 SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.22,
+                  height: MediaQuery
+                      .of(context)
+                      .size
+                      .height * 0.22,
                   child: DrawerHeader(
                     // decoration: const BoxDecoration(color: Colors.),
                     child: Column(
@@ -79,80 +82,80 @@ class LogesticdashboardView extends GetView<LogesticdashboardController> {
                               children: [
                                 Row(
                                   mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  MainAxisAlignment.spaceBetween,
                                   children: [
                                     ClipOval(
                                       child: SizedBox.fromSize(
                                           size: const Size.fromRadius(
                                               40), // Image radius
                                           child: (controllerX
-                                                          .profileViewModel
-                                                          ?.riderData
-                                                          ?.profile_image !=
-                                                      null &&
-                                                  controllerX
-                                                          .profileViewModel
-                                                          ?.riderData
-                                                          ?.profile_image
-                                                          .toString()
-                                                          .trim() !=
-                                                      "")
+                                              .profileViewModel
+                                              ?.riderData
+                                              ?.profile_image !=
+                                              null &&
+                                              controllerX
+                                                  .profileViewModel
+                                                  ?.riderData
+                                                  ?.profile_image
+                                                  .toString()
+                                                  .trim() !=
+                                                  "")
                                               ? CachedNetworkImage(
-                                                  imageUrl: controllerX
-                                                          .profileViewModel
-                                                          ?.riderData
-                                                          ?.profile_image ??
-                                                      "",
-                                                  imageBuilder: (context,
-                                                          imageProvider) =>
-                                                      Container(
-                                                    decoration: BoxDecoration(
-                                                        image: DecorationImage(
-                                                          image: imageProvider,
-                                                          fit: BoxFit.cover,
-                                                        ),
-                                                        border: Border.all(
-                                                            color: Colors.red,
-                                                            width: 1,
-                                                            style: BorderStyle
-                                                                .solid),
-                                                        borderRadius:
-                                                            BorderRadius.all(
-                                                                Radius.circular(
-                                                                    40))),
-                                                  ),
-                                                  progressIndicatorBuilder:
-                                                      (context, url,
-                                                              downloadProgress) =>
-                                                          Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      SizedBox(
-                                                        height:
-                                                            Get.height * 0.04,
-                                                        width: Get.width * 0.15,
-                                                        child: Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .all(18.0),
-                                                          child: CircularProgressIndicator(
-                                                              value:
-                                                                  downloadProgress
-                                                                      .progress),
-                                                        ),
+                                            imageUrl: controllerX
+                                                .profileViewModel
+                                                ?.riderData
+                                                ?.profile_image ??
+                                                "",
+                                            imageBuilder: (context,
+                                                imageProvider) =>
+                                                Container(
+                                                  decoration: BoxDecoration(
+                                                      image: DecorationImage(
+                                                        image: imageProvider,
+                                                        fit: BoxFit.cover,
                                                       ),
-                                                    ],
-                                                  ),
-                                                  errorWidget:
-                                                      (context, url, error) =>
-                                                          Icon(Icons.error),
-                                                )
+                                                      border: Border.all(
+                                                          color: Colors.red,
+                                                          width: 1,
+                                                          style: BorderStyle
+                                                              .solid),
+                                                      borderRadius:
+                                                      BorderRadius.all(
+                                                          Radius.circular(
+                                                              40))),
+                                                ),
+                                            progressIndicatorBuilder:
+                                                (context, url,
+                                                downloadProgress) =>
+                                                Column(
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .center,
+                                                  children: [
+                                                    SizedBox(
+                                                      height:
+                                                      Get.height * 0.04,
+                                                      width: Get.width * 0.15,
+                                                      child: Padding(
+                                                        padding:
+                                                        const EdgeInsets
+                                                            .all(18.0),
+                                                        child: CircularProgressIndicator(
+                                                            value:
+                                                            downloadProgress
+                                                                .progress),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                            errorWidget:
+                                                (context, url, error) =>
+                                                Icon(Icons.error),
+                                          )
                                               : Image.asset(
-                                                  'assets/images/man.jpg',
-                                                  fit: BoxFit.cover,
-                                                )),
+                                            'assets/images/man.jpg',
+                                            fit: BoxFit.cover,
+                                          )),
                                     ),
                                     SizedBox(
                                       width: 10,
@@ -162,7 +165,7 @@ class LogesticdashboardView extends GetView<LogesticdashboardController> {
                                       builder: (controllerX) {
                                         return Row(
                                           mainAxisAlignment:
-                                              MainAxisAlignment.spaceAround,
+                                          MainAxisAlignment.spaceAround,
                                           children: [
                                             // driverINfoWidget("assets/icon/time.png", "10.2", "Hours online"),
                                             driverINfoWidget(
@@ -192,7 +195,9 @@ class LogesticdashboardView extends GetView<LogesticdashboardController> {
                                     Container(
                                       // width: Get.width * 0.5,
                                       child: Text(
-                                        "${controllerX.profileViewModel?.riderData?.firstName ?? ""} ${controllerX.profileViewModel?.riderData?.lastName ?? ""}",
+                                        "${controllerX.profileViewModel?.riderData?.firstName ??
+                                            ""} ${controllerX.profileViewModel?.riderData
+                                            ?.lastName ?? ""}",
                                         style: TextStyles(context)
                                             .getBoldStyle()
                                             .copyWith(fontSize: 18),
@@ -206,7 +211,7 @@ class LogesticdashboardView extends GetView<LogesticdashboardController> {
                                       // width: Get.width * 0.5,
                                       child: Text(
                                         controllerX.profileViewModel?.riderData
-                                                ?.email ??
+                                            ?.email ??
                                             "",
                                         style: TextStyles(context)
                                             .getBoldStyle()
@@ -229,7 +234,9 @@ class LogesticdashboardView extends GetView<LogesticdashboardController> {
                     controllerX.advancedDrawerController.hideDrawer();
                   },
                   leading:
-                      Icon(Icons.home, color: Theme.of(context).primaryColor),
+                  Icon(Icons.home, color: Theme
+                      .of(context)
+                      .primaryColor),
                   title: Text(
                     'Home',
                     style: TextStyles(context)
@@ -242,7 +249,9 @@ class LogesticdashboardView extends GetView<LogesticdashboardController> {
                     Get.toNamed(Routes.PROFILESCREEN);
                   },
                   leading: Icon(Icons.account_circle_rounded,
-                      color: Theme.of(context).primaryColor),
+                      color: Theme
+                          .of(context)
+                          .primaryColor),
                   title: Text(
                     'Profile',
                     style: TextStyles(context)
@@ -255,7 +264,9 @@ class LogesticdashboardView extends GetView<LogesticdashboardController> {
                     Get.toNamed(Routes.VEHICLE_DETAILS);
                   },
                   leading: Icon(Icons.electric_car,
-                      color: Theme.of(context).primaryColor),
+                      color: Theme
+                          .of(context)
+                          .primaryColor),
                   title: Text(
                     'Vehicle Details',
                     style: TextStyles(context)
@@ -268,7 +279,9 @@ class LogesticdashboardView extends GetView<LogesticdashboardController> {
                     Get.toNamed(Routes.EARNINGPAGE);
                   },
                   leading:
-                      Icon(Icons.money, color: Theme.of(context).primaryColor),
+                  Icon(Icons.money, color: Theme
+                      .of(context)
+                      .primaryColor),
                   title: Text(
                     'My Earning',
                     style: TextStyles(context)
@@ -294,7 +307,9 @@ class LogesticdashboardView extends GetView<LogesticdashboardController> {
                     Get.toNamed(Routes.HISTORYSCREEN);
                   },
                   leading: Icon(Icons.history,
-                      color: Theme.of(context).primaryColor),
+                      color: Theme
+                          .of(context)
+                          .primaryColor),
                   title: Text(
                     'History',
                     style: TextStyles(context)
@@ -317,11 +332,13 @@ class LogesticdashboardView extends GetView<LogesticdashboardController> {
                   onTap: () {
                     Get.toNamed(Routes.INVITESCREEN,
                         arguments: (controllerX
-                                .profileViewModel?.riderData?.referralCode ??
+                            .profileViewModel?.riderData?.referralCode ??
                             "XXXXXXXXXXXXX"));
                   },
                   leading: Icon(Icons.card_giftcard_outlined,
-                      color: Theme.of(context).primaryColor),
+                      color: Theme
+                          .of(context)
+                          .primaryColor),
                   title: Text(
                     'Refer and Earn',
                     style: TextStyles(context)
@@ -337,7 +354,9 @@ class LogesticdashboardView extends GetView<LogesticdashboardController> {
                         subject: 'Look what I made!');
                   },
                   leading:
-                      Icon(Icons.share, color: Theme.of(context).primaryColor),
+                  Icon(Icons.share, color: Theme
+                      .of(context)
+                      .primaryColor),
                   title: Text(
                     'Share',
                     style: TextStyles(context)
@@ -351,7 +370,9 @@ class LogesticdashboardView extends GetView<LogesticdashboardController> {
                     controllerX.openPlayStorePage();
                   },
                   leading: Icon(Icons.star_rate,
-                      color: Theme.of(context).primaryColor),
+                      color: Theme
+                          .of(context)
+                          .primaryColor),
                   title: Text(
                     'Rate Us',
                     style: TextStyles(context)
@@ -365,7 +386,9 @@ class LogesticdashboardView extends GetView<LogesticdashboardController> {
                     // controllerX.openPlayStorePage();
                   },
                   leading:
-                      Icon(Icons.image, color: Theme.of(context).primaryColor),
+                  Icon(Icons.image, color: Theme
+                      .of(context)
+                      .primaryColor),
                   title: Text(
                     'Gallery',
                     style: TextStyles(context)
@@ -393,7 +416,9 @@ class LogesticdashboardView extends GetView<LogesticdashboardController> {
                     controllerX.gotoSplashScreen();
                   },
                   leading:
-                      Icon(Icons.logout, color: Theme.of(context).primaryColor),
+                  Icon(Icons.logout, color: Theme
+                      .of(context)
+                      .primaryColor),
                   title: Text(
                     'Logout',
                     style: TextStyles(context)
@@ -406,93 +431,133 @@ class LogesticdashboardView extends GetView<LogesticdashboardController> {
           ),
         ),
       ),
-      child: Scaffold(
-        body: UpgradeAlert(
-          upgrader: Upgrader(
-            dialogStyle: UpgradeDialogStyle.cupertino,
-            canDismissDialog: false,
-          ),
-          child: StreamBuilder<ConnectivityResult>(
-            stream: controllerX.connectivitySubscription,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                try {
-                  Utils.checkInternetConnectivity().then((value) {
-                    if (value) {
-                      controllerX = Get.put<LogesticdashboardController>(
-                          LogesticdashboardController());
-                      // controllerX.getCurrentLocation();
-                      return maiWidgetFun(context);
-                    } else {
-                      return const Center(child: CircularProgressIndicator());
-                    }
-                  });
-                } catch (e) {
-                  return const Center(child: CircularProgressIndicator());
+      child: DefaultTabController(
+        length: 2,
+        child: Scaffold(
+          appBar: AppBar(
+            bottom:  TabBar(
+              controller: controllerX.tabController,
+              onTap: (index){
+                if(index == 0){
+                  controllerX.getPendingRides();
+                }else if(index == 1){
+                  controllerX.getUpcomingRides();
                 }
-              }
-              if (snapshot.hasError) {
-                return Text('Error: ${snapshot.error}');
-              }
-              final connectivityResult = snapshot.data;
-              String statusText = 'Unknown';
-              if (connectivityResult == ConnectivityResult.mobile ||
-                  connectivityResult == ConnectivityResult.wifi ||
-                  connectivityResult == ConnectivityResult.ethernet) {
-                statusText = 'Mobile Data';
-                controllerX = Get.put<LogesticdashboardController>(
-                    LogesticdashboardController());
-                // controllerX.getCurrentLocation();
-                return maiWidgetFun(context);
-              } else if (connectivityResult == ConnectivityResult.none) {
-                statusText = 'No Connection';
-                return Center(
-                  child: Container(
-                    foregroundDecoration:
-                        !Get.find<ThemeController>().isLightMode
-                            ? BoxDecoration(
-                                color: Theme.of(context)
-                                    .backgroundColor
-                                    .withOpacity(0.4))
-                            : null,
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height,
-                    child: lottie.Lottie.asset(
-                      'assets/json/offline.json',
-                      fit: BoxFit.contain,
+
+              },
+              tabs:  [
+                Tab(text: "Pending Rides"),
+                Tab(text: "Upcoming Rides",),
+                // Tab(icon: Icon(Icons.directions_car)),
+              ],dividerColor: Colors.red,
+              indicatorColor: Colors.red,labelStyle: TextStyles(context).getBoldStyle().copyWith(fontSize: 17),
+            ),
+            backgroundColor: Color(0xFFFFFFFF),
+            title: Padding(
+              padding: const EdgeInsets.all(0.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(
+                          5.0), //<-- SEE HERE
+                    ),
+                    margin: EdgeInsets.all(2),
+                    elevation: 5,
+                    child: IconButton(
+                      onPressed:
+                      controllerX.handleMenuButtonPressed,
+                      padding: EdgeInsets.all(2),
+                      visualDensity: VisualDensity(
+                          horizontal: -4, vertical: -4),
+                      icon: ValueListenableBuilder<
+                          AdvancedDrawerValue>(
+                        valueListenable:
+                        controllerX.advancedDrawerController,
+                        builder: (_, value, __) {
+                          return AnimatedSwitcher(
+                            duration: Duration(milliseconds: 250),
+                            child: Icon(
+                              value.visible
+                                  ? Icons.clear
+                                  : Icons.menu,
+                              color: Colors.black,
+                              key: ValueKey<bool>(value.visible),
+                            ),
+                          );
+                        },
+                      ),
                     ),
                   ),
-                );
-              } else {
-                Utils.checkInternetConnectivity().then((value) {
-                  if (value) {
-                    controllerX = Get.put<LogesticdashboardController>(
-                        LogesticdashboardController());
-                    // controllerX.getCurrentLocation();
-                    return maiWidgetFun(context);
-                  } else {
-                    return Center(
-                      child: Container(
-                        foregroundDecoration:
-                            !Get.find<ThemeController>().isLightMode
-                                ? BoxDecoration(
-                                    color: Theme.of(context)
-                                        .backgroundColor
-                                        .withOpacity(0.4))
-                                : null,
-                        width: MediaQuery.of(context).size.width,
-                        height: MediaQuery.of(context).size.height,
-                        child: lottie.Lottie.asset(
-                          'assets/json/offline.json',
-                          fit: BoxFit.contain,
-                        ),
-                      ),
-                    );
-                  }
-                });
-              }
-              return maiWidgetFun(context);
-            },
+                  InkWell(
+                    onTap: () {
+                      controllerX.getRideAnalytics();
+                    },
+                    child:
+                    GetBuilder<LogesticdashboardController>(
+                      id: "amt",
+                      builder: (controllerX) {
+                        return Card(
+                            elevation: 5,
+                            color: Theme
+                                .of(context)
+                                .cardColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius:
+                              BorderRadius.circular(8.0),
+                            ),
+                            child: Row(
+                              children: [
+                                Padding(
+                                  padding:
+                                  const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    "₹${double.parse(controllerX.totalAmount ?? "0")
+                                        .toStringAsFixed(2)}",
+                                    style: Theme
+                                        .of(context)
+                                        .textTheme
+                                        .headline5!
+                                        .copyWith(
+                                        fontSize: 25,
+                                        color: Colors.white),
+                                  ),
+                                ),
+                                const Padding(
+                                  padding: EdgeInsets.only(
+                                      right: 5.0,
+                                      left: 0,
+                                      top: 0,
+                                      bottom: 0),
+                                  child: Icon(
+                                    Icons.refresh,
+                                    color: Colors.white,
+                                    size: 15,
+                                  ),
+                                )
+                              ],
+                            ));
+                      },
+                    ),
+                  ),
+                  CupertinoSwitch(
+                    value: true,
+                    dragStartBehavior: DragStartBehavior.start,
+                    onChanged: (value) {
+                      // controllerX.goOnline(value);
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+          body: UpgradeAlert(
+            upgrader: Upgrader(
+              dialogStyle: UpgradeDialogStyle.cupertino,
+              canDismissDialog: false,
+            ),
+            child:maiWidgetFun(context),
           ),
         ),
       ),
@@ -500,6 +565,171 @@ class LogesticdashboardView extends GetView<LogesticdashboardController> {
   }
 
   Widget maiWidgetFun(BuildContext context) {
+    try {
+      return TabBarView(
+        controller: controllerX.tabController,
+        children: [
+          Container(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+               /* Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "UpComing Rides",
+                        style: TextStyles(context)
+                            .getBoldStyle()
+                            .copyWith(fontSize: 20),
+                      ),
+                      SizedBox(
+                        width: MediaQuery
+                            .of(context)
+                            .size
+                            .width * 0.22,
+                        child: CommonButton(
+                          padding: const EdgeInsets.only(
+                              left: 1, right: 5, bottom: 0, top: 1),
+                          buttonText: "Refresh",
+
+                          onTap: () {},
+                          radius: 6,
+                          height: 30,
+                          // isIcon: true,
+                          // icon: Icons.refresh,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),*/
+                  GetBuilder<LogesticdashboardController>(
+                    // assignId: true,
+                    id: "lst",
+                    builder: (controllerX) {
+                      return SizedBox(
+                        height:
+                        MediaQuery
+                            .of(context)
+                            .size
+                            .height * 0.75,
+                        child: (controllerX.upComingRidesModel !=
+                            null &&
+                            controllerX.upComingRidesModel?.rides !=
+                                null &&
+                            (controllerX.upComingRidesModel?.rides
+                                ?.length ??
+                                0) >
+                                0)
+                            ? ListView.builder(
+                            itemCount: controllerX.upComingRidesModel?.rides?.length??0,
+                            physics: const BouncingScrollPhysics(),
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding: EdgeInsets.only(
+                                    left: 8.0,
+                                    right: 8,
+                                    bottom: 5,
+                                    top: 2),
+                                child: GetBuilder<LogesticdashboardController>(
+                                  // assignId: true,
+                                  id: "lstData",
+                                  builder: (controllerX) {
+                                    return Container(
+                                      child: InkWell(
+                                        onTap: () {
+                                          if(controllerX.upComingRidesModel
+                                              ?.rides?[index].acceptClick == true){
+                                            Get.toNamed(Routes.UP_COMING_RIDE_DETAILS_PAGE,
+                                                arguments: controllerX.upComingRidesModel
+                                                    ?.rides?[index].toJson());
+                                          }
+                                        },
+                                        child: UpComingRidesWidget(
+                                            totalAmount: (controllerX.upComingRidesModel
+                                                ?.rides?[index].totalAmount ?? "0.00")
+                                                .toString(),
+                                            paidAmount: (controllerX.upComingRidesModel
+                                                ?.rides?[index].amountPaid ?? "0")
+                                                .toString(),
+                                            status: "Waiting...",
+                                            fromDate: controllerX.upComingRidesModel
+                                                ?.rides?[index].fromDate ?? "",
+                                            toDate: controllerX.upComingRidesModel
+                                                ?.rides?[index].toDate ?? "",
+                                            onTapCancel: () {
+//ACCEPT
+                                              controllerX.upDateRideStatusComplete("REJECT",
+                                                  bookingId:(controllerX.upComingRidesModel?.rides?[index].id??"").toString()
+                                                  ,riderId: controllerX.riderIdNew).then((value){
+                                                if(value){
+                                                  controllerX.upComingRidesModel?.rides?[index]
+                                                      .acceptClick = false;
+                                                  controllerX.upComingRidesModel?.rides?[index]
+                                                      .rejectClick = true;
+                                                  controllerX.update(['lstData']);
+                                                }else{
+                                                  Get.snackbar("", "Something went wrong\nPlease try after sometime");
+                                                }
+                                              });
+
+
+                                            },
+                                            acceptClick: controllerX.upComingRidesModel
+                                                ?.rides?[index].acceptClick ?? false,
+                                            rejectClick: controllerX.upComingRidesModel
+                                                ?.rides?[index].rejectClick ?? false,
+                                            imgVisibility: false,
+                                            onTapAccept: () {
+                                              print(">>>>>>>>>>>>>Index${index}");
+                                              controllerX.upDateRideStatusComplete("ACCEPT",
+                                                  bookingId:(controllerX.upComingRidesModel?.rides?[index].id??"").toString()
+                                                  ,riderId: controllerX.riderIdNew).then((value){
+                                                if(value){
+                                                  controllerX.upComingRidesModel?.rides?[index]
+                                                      .acceptClick = true;
+                                                  controllerX.upComingRidesModel?.rides?[index]
+                                                      .rejectClick = false;
+                                                  controllerX.update(['lstData']);
+                                                }else{
+                                                  Get.snackbar("", "Something went wrong\nPlease try after sometime");
+                                                }
+                                              });
+
+                                            },
+                                            destination:
+                                            controllerX.upComingRidesModel?.rides?[index]
+                                                .dropAddress ?? "",
+                                            source: controllerX.upComingRidesModel
+                                                ?.rides?[index].pickupAddress ??
+                                                "Korua, L.N. College",
+                                            driverName: "eVIMAN"),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              );
+                            })
+                            : Container(),
+                      );
+                    },
+                  ),
+              ],
+            ),
+          ),
+          Container(
+            child: Text("Data not found"),
+          )
+        ],
+      );
+    } catch (e) {
+      return const Center(child: CircularProgressIndicator());
+    }
+  }
+
+
+  Widget maiWidgetFun1(BuildContext context) {
     try {
       return GetBuilder<LogesticdashboardController>(
           id: "top",
@@ -526,14 +756,14 @@ class LogesticdashboardView extends GetView<LogesticdashboardController> {
                                   elevation: 5,
                                   child: IconButton(
                                     onPressed:
-                                        controllerX.handleMenuButtonPressed,
+                                    controllerX.handleMenuButtonPressed,
                                     padding: EdgeInsets.all(2),
                                     visualDensity: VisualDensity(
                                         horizontal: -4, vertical: -4),
                                     icon: ValueListenableBuilder<
                                         AdvancedDrawerValue>(
                                       valueListenable:
-                                          controllerX.advancedDrawerController,
+                                      controllerX.advancedDrawerController,
                                       builder: (_, value, __) {
                                         return AnimatedSwitcher(
                                           duration: Duration(milliseconds: 250),
@@ -553,29 +783,33 @@ class LogesticdashboardView extends GetView<LogesticdashboardController> {
                                     controllerX.getRideAnalytics();
                                   },
                                   child:
-                                      GetBuilder<LogesticdashboardController>(
+                                  GetBuilder<LogesticdashboardController>(
                                     id: "amt",
                                     builder: (controllerX) {
                                       return Card(
                                           elevation: 5,
-                                          color: Theme.of(context).cardColor,
+                                          color: Theme
+                                              .of(context)
+                                              .cardColor,
                                           shape: RoundedRectangleBorder(
                                             borderRadius:
-                                                BorderRadius.circular(8.0),
+                                            BorderRadius.circular(8.0),
                                           ),
                                           child: Row(
                                             children: [
                                               Padding(
                                                 padding:
-                                                    const EdgeInsets.all(8.0),
+                                                const EdgeInsets.all(8.0),
                                                 child: Text(
-                                                  "₹${double.parse(controllerX.totalAmount ?? "0").toStringAsFixed(2)}",
-                                                  style: Theme.of(context)
+                                                  "₹${double.parse(controllerX.totalAmount ?? "0")
+                                                      .toStringAsFixed(2)}",
+                                                  style: Theme
+                                                      .of(context)
                                                       .textTheme
                                                       .headline5!
                                                       .copyWith(
-                                                          fontSize: 25,
-                                                          color: Colors.white),
+                                                      fontSize: 25,
+                                                      color: Colors.white),
                                                 ),
                                               ),
                                               const Padding(
@@ -617,7 +851,10 @@ class LogesticdashboardView extends GetView<LogesticdashboardController> {
                                       .copyWith(fontSize: 20),
                                 ),
                                 SizedBox(
-                                  width: MediaQuery.of(context).size.width * 0.22,
+                                  width: MediaQuery
+                                      .of(context)
+                                      .size
+                                      .width * 0.22,
                                   child: CommonButton(
                                     padding: const EdgeInsets.only(
                                         left: 1, right: 5, bottom: 0, top: 1),
@@ -633,7 +870,7 @@ class LogesticdashboardView extends GetView<LogesticdashboardController> {
                               ],
                             ),
                           ),
-                        /*  Row(
+                          /*  Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
@@ -650,48 +887,107 @@ class LogesticdashboardView extends GetView<LogesticdashboardController> {
                             builder: (controllerX) {
                               return SizedBox(
                                 height:
-                                    MediaQuery.of(context).size.height * 0.75,
+                                MediaQuery
+                                    .of(context)
+                                    .size
+                                    .height * 0.75,
                                 child: (controllerX.upComingRidesModel !=
-                                            null &&
-                                        controllerX.upComingRidesModel?.rides !=
-                                            null &&
-                                        (controllerX.upComingRidesModel?.rides
-                                                    ?.length ??
-                                                0) >
-                                            0)
+                                    null &&
+                                    controllerX.upComingRidesModel?.rides !=
+                                        null &&
+                                    (controllerX.upComingRidesModel?.rides
+                                        ?.length ??
+                                        0) >
+                                        0)
                                     ? ListView.builder(
-                                        itemCount: controllerX.upComingRidesModel?.rides?.length,
-                                        physics: const BouncingScrollPhysics(),
-                                        itemBuilder: (context, index) {
-                                          return  Padding(
-                                            padding: EdgeInsets.only(
-                                                left: 8.0,
-                                                right: 8,
-                                                bottom: 5,
-                                                top: 2),
-                                            child: InkWell(
-                                              onTap: (){
-                                                Get.toNamed(Routes.UP_COMING_RIDE_DETAILS_PAGE,
-                                                    arguments:controllerX.upComingRidesModel?.rides?[index].toJson() );
-                                              },
-                                              child: UpComingRidesWidget(
-                                                  totalAmount:(controllerX.upComingRidesModel?.rides?[index].totalAmount?? "0.00").toString(),
-                                                  paidAmount: (controllerX.upComingRidesModel?.rides?[index].amountPaid??"0").toString(),
-                                                  status: "Waiting...",
-                                                  fromDate:controllerX.upComingRidesModel?.rides?[index].fromDate?? "",
-                                                  toDate:controllerX.upComingRidesModel?.rides?[index].toDate?? "",
-                                                  imgVisibility: false,
-                                                  onTapAccept: (){
-                                                    print(">>>>>>>>>>>>>Index${index}");
+                                    itemCount: controllerX.upComingRidesModel?.rides?.length,
+                                    physics: const BouncingScrollPhysics(),
+                                    itemBuilder: (context, index) {
+                                      return Padding(
+                                        padding: EdgeInsets.only(
+                                            left: 8.0,
+                                            right: 8,
+                                            bottom: 5,
+                                            top: 2),
+                                        child: GetBuilder<LogesticdashboardController>(
+                                          assignId: true,
+                                          id: "lst",
+                                          builder: (controllerX) {
+                                            return Container(
+                                              child: InkWell(
+                                                onTap: () {
+                                                  if(controllerX.upComingRidesModel
+                                                      ?.rides?[index].acceptClick == true){
+                                                    Get.toNamed(Routes.UP_COMING_RIDE_DETAILS_PAGE,
+                                                        arguments: controllerX.upComingRidesModel
+                                                            ?.rides?[index].toJson());
+                                                  }
+                                                },
+                                                child: UpComingRidesWidget(
+                                                    totalAmount: (controllerX.upComingRidesModel
+                                                        ?.rides?[index].totalAmount ?? "0.00")
+                                                        .toString(),
+                                                    paidAmount: (controllerX.upComingRidesModel
+                                                        ?.rides?[index].amountPaid ?? "0")
+                                                        .toString(),
+                                                    status: "Waiting...",
+                                                    fromDate: controllerX.upComingRidesModel
+                                                        ?.rides?[index].fromDate ?? "",
+                                                    toDate: controllerX.upComingRidesModel
+                                                        ?.rides?[index].toDate ?? "",
+                                                    onTapCancel: () {
+//ACCEPT
+                                                      controllerX.upDateRideStatusComplete("REJECT",
+                                                          bookingId:(controllerX.upComingRidesModel?.rides?[index].id??"").toString()
+                                                          ,riderId: controllerX.riderIdNew).then((value){
+                                                        if(value){
+                                                          controllerX.upComingRidesModel?.rides?[index]
+                                                              .acceptClick = false;
+                                                          controllerX.upComingRidesModel?.rides?[index]
+                                                              .rejectClick = true;
+                                                          controllerX.update(['lst']);
+                                                        }else{
+                                                          Get.snackbar("", "Something went wrong\nPlease try after sometime");
+                                                        }
+                                                      });
 
-                                                  },
-                                                  destination:
-                                                  controllerX.upComingRidesModel?.rides?[index].dropAddress?? "",
-                                                  source:  controllerX.upComingRidesModel?.rides?[index].pickupAddress??"Korua, L.N. College",
-                                                  driverName: "eVIMAN"),
-                                            ),
-                                          );
-                                        })
+
+                                                    },
+                                                    acceptClick: controllerX.upComingRidesModel
+                                                        ?.rides?[index].acceptClick ?? false,
+                                                    rejectClick: controllerX.upComingRidesModel
+                                                        ?.rides?[index].rejectClick ?? false,
+                                                    imgVisibility: false,
+                                                    onTapAccept: () {
+                                                      print(">>>>>>>>>>>>>Index${index}");
+                                                      controllerX.upDateRideStatusComplete("ACCEPT",
+                                                          bookingId:(controllerX.upComingRidesModel?.rides?[index].id??"").toString()
+                                                          ,riderId: controllerX.riderIdNew).then((value){
+                                                        if(value){
+                                                          controllerX.upComingRidesModel?.rides?[index]
+                                                              .acceptClick = true;
+                                                          controllerX.upComingRidesModel?.rides?[index]
+                                                              .rejectClick = false;
+                                                          controllerX.update(['lst']);
+                                                        }else{
+                                                          Get.snackbar("", "Something went wrong\nPlease try after sometime");
+                                                        }
+                                                      });
+
+                                                    },
+                                                    destination:
+                                                    controllerX.upComingRidesModel?.rides?[index]
+                                                        .dropAddress ?? "",
+                                                    source: controllerX.upComingRidesModel
+                                                        ?.rides?[index].pickupAddress ??
+                                                        "Korua, L.N. College",
+                                                    driverName: "eVIMAN"),
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                      );
+                                    })
                                     : Container(),
                               );
                             },
@@ -706,4 +1002,5 @@ class LogesticdashboardView extends GetView<LogesticdashboardController> {
       return const Center(child: CircularProgressIndicator());
     }
   }
+
 }
