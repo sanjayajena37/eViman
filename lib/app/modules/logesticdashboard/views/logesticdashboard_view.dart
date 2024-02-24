@@ -435,22 +435,23 @@ class LogesticdashboardView extends StatelessWidget {
         length: 2,
         child: Scaffold(
           appBar: AppBar(
-            bottom:  TabBar(
+            bottom: TabBar(
               controller: controllerX.tabController,
-              onTap: (index){
-                if(index == 0){
+              onTap: (index) {
+                if (index == 0) {
                   controllerX.getPendingRides();
-                }else if(index == 1){
+                } else if (index == 1) {
                   controllerX.getUpcomingRides();
                 }
-
               },
-              tabs:  [
+              tabs: [
                 Tab(text: "Pending Rides"),
                 Tab(text: "Upcoming Rides",),
                 // Tab(icon: Icon(Icons.directions_car)),
-              ],dividerColor: Colors.red,
-              indicatorColor: Colors.red,labelStyle: TextStyles(context).getBoldStyle().copyWith(fontSize: 17),
+              ],
+              dividerColor: Colors.red,
+              indicatorColor: Colors.red,
+              labelStyle: TextStyles(context).getBoldStyle().copyWith(fontSize: 17),
             ),
             backgroundColor: Color(0xFFFFFFFF),
             title: Padding(
@@ -541,13 +542,14 @@ class LogesticdashboardView extends StatelessWidget {
                       },
                     ),
                   ),
-                  CupertinoSwitch(
+                  /*CupertinoSwitch(
                     value: true,
                     dragStartBehavior: DragStartBehavior.start,
                     onChanged: (value) {
                       // controllerX.goOnline(value);
                     },
-                  ),
+                  ),*/
+                  Container()
                 ],
               ),
             ),
@@ -557,7 +559,7 @@ class LogesticdashboardView extends StatelessWidget {
               dialogStyle: UpgradeDialogStyle.cupertino,
               canDismissDialog: false,
             ),
-            child:maiWidgetFun(context),
+            child: maiWidgetFun(context),
           ),
         ),
       ),
@@ -569,158 +571,207 @@ class LogesticdashboardView extends StatelessWidget {
       return TabBarView(
         controller: controllerX.tabController,
         children: [
-          Container(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-               /* Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "UpComing Rides",
-                        style: TextStyles(context)
-                            .getBoldStyle()
-                            .copyWith(fontSize: 20),
-                      ),
-                      SizedBox(
-                        width: MediaQuery
-                            .of(context)
-                            .size
-                            .width * 0.22,
-                        child: CommonButton(
-                          padding: const EdgeInsets.only(
-                              left: 1, right: 5, bottom: 0, top: 1),
-                          buttonText: "Refresh",
+          GetBuilder<LogesticdashboardController>(
+            // assignId: true,
+            id: "lst",
+            builder: (controllerX) {
+              return SizedBox(
+                height:
+                MediaQuery
+                    .of(context)
+                    .size
+                    .height * 0.75,
+                child: (controllerX.pendingRidesDataModel !=
+                    null &&
+                    controllerX.pendingRidesDataModel?.rides !=
+                        null &&
+                    (controllerX.pendingRidesDataModel?.rides
+                        ?.length ??
+                        0) >
+                        0)
+                    ? RefreshIndicator(
+                      onRefresh: () {
+                    return Future.delayed(const Duration(seconds: 1),() {
+                      controllerX.getPendingRides();
+                    },);
+                  },
+                      child: ListView.builder(
+                      itemCount: controllerX.pendingRidesDataModel?.rides?.length ?? 0,
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: EdgeInsets.only(
+                              left: 8.0,
+                              right: 8,
+                              bottom: 5,
+                              top: 2),
+                          child: GetBuilder<LogesticdashboardController>(
+                            // assignId: true,
+                            id: "lstData",
+                            builder: (controllerX) {
+                              return Container(
+                                child: InkWell(
+                                  onTap: () {
 
-                          onTap: () {},
-                          radius: 6,
-                          height: 30,
-                          // isIcon: true,
-                          // icon: Icons.refresh,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),*/
-                  GetBuilder<LogesticdashboardController>(
-                    // assignId: true,
-                    id: "lst",
-                    builder: (controllerX) {
-                      return SizedBox(
-                        height:
-                        MediaQuery
-                            .of(context)
-                            .size
-                            .height * 0.75,
-                        child: (controllerX.upComingRidesModel !=
-                            null &&
-                            controllerX.upComingRidesModel?.rides !=
-                                null &&
-                            (controllerX.upComingRidesModel?.rides
-                                ?.length ??
-                                0) >
-                                0)
-                            ? ListView.builder(
-                            itemCount: controllerX.upComingRidesModel?.rides?.length??0,
-                            physics: const BouncingScrollPhysics(),
-                            itemBuilder: (context, index) {
-                              return Padding(
-                                padding: EdgeInsets.only(
-                                    left: 8.0,
-                                    right: 8,
-                                    bottom: 5,
-                                    top: 2),
-                                child: GetBuilder<LogesticdashboardController>(
-                                  // assignId: true,
-                                  id: "lstData",
-                                  builder: (controllerX) {
-                                    return Container(
-                                      child: InkWell(
-                                        onTap: () {
-                                          if(controllerX.upComingRidesModel
-                                              ?.rides?[index].acceptClick == true){
-                                            Get.toNamed(Routes.UP_COMING_RIDE_DETAILS_PAGE,
-                                                arguments: controllerX.upComingRidesModel
-                                                    ?.rides?[index].toJson());
-                                          }
-                                        },
-                                        child: UpComingRidesWidget(
-                                            totalAmount: (controllerX.upComingRidesModel
-                                                ?.rides?[index].totalAmount ?? "0.00")
-                                                .toString(),
-                                            paidAmount: (controllerX.upComingRidesModel
-                                                ?.rides?[index].amountPaid ?? "0")
-                                                .toString(),
-                                            status: "Waiting...",
-                                            fromDate: controllerX.upComingRidesModel
-                                                ?.rides?[index].fromDate ?? "",
-                                            toDate: controllerX.upComingRidesModel
-                                                ?.rides?[index].toDate ?? "",
-                                            onTapCancel: () {
-//ACCEPT
-                                              controllerX.upDateRideStatusComplete("REJECT",
-                                                  bookingId:(controllerX.upComingRidesModel?.rides?[index].id??"").toString()
-                                                  ,riderId: controllerX.riderIdNew).then((value){
-                                                if(value){
-                                                  controllerX.upComingRidesModel?.rides?[index]
-                                                      .acceptClick = false;
-                                                  controllerX.upComingRidesModel?.rides?[index]
-                                                      .rejectClick = true;
-                                                  controllerX.update(['lstData']);
-                                                }else{
-                                                  Get.snackbar("", "Something went wrong\nPlease try after sometime");
-                                                }
-                                              });
-
-
-                                            },
-                                            acceptClick: controllerX.upComingRidesModel
-                                                ?.rides?[index].acceptClick ?? false,
-                                            rejectClick: controllerX.upComingRidesModel
-                                                ?.rides?[index].rejectClick ?? false,
-                                            imgVisibility: false,
-                                            onTapAccept: () {
-                                              print(">>>>>>>>>>>>>Index${index}");
-                                              controllerX.upDateRideStatusComplete("ACCEPT",
-                                                  bookingId:(controllerX.upComingRidesModel?.rides?[index].id??"").toString()
-                                                  ,riderId: controllerX.riderIdNew).then((value){
-                                                if(value){
-                                                  controllerX.upComingRidesModel?.rides?[index]
-                                                      .acceptClick = true;
-                                                  controllerX.upComingRidesModel?.rides?[index]
-                                                      .rejectClick = false;
-                                                  controllerX.update(['lstData']);
-                                                }else{
-                                                  Get.snackbar("", "Something went wrong\nPlease try after sometime");
-                                                }
-                                              });
-
-                                            },
-                                            destination:
-                                            controllerX.upComingRidesModel?.rides?[index]
-                                                .dropAddress ?? "",
-                                            source: controllerX.upComingRidesModel
-                                                ?.rides?[index].pickupAddress ??
-                                                "Korua, L.N. College",
-                                            driverName: "eVIMAN"),
-                                      ),
-                                    );
                                   },
+                                  child: UpComingRidesWidget(
+                                      totalAmount: (controllerX.pendingRidesDataModel
+                                          ?.rides?[index].totalAmount ?? "0.00")
+                                          .toString(),
+                                      paidAmount: (controllerX.pendingRidesDataModel
+                                          ?.rides?[index].amountPaid ?? "0")
+                                          .toString(),
+                                      status: "Waiting...",
+                                      fromDate: controllerX.pendingRidesDataModel
+                                          ?.rides?[index].fromDate ?? "",
+                                      toDate: controllerX.pendingRidesDataModel
+                                          ?.rides?[index].toDate ?? "",
+                                      onTapCancel: () {
+//ACCEPT
+                                        controllerX.upDateRideStatusComplete("REJECT",
+                                            bookingId: (controllerX.pendingRidesDataModel
+                                                ?.rides?[index].id ?? "").toString()
+                                            , riderId: controllerX.riderIdNew).then((value) {
+                                          if (value) {
+                                            controllerX.pendingRidesDataModel?.rides?[index]
+                                                .acceptClick = false;
+                                            controllerX.pendingRidesDataModel?.rides?[index]
+                                                .rejectClick = true;
+                                            controllerX.update(['lstData']);
+                                          } else {
+                                            Get.snackbar("",
+                                                "Something went wrong\nPlease try after sometime");
+                                          }
+                                        });
+                                      },
+                                      acceptClick: controllerX.pendingRidesDataModel
+                                          ?.rides?[index].acceptClick ?? false,
+                                      rejectClick: controllerX.pendingRidesDataModel
+                                          ?.rides?[index].rejectClick ?? false,
+                                      imgVisibility: false,
+                                      onTapAccept: () {
+                                        print(">>>>>>>>>>>>>Index${index}");
+                                        controllerX.upDateRideStatusComplete("ACCEPT",
+                                            bookingId: (controllerX.pendingRidesDataModel
+                                                ?.rides?[index].id ?? "").toString()
+                                            , riderId: controllerX.riderIdNew).then((value) {
+                                          if (value) {
+                                            controllerX.pendingRidesDataModel?.rides?[index]
+                                                .acceptClick = true;
+                                            controllerX.pendingRidesDataModel?.rides?[index]
+                                                .rejectClick = false;
+                                            controllerX.update(['lstData']);
+                                          } else {
+                                            Get.snackbar("",
+                                                "Something went wrong\nPlease try after sometime");
+                                          }
+                                        });
+                                      },
+                                      destination:
+                                      controllerX.pendingRidesDataModel?.rides?[index]
+                                          .dropAddress ?? "",
+                                      source: controllerX.pendingRidesDataModel
+                                          ?.rides?[index].pickupAddress ??
+                                          "Korua, L.N. College",
+                                      driverName: "eVIMAN"),
                                 ),
                               );
-                            })
-                            : Container(),
-                      );
-                    },
-                  ),
-              ],
-            ),
+                            },
+                          ),
+                        );
+                      }),
+                    )
+                    : const Center(
+                  child: Text("No Pending Rides Found"),
+                ),
+              );
+            },
           ),
-          Container(
-            child: Text("Data not found"),
-          )
+
+          GetBuilder<LogesticdashboardController>(
+              id: "lst2",
+              builder: (controllerX) {
+            return Container(
+                child: SizedBox(
+                  height:
+                  MediaQuery
+                      .of(context)
+                      .size
+                      .height * 0.75,
+                  child: (controllerX.upcomingRidesDataModel !=
+                      null &&
+                      controllerX.upcomingRidesDataModel?.rides !=
+                          null &&
+                      (controllerX.upcomingRidesDataModel?.rides
+                          ?.length ??
+                          0) >
+                          0)
+                      ? RefreshIndicator(
+                        onRefresh: () {
+                      return Future.delayed(const Duration(seconds: 1),() {
+                        controllerX.getUpcomingRides();
+                      },);
+                    },
+                        child: ListView.builder(
+                        itemCount: controllerX.upcomingRidesDataModel?.rides?.length ?? 0,
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding: EdgeInsets.only(
+                                left: 8.0,
+                                right: 8,
+                                bottom: 5,
+                                top: 2),
+                            child:Container(
+                              child: InkWell(
+                                onTap: () {
+                                  Get.toNamed(Routes.UP_COMING_RIDE_DETAILS_PAGE,
+                                      arguments: controllerX.upcomingRidesDataModel
+                                          ?.rides?[index].toJson());
+                                },
+                                child: UpComingRidesWidget(
+                                    totalAmount: (controllerX.upcomingRidesDataModel
+                                        ?.rides?[index].totalAmount ?? "0.00")
+                                        .toString(),
+                                    paidAmount: (controllerX.upcomingRidesDataModel
+                                        ?.rides?[index].amountPaid ?? "0")
+                                        .toString(),
+                                    status: "Waiting...",
+                                    fromDate: controllerX.upcomingRidesDataModel
+                                        ?.rides?[index].fromDate ?? "",
+                                    toDate: controllerX.upcomingRidesDataModel
+                                        ?.rides?[index].toDate ?? "",
+                                    onTapCancel: () {
+
+
+                                    },
+                                    acceptClick: controllerX.upcomingRidesDataModel
+                                        ?.rides?[index].acceptClick ?? false,
+                                    rejectClick: controllerX.upcomingRidesDataModel
+                                        ?.rides?[index].rejectClick ?? false,
+                                    imgVisibility: false,
+                                    btnVisibility: false,
+                                    onTapAccept: () {
+                                      print(">>>>>>>>>>>>>Index${index}");
+                                    },
+                                    destination:
+                                    controllerX.upcomingRidesDataModel?.rides?[index]
+                                        .dropAddress ?? "",
+                                    source: controllerX.upcomingRidesDataModel
+                                        ?.rides?[index].pickupAddress ??
+                                        "Korua, L.N. College",
+                                    driverName: "eVIMAN"),
+                              ),
+                            ),
+                          );
+                        }),
+                      )
+                      : const Center(
+                    child: Text("No Upcoming Rides Found"),
+                  ),
+                )
+            );
+          })
         ],
       );
     } catch (e) {
@@ -891,16 +942,16 @@ class LogesticdashboardView extends StatelessWidget {
                                     .of(context)
                                     .size
                                     .height * 0.75,
-                                child: (controllerX.upComingRidesModel !=
+                                child: (controllerX.pendingRidesDataModel !=
                                     null &&
-                                    controllerX.upComingRidesModel?.rides !=
+                                    controllerX.pendingRidesDataModel?.rides !=
                                         null &&
-                                    (controllerX.upComingRidesModel?.rides
+                                    (controllerX.pendingRidesDataModel?.rides
                                         ?.length ??
                                         0) >
                                         0)
                                     ? ListView.builder(
-                                    itemCount: controllerX.upComingRidesModel?.rides?.length,
+                                    itemCount: controllerX.pendingRidesDataModel?.rides?.length,
                                     physics: const BouncingScrollPhysics(),
                                     itemBuilder: (context, index) {
                                       return Padding(
@@ -916,69 +967,78 @@ class LogesticdashboardView extends StatelessWidget {
                                             return Container(
                                               child: InkWell(
                                                 onTap: () {
-                                                  if(controllerX.upComingRidesModel
-                                                      ?.rides?[index].acceptClick == true){
+                                                  if (controllerX.pendingRidesDataModel
+                                                      ?.rides?[index].acceptClick == true) {
                                                     Get.toNamed(Routes.UP_COMING_RIDE_DETAILS_PAGE,
-                                                        arguments: controllerX.upComingRidesModel
+                                                        arguments: controllerX.pendingRidesDataModel
                                                             ?.rides?[index].toJson());
                                                   }
                                                 },
                                                 child: UpComingRidesWidget(
-                                                    totalAmount: (controllerX.upComingRidesModel
+                                                    totalAmount: (controllerX.pendingRidesDataModel
                                                         ?.rides?[index].totalAmount ?? "0.00")
                                                         .toString(),
-                                                    paidAmount: (controllerX.upComingRidesModel
+                                                    paidAmount: (controllerX.pendingRidesDataModel
                                                         ?.rides?[index].amountPaid ?? "0")
                                                         .toString(),
                                                     status: "Waiting...",
-                                                    fromDate: controllerX.upComingRidesModel
+                                                    fromDate: controllerX.pendingRidesDataModel
                                                         ?.rides?[index].fromDate ?? "",
-                                                    toDate: controllerX.upComingRidesModel
+                                                    toDate: controllerX.pendingRidesDataModel
                                                         ?.rides?[index].toDate ?? "",
                                                     onTapCancel: () {
 //ACCEPT
                                                       controllerX.upDateRideStatusComplete("REJECT",
-                                                          bookingId:(controllerX.upComingRidesModel?.rides?[index].id??"").toString()
-                                                          ,riderId: controllerX.riderIdNew).then((value){
-                                                        if(value){
-                                                          controllerX.upComingRidesModel?.rides?[index]
+                                                          bookingId: (controllerX
+                                                              .pendingRidesDataModel?.rides?[index]
+                                                              .id ?? "").toString()
+                                                          , riderId: controllerX.riderIdNew).then((
+                                                          value) {
+                                                        if (value) {
+                                                          controllerX.pendingRidesDataModel
+                                                              ?.rides?[index]
                                                               .acceptClick = false;
-                                                          controllerX.upComingRidesModel?.rides?[index]
+                                                          controllerX.pendingRidesDataModel
+                                                              ?.rides?[index]
                                                               .rejectClick = true;
                                                           controllerX.update(['lst']);
-                                                        }else{
-                                                          Get.snackbar("", "Something went wrong\nPlease try after sometime");
+                                                        } else {
+                                                          Get.snackbar("",
+                                                              "Something went wrong\nPlease try after sometime");
                                                         }
                                                       });
-
-
                                                     },
-                                                    acceptClick: controllerX.upComingRidesModel
+                                                    acceptClick: controllerX.pendingRidesDataModel
                                                         ?.rides?[index].acceptClick ?? false,
-                                                    rejectClick: controllerX.upComingRidesModel
+                                                    rejectClick: controllerX.pendingRidesDataModel
                                                         ?.rides?[index].rejectClick ?? false,
                                                     imgVisibility: false,
                                                     onTapAccept: () {
                                                       print(">>>>>>>>>>>>>Index${index}");
                                                       controllerX.upDateRideStatusComplete("ACCEPT",
-                                                          bookingId:(controllerX.upComingRidesModel?.rides?[index].id??"").toString()
-                                                          ,riderId: controllerX.riderIdNew).then((value){
-                                                        if(value){
-                                                          controllerX.upComingRidesModel?.rides?[index]
+                                                          bookingId: (controllerX
+                                                              .pendingRidesDataModel?.rides?[index]
+                                                              .id ?? "").toString()
+                                                          , riderId: controllerX.riderIdNew).then((
+                                                          value) {
+                                                        if (value) {
+                                                          controllerX.pendingRidesDataModel
+                                                              ?.rides?[index]
                                                               .acceptClick = true;
-                                                          controllerX.upComingRidesModel?.rides?[index]
+                                                          controllerX.pendingRidesDataModel
+                                                              ?.rides?[index]
                                                               .rejectClick = false;
                                                           controllerX.update(['lst']);
-                                                        }else{
-                                                          Get.snackbar("", "Something went wrong\nPlease try after sometime");
+                                                        } else {
+                                                          Get.snackbar("",
+                                                              "Something went wrong\nPlease try after sometime");
                                                         }
                                                       });
-
                                                     },
                                                     destination:
-                                                    controllerX.upComingRidesModel?.rides?[index]
+                                                    controllerX.pendingRidesDataModel?.rides?[index]
                                                         .dropAddress ?? "",
-                                                    source: controllerX.upComingRidesModel
+                                                    source: controllerX.pendingRidesDataModel
                                                         ?.rides?[index].pickupAddress ??
                                                         "Korua, L.N. College",
                                                     driverName: "eVIMAN"),

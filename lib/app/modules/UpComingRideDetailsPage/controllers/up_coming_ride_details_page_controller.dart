@@ -2,13 +2,16 @@ import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../constants/helper.dart';
 import '../../../constants/shared_preferences_keys.dart';
+import '../../../widgets/MyWidget.dart';
 import '../../ConnectorController.dart';
 import '../../logesticdashboard/UpComingRidesModel.dart';
 
 
 
-class UpComingRideDetailsPageController extends GetxController {
+
+class UpComingRideDetailsPageController extends GetxController with Helper{
   //TODO: Implement UpComingRideDetailsPageController
 
   final count = 0.obs;
@@ -33,9 +36,36 @@ class UpComingRideDetailsPageController extends GetxController {
       throw 'Could not launch $url';
     }
   }
+
+  void cancelRide() async {
+    bool isOk = await showCommonPopupNew3(
+        "Are you sure you want to cancel it?", "If yes, please press ok.",
+        barrierDismissible: false,
+        isYesOrNoPopup: true,
+        filePath: "assets/json/question.json");
+    if (isOk) {
+      upDateRideStatusComplete
+        ("CANCEL BY RIDER",(ridesData?.totalAmount??"0.00").toString(),
+          bookingId:ridesData?.bookingId??"");
+    }
+  }
+
+  void completeRide() async {
+    bool isOk = await showCommonPopupNew3(
+        "Are you sure you want to complete it?", "If yes, please press ok.",
+        barrierDismissible: false,
+        isYesOrNoPopup: true,
+        filePath: "assets/json/congratulation.json");
+    if (isOk) {
+      upDateRideStatusComplete
+        ("COMPLETED",(ridesData?.totalAmount??"0.00").toString(),
+          bookingId: ridesData?.bookingId??"");
+    }
+  }
+
   Future<void> upDateRideStatusComplete(String? sta,  String? amount,
       {String? bookingId}) async {
-    // MyWidgets.showLoading3();
+    MyWidgets.showLoading3();
     Map<String, dynamic> postData = {
       "bookingId": bookingId ?? "",
       "bookingStatus": sta ?? "",
@@ -49,11 +79,16 @@ class UpComingRideDetailsPageController extends GetxController {
         token: authToken ?? "token",
         json: postData,
         fun: (map) {
+          closeDialogIfOpen();
           print(">>>>>>>>>>>>>>>>>>>>>map$map");
-          // Get.back();
+          Get.back();
         });
   }
-
+  closeDialogIfOpen() {
+    if (Get.isDialogOpen ?? false) {
+      Get.back();
+    }
+  }
   getData(){
     try{
       ridesData = Rides.fromJson(Get.arguments);

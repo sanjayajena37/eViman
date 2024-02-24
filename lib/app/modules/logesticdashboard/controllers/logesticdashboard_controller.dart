@@ -49,6 +49,7 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:location/location.dart';
 
+import '../PendingRidesModel.dart';
 import '../UpComingRidesModel.dart';
 
 part 'helpercontroller.dart';
@@ -187,7 +188,7 @@ class LogesticdashboardController extends GetxController
     }
   }
 
-  UpComingRidesModel? upComingRidesModel;
+  PendingRidesModel? pendingRidesDataModel;
 
   getPendingRides() {
     Get.find<ConnectorController>().GETMETHODCALL_TOKEN(
@@ -196,14 +197,16 @@ class LogesticdashboardController extends GetxController
         fun: (map) {
           dev.log(">>>>>>>>>>>pending${jsonEncode(map)}");
           if (map['success'] == true) {
-            upComingRidesModel = UpComingRidesModel.fromJson(map as Map<String, dynamic>);
+            pendingRidesDataModel = PendingRidesModel.fromJson(map as Map<String, dynamic>);
             update(['lst']);
           } else {
-            upComingRidesModel = null;
+            pendingRidesDataModel = null;
             update(['lst']);
           }
         });
   }
+
+  UpComingRidesModel? upcomingRidesDataModel;
 
   getUpcomingRides() {
     Get.find<ConnectorController>().GETMETHODCALL_TOKEN(
@@ -212,11 +215,11 @@ class LogesticdashboardController extends GetxController
         fun: (map) {
           dev.log(">>>>>>>>>>>upcoming${jsonEncode(map)}");
           if (map['success'] == true) {
-            // upComingRidesModel = UpComingRidesModel.fromJson(map as Map<String, dynamic>);
-            // update(['lst']);
+            upcomingRidesDataModel = UpComingRidesModel.fromJson(map as Map<String, dynamic>);
+            update(['lst2']);
           } else {
-            upComingRidesModel = null;
-            // update(['lst']);
+            upcomingRidesDataModel = null;
+            update(['lst2']);
           }
         });
   }

@@ -28,191 +28,129 @@ class UpComingRidesModel {
 }
 
 class Rides {
-  int? id;
-  String? bookingId;
   int? clientId;
-  String? vehicleAssigned;
-  String? riderAssigned;
-  int? fareInfo;
-  int? discount;
-  double? totalAmount;
+  String? bookingId;
+  String? totalAmount;
   String? amountPaid;
-  int? isPaid;
-  String? rideDate;
-  String? pickupLat;
-  String? pickupLng;
-  String? dropLat;
-  String? dropLng;
-  String? rideStartTime;
-  String? rideEndTime;
+  bool? isPaid;
   String? rideStatus;
   String? pickupAddress;
   String? dropAddress;
-  String? eta;
-  String? distance;
-  int? otp;
-  String? pickupDistance;
-  String? rideType;
-  String? createdAt;
-  String? updatedAt;
-  String? riderHead;
-  String? adminCommission;
-  String? adminCommissionPercentage;
-  String? riderCommission;
-  String? cancellationTime;
-  String? cancellationCharges;
-  String? isRefunded;
-  String? refundTxnId;
-  String? promocodeId;
-  String? promocodeDiscount;
-  String? actualAmount;
-  String? ride;
   String? fromDate;
   String? toDate;
-   bool ?acceptClick;
-   bool ?rejectClick;
-  List<int>? riders;
+  bool ?acceptClick;
+  bool ?rejectClick;
+  ClientDetails? clientDetails;
 
   Rides(
-      {
-        this.id,
-        this.acceptClick =  false,
-        this.rejectClick = false,
+      {this.clientId,
         this.bookingId,
-        this.clientId,
-        this.vehicleAssigned,
-        this.riderAssigned,
-        this.fareInfo,
-        this.discount,
         this.totalAmount,
         this.amountPaid,
         this.isPaid,
-        this.rideDate,
-        this.pickupLat,
-        this.pickupLng,
-        this.dropLat,
-        this.dropLng,
-        this.rideStartTime,
-        this.rideEndTime,
         this.rideStatus,
         this.pickupAddress,
         this.dropAddress,
-        this.eta,
-        this.distance,
-        this.otp,
-        this.pickupDistance,
-        this.rideType,
-        this.createdAt,
-        this.updatedAt,
-        this.riderHead,
-        this.adminCommission,
-        this.adminCommissionPercentage,
-        this.riderCommission,
-        this.cancellationTime,
-        this.cancellationCharges,
-        this.isRefunded,
-        this.refundTxnId,
-        this.promocodeId,
-        this.promocodeDiscount,
-        this.actualAmount,
-        this.ride,
         this.fromDate,
         this.toDate,
-        this.riders});
+        this.clientDetails,this.acceptClick,this.rejectClick});
 
   Rides.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
+    clientId = json['client_id'];
     acceptClick = json['acceptClick'];
     rejectClick = json['rejectClick'];
     bookingId = json['booking_id'];
-    clientId = json['client_id'];
-    vehicleAssigned = json['vehicle_assigned'];
-    riderAssigned = json['rider_assigned'];
-    fareInfo = json['fare_info'];
-    discount = json['discount'];
-    totalAmount = json['total_amount'];
-    amountPaid =( json['amount_paid']??"0").toString();
+    totalAmount = (json['total_amount']??"0").toString();
+    amountPaid = (json['amount_paid']??"0").toString();
     isPaid = json['is_paid'];
-    rideDate = json['ride_date'];
-    pickupLat = json['pickup_lat'];
-    pickupLng = json['pickup_lng'];
-    dropLat = json['drop_lat'];
-    dropLng = json['drop_lng'];
-    rideStartTime = json['ride_start_time'];
-    rideEndTime = (json['ride_end_time']??"").toString();
     rideStatus = json['ride_status'];
     pickupAddress = json['pickup_address'];
     dropAddress = json['drop_address'];
-    eta = json['eta'];
-    distance = json['distance'];
-    otp = json['otp'];
-    pickupDistance = (json['pickup_distance']??"").toString();
-    rideType = json['ride_type'];
-    createdAt = json['createdAt'];
-    updatedAt = json['updatedAt'];
-    riderHead = (json['riderHead']??"").toString();
-    adminCommission = (json['admin_commission']??"").toString();
-    adminCommissionPercentage = (json['admin_commission_percentage']??"0").toString();
-    riderCommission = (json['rider_commission']??"0").toString();
-    cancellationTime = (json['cancellation_time']??"").toString();
-    cancellationCharges = (json['cancellation_charges']??"").toString();
-    isRefunded = (json['is_refunded']??"0").toString();
-    refundTxnId = (json['refund_txn_id']??"").toString();
-    promocodeId = (json['promocode_id']??"").toString();
-    promocodeDiscount = (json['promocode_discount']??"").toString();
-    actualAmount = (json['actual_amount']??"").toString();
-    ride = json['ride'];
     fromDate = json['from_date'];
     toDate = json['to_date'];
-    riders = json['riders'].cast<int>();
+    clientDetails = json['clientDetails'] != null
+        ? new ClientDetails.fromJson(json['clientDetails'])
+        : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['client_id'] = this.clientId;
+    data['acceptClick'] = this.acceptClick;
+    data['rejectClick'] = this.rejectClick;
+    data['booking_id'] = this.bookingId;
+    data['total_amount'] = this.totalAmount;
+    data['amount_paid'] = this.amountPaid;
+    data['is_paid'] = this.isPaid;
+    data['ride_status'] = this.rideStatus;
+    data['pickup_address'] = this.pickupAddress;
+    data['drop_address'] = this.dropAddress;
+    data['from_date'] = this.fromDate;
+    data['to_date'] = this.toDate;
+    if (this.clientDetails != null) {
+      data['clientDetails'] = this.clientDetails!.toJson();
+    }
+    return data;
+  }
+}
+
+class ClientDetails {
+  int? id;
+  String? firstName;
+  String? lastName;
+  String? email;
+  String? mobile;
+  String? address;
+  String? authType;
+  String? profileImage;
+  int? isVerified;
+  int? isActive;
+  String? createdAt;
+  String? updatedAt;
+
+  ClientDetails(
+      {this.id,
+        this.firstName,
+        this.lastName,
+        this.email,
+        this.mobile,
+        this.address,
+        this.authType,
+        this.profileImage,
+        this.isVerified,
+        this.isActive,
+        this.createdAt,
+        this.updatedAt});
+
+  ClientDetails.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    firstName = json['first_name'];
+    lastName = json['last_name'];
+    email = json['email'];
+    mobile = json['mobile'];
+    address = json['address'];
+    authType = json['auth_type'];
+    profileImage = json['profile_image'];
+    isVerified = json['is_verified'];
+    isActive = json['is_active'];
+    createdAt = json['createdAt'];
+    updatedAt = json['updatedAt'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
-    data['acceptClick'] = this.acceptClick;
-    data['rejectClick'] = this.rejectClick;
-    data['booking_id'] = this.bookingId;
-    data['client_id'] = this.clientId;
-    data['vehicle_assigned'] = this.vehicleAssigned;
-    data['rider_assigned'] = this.riderAssigned;
-    data['fare_info'] = this.fareInfo;
-    data['discount'] = this.discount;
-    data['total_amount'] = this.totalAmount;
-    data['amount_paid'] = this.amountPaid;
-    data['is_paid'] = this.isPaid;
-    data['ride_date'] = this.rideDate;
-    data['pickup_lat'] = this.pickupLat;
-    data['pickup_lng'] = this.pickupLng;
-    data['drop_lat'] = this.dropLat;
-    data['drop_lng'] = this.dropLng;
-    data['ride_start_time'] = this.rideStartTime;
-    data['ride_end_time'] = this.rideEndTime;
-    data['ride_status'] = this.rideStatus;
-    data['pickup_address'] = this.pickupAddress;
-    data['drop_address'] = this.dropAddress;
-    data['eta'] = this.eta;
-    data['distance'] = this.distance;
-    data['otp'] = this.otp;
-    data['pickup_distance'] = this.pickupDistance;
-    data['ride_type'] = this.rideType;
+    data['first_name'] = this.firstName;
+    data['last_name'] = this.lastName;
+    data['email'] = this.email;
+    data['mobile'] = this.mobile;
+    data['address'] = this.address;
+    data['auth_type'] = this.authType;
+    data['profile_image'] = this.profileImage;
+    data['is_verified'] = this.isVerified;
+    data['is_active'] = this.isActive;
     data['createdAt'] = this.createdAt;
     data['updatedAt'] = this.updatedAt;
-    data['riderHead'] = this.riderHead;
-    data['admin_commission'] = this.adminCommission;
-    data['admin_commission_percentage'] = this.adminCommissionPercentage;
-    data['rider_commission'] = this.riderCommission;
-    data['cancellation_time'] = this.cancellationTime;
-    data['cancellation_charges'] = this.cancellationCharges;
-    data['is_refunded'] = this.isRefunded;
-    data['refund_txn_id'] = this.refundTxnId;
-    data['promocode_id'] = this.promocodeId;
-    data['promocode_discount'] = this.promocodeDiscount;
-    data['actual_amount'] = this.actualAmount;
-    data['ride'] = this.ride;
-    data['from_date'] = this.fromDate;
-    data['to_date'] = this.toDate;
-    data['riders'] = this.riders;
     return data;
   }
 }

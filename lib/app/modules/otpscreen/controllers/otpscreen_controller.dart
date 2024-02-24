@@ -133,19 +133,21 @@ class OtpscreenController extends GetxController with CodeAutoFill, Helper {
                     "index": 0,
                     "authToken": map['authToken'] ?? ""
                   });
-                } else if (map['status'] == "vehicle-pending") {
+                }
+                else if (map['status'] == "vehicle-pending") {
                   Get.offAndToNamed(Routes.KYCSCREEN, arguments: {
                     "mobile": mapData['mobile'] ?? "",
                     "index": 2,
                     "riderId": (map['riderId']) ?? 0,
                     "authToken": map['authToken'] ?? ""
                   });
-                } else if (map['status'] == "kyc-pending") {
-                  await SharedPreferencesKeys().setStringData(
+                }
+                else if (map['status'] == "kyc-pending") {
+                  /*await SharedPreferencesKeys().setStringData(
                       key: "authToken",
                       text: (map['authToken'] ?? "").toString());
                   await SharedPreferencesKeys()
-                      .setStringData(key: "isLogin", text: "true");
+                      .setStringData(key: "isLogin", text: "false");
                   await SharedPreferencesKeys().setStringData(
                       key: "riderId", text: (map['riderId'] ?? "").toString());
                   await SharedPreferencesKeys().setStringData(
@@ -156,12 +158,13 @@ class OtpscreenController extends GetxController with CodeAutoFill, Helper {
 
                   await SharedPreferencesKeys().setStringData(
                       key: "vehicleMode",
-                      text: (map['vehicleMode'] ?? "").toString());
+                      text: (map['vehicleMode'] ?? "").toString());*/
 
-                  log(">>>>>>>>>>>authToken" + authToken.toString());
+                  // log(">>>>>>>>>>>authToken" + authToken.toString());
 
                   showUnderProcess(map);
-                } else if (map['status'] == "kyc-verified") {
+                }
+                else if (map['status'] == "kyc-verified") {
                   await SharedPreferencesKeys().setStringData(
                       key: "authToken",
                       text: (map['authToken'] ?? 0).toString());
@@ -182,10 +185,12 @@ class OtpscreenController extends GetxController with CodeAutoFill, Helper {
 
                   Get.delete<OtpscreenController>();
                   Get.offAllNamed(Routes.DRIVER_DASHBOARD);
-                } else {
+                }
+                else {
                   Snack.callError((map['message'] ?? "Something went wrong"));
                 }
-              } else if (map['vehicleMode'] == "logistic") {
+              }
+              else if (map['vehicleMode'] == "logistic") {
                 print(">>>>>>>>>>>>>>>>>\n\nfrom rider");
 
                 await SharedPreferencesKeys().setStringData(

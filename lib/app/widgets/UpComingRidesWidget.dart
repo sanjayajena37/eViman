@@ -18,6 +18,7 @@ class UpComingRidesWidget extends StatelessWidget {
   final String? status;
   final String? assetUrl;
   final bool? imgVisibility;
+  final bool? btnVisibility;
   final bool? acceptClick;
   final bool? rejectClick;
   final Function? onTapAccept;
@@ -38,7 +39,7 @@ class UpComingRidesWidget extends StatelessWidget {
       this.onTapAccept,
       this.onTapCancel,
       this.acceptClick = false,
-      this.rejectClick = false});
+      this.rejectClick = false,this.btnVisibility = true});
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +73,7 @@ class UpComingRidesWidget extends StatelessWidget {
               Positioned.fill(
                 child: Align(
                   alignment: Alignment.bottomRight,
-                  child: Padding(
+                  child:(btnVisibility == true)? Padding(
                     padding: const EdgeInsets.only(left: 8.0, right: 8, bottom: 4, top: 1),
                     child: (acceptClick == false && rejectClick == false)
                         ? Row(
@@ -130,6 +131,9 @@ class UpComingRidesWidget extends StatelessWidget {
                         : (rejectClick == false)
                             ? Lottie.asset("assets/json/done.json", fit: BoxFit.contain, height: 60)
                             : Lottie.asset("assets/json/reject.json", fit: BoxFit.contain, height: 60),
+                  ):Padding(
+                    padding: const EdgeInsets.all(2.0),
+                    child: const Icon(Icons.info),
                   ),
                 ),
               ),
