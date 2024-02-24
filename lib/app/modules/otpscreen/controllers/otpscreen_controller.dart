@@ -191,26 +191,68 @@ class OtpscreenController extends GetxController with CodeAutoFill, Helper {
                 }
               }
               else if (map['vehicleMode'] == "logistic") {
-                print(">>>>>>>>>>>>>>>>>\n\nfrom rider");
 
-                await SharedPreferencesKeys().setStringData(
-                    key: "authToken", text: (map['authToken'] ?? 0).toString());
-                await SharedPreferencesKeys()
-                    .setStringData(key: "isLogin", text: "true");
-                await SharedPreferencesKeys().setStringData(
-                    key: "riderId", text: (map['riderId'] ?? 0).toString());
-                await SharedPreferencesKeys().setStringData(
-                    key: "vehicleId", text: (map['vehicleId'] ?? 0).toString());
+                if (map['status'] == "new-user") {
+                  Get.offAndToNamed(Routes.KYCSCREEN, arguments: {
+                    "mobile": mapData['mobile'] ?? "",
+                    "index": 0,
+                    "authToken": map['authToken'] ?? ""
+                  });
+                }
+                else if (map['status'] == "vehicle-pending") {
+                  Get.offAndToNamed(Routes.KYCSCREEN, arguments: {
+                    "mobile": mapData['mobile'] ?? "",
+                    "index": 2,
+                    "riderId": (map['riderId']) ?? 0,
+                    "authToken": map['authToken'] ?? ""
+                  });
+                }
+                else if (map['status'] == "kyc-pending") {
+                  /*await SharedPreferencesKeys().setStringData(
+                      key: "authToken",
+                      text: (map['authToken'] ?? "").toString());
+                  await SharedPreferencesKeys()
+                      .setStringData(key: "isLogin", text: "false");
+                  await SharedPreferencesKeys().setStringData(
+                      key: "riderId", text: (map['riderId'] ?? "").toString());
+                  await SharedPreferencesKeys().setStringData(
+                      key: "vehicleId",
+                      text: (map['vehicleId'] ?? 0).toString());
+                  String? authToken = await SharedPreferencesKeys()
+                      .getStringData(key: 'authToken');
 
-                await SharedPreferencesKeys().setStringData(
-                    key: "vehicleMode",
-                    text: (map['vehicleMode'] ?? "").toString());
+                  await SharedPreferencesKeys().setStringData(
+                      key: "vehicleMode",
+                      text: (map['vehicleMode'] ?? "").toString());*/
 
-                await SharedPreferencesKeys().setStringData(
-                    key: "loginTime", text: (DateTime.now()).toString());
-                postFCMToken(authToken: map['authToken']);
-                Get.delete<OtpscreenController>();
-                Get.offAllNamed(Routes.LOGESTICDASHBOARD);
+                  // log(">>>>>>>>>>>authToken" + authToken.toString());
+
+                  showUnderProcess(map);
+                }
+                else if (map['status'] == "kyc-verified") {
+                  print(">>>>>>>>>>>>>>>>>\n\nfrom rider");
+
+                  await SharedPreferencesKeys().setStringData(
+                      key: "authToken",
+                      text: (map['authToken'] ?? 0).toString());
+                  await SharedPreferencesKeys()
+                      .setStringData(key: "isLogin", text: "true");
+                  await SharedPreferencesKeys().setStringData(
+                      key: "riderId", text: (map['riderId'] ?? 0).toString());
+                  await SharedPreferencesKeys().setStringData(
+                      key: "vehicleId",
+                      text: (map['vehicleId'] ?? 0).toString());
+
+                  await SharedPreferencesKeys().setStringData(
+                      key: "vehicleMode",
+                      text: (map['vehicleMode'] ?? "").toString());
+
+                  await SharedPreferencesKeys().setStringData(
+                      key: "loginTime", text: (DateTime.now()).toString());
+                  postFCMToken(authToken: map['authToken']);
+                  Get.delete<OtpscreenController>();
+                  Get.offAllNamed(Routes.LOGESTICDASHBOARD);
+                }
               }
             } else {
               Snack.callError((map['message'] ?? "Something went wrong"));

@@ -73,6 +73,7 @@ dependencies:
   flutter_spinkit:
   linear_timer:
   connectivity_plus:
+  assets_audio_player:
 #  flutter_phone_direct_caller:
 
 #  simple_animations:
@@ -93,3 +94,4 @@ flutter:
     - assets/images/
     - assets/json/
     - assets/icon/
+    - assets/audio/
