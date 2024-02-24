@@ -456,7 +456,8 @@ class DriverDashboardController extends GetxController
 
   openPlayer(){
     // Audio("assets/audios/song1.mp3")
-    assetsAudioPlayer?.open(Audio("assets/audios/song1.mp3"),showNotification: true);
+    assetsAudioPlayer?.open(Audio("assets/audios/song1.mp3"),showNotification: true,loopMode: LoopMode.single,
+        respectSilentMode: false);
   }
 
   // Add more colors as needed

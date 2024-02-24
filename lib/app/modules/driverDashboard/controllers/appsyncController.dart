@@ -41,8 +41,6 @@ extension AppSyncController on DriverDashboardController {
               pickupAddress
               status
               amount
-              paymentmode
-              paymentId
             }
           }
         """,
@@ -117,6 +115,14 @@ extension AppSyncController on DriverDashboardController {
                         receiveData?['incomingBooking']['clientLng'] ??
                             "0"))
                     .then((value2) {
+                      try{
+                        assetsAudioPlayer?.play();
+                      }catch(e){
+                        if (kDebugMode) {
+                          print("exception$e");
+                        }
+
+                      }
                   showRideAcceptDialog(Get.context!, Get.width * 0.9,
                       dropAddress: receiveData?['incomingBooking']
                       ['dropAddress'],

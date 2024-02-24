@@ -281,7 +281,7 @@ Future<void> onStart(ServiceInstance service) async {
 
 
   if (vehicleId != null && authToken != null && vehicleId != "" && authToken != ""){
-    Timer.periodic(const Duration(seconds: 10), (timer) async {
+    Timer.periodic(const Duration(seconds: 20), (timer) async {
       Position? curentPosition;
       vehicleId = await SharedPreferencesKeys().getStringData(key: 'vehicleId');
       authToken = await SharedPreferencesKeys().getStringData(key: 'authToken');
@@ -353,7 +353,8 @@ Future<void> onStart(ServiceInstance service) async {
             });
           }
         }
-      } else {
+      }
+      else {
         if (service is AndroidServiceInstance) {
           if (await service.isForegroundService()) {
             await Geolocator.getCurrentPosition(
