@@ -54,6 +54,8 @@ class KycscreenController extends GetxController with Helper {
   final TextEditingController vehicleTypeController = TextEditingController();
   final TextEditingController vehicleSubTypeController =
   TextEditingController();
+  final TextEditingController userTypeController =
+  TextEditingController();
   final TextEditingController address1VehicleController =
   TextEditingController();
   final TextEditingController address2VehicleController =
@@ -99,6 +101,7 @@ class KycscreenController extends GetxController with Helper {
   String errorOwnerName = '';
   String errorVehicleType = '';
   String errorVehicleSubType = '';
+  String errorUserType = '';
   String errorVehicleAddress1 = '';
   String errorVehicleAddress2 = '';
   String errorVehicleCity = '';
@@ -314,7 +317,26 @@ class KycscreenController extends GetxController with Helper {
   bool allValidation3() {
     print(">>>>validation3call");
     bool isValid = true;
-    if (regNumberController.text
+    if (userTypeController.text
+        .trim()
+        .isEmpty) {
+      errorChassis = '';
+      errorRegNo = '';
+      errorChassis = '';
+      errorEngineNum = '';
+      errorOwnerName = '';
+      errorVehicleType = '';
+      errorUserType = 'Please enter your vehicle sub type';
+      errorVehicleAddress1 = '';
+      errorVehicleAddress2 = '';
+      errorVehicleCity = '';
+      errorVehicleState = '';
+      errorVehicleCountry = '';
+      errorVehiclePin = '';
+      errorVehicleCurrentCity = '';
+      isValid = false;
+    }
+    else if (regNumberController.text
         .trim()
         .isEmpty) {
       errorRegNo = 'Please enter your regDNumber';
@@ -322,6 +344,7 @@ class KycscreenController extends GetxController with Helper {
       errorEngineNum = '';
       errorOwnerName = '';
       errorVehicleType = '';
+      errorUserType = '';
       errorVehicleSubType = '';
       errorVehicleAddress1 = '';
       errorVehicleAddress2 = '';
@@ -383,6 +406,7 @@ class KycscreenController extends GetxController with Helper {
       errorVehicleAddress2 = '';
       errorVehicleCity = '';
       errorVehicleState = '';
+      errorUserType = '';
       errorVehicleCountry = '';
       errorVehiclePin = '';
       errorVehicleCurrentCity = '';
@@ -403,6 +427,7 @@ class KycscreenController extends GetxController with Helper {
       errorVehicleCity = '';
       errorVehicleState = '';
       errorVehicleCountry = '';
+      errorUserType = '';
       errorVehiclePin = '';
       errorVehicleCurrentCity = '';
       isValid = false;
@@ -433,6 +458,7 @@ class KycscreenController extends GetxController with Helper {
       errorVehicleAddress2 = '';
       errorVehicleCity = '';
       errorVehicleState = '';
+      errorUserType = '';
       errorVehicleCountry = '';
       errorVehiclePin = '';
       errorVehicleCurrentCity = '';
@@ -453,6 +479,7 @@ class KycscreenController extends GetxController with Helper {
       errorVehicleState = '';
       errorVehicleCountry = '';
       errorVehiclePin = '';
+      errorUserType = '';
       errorVehicleCurrentCity = '';
       isValid = false;
     } else if (address1VehicleController.text
@@ -465,6 +492,7 @@ class KycscreenController extends GetxController with Helper {
       errorOwnerName = '';
       errorVehicleType = '';
       errorVehicleSubType = '';
+      errorUserType = '';
       errorVehicleAddress1 = 'Please enter your vehicle address1';
       errorVehicleAddress2 = '';
       errorVehicleCity = '';
@@ -484,6 +512,7 @@ class KycscreenController extends GetxController with Helper {
       errorVehicleType = '';
       errorVehicleSubType = '';
       errorVehicleAddress1 = '';
+      errorUserType = '';
       errorVehicleAddress2 = 'Please enter your vehicle address2';
       errorVehicleCity = '';
       errorVehicleState = '';
@@ -501,6 +530,7 @@ class KycscreenController extends GetxController with Helper {
       errorOwnerName = '';
       errorVehicleType = '';
       errorVehicleSubType = '';
+      errorUserType = '';
       errorVehicleAddress1 = '';
       errorVehicleAddress2 = '';
       errorVehicleCity = 'Please enter your vehicle city';
@@ -517,6 +547,7 @@ class KycscreenController extends GetxController with Helper {
       errorChassis = '';
       errorEngineNum = '';
       errorOwnerName = '';
+      errorUserType = '';
       errorVehicleType = '';
       errorVehicleSubType = '';
       errorVehicleAddress1 = '';
@@ -537,6 +568,7 @@ class KycscreenController extends GetxController with Helper {
       errorOwnerName = '';
       errorVehicleType = '';
       errorVehicleSubType = '';
+      errorUserType = '';
       errorVehicleAddress1 = '';
       errorVehicleAddress2 = '';
       errorVehicleCity = '';
@@ -552,6 +584,7 @@ class KycscreenController extends GetxController with Helper {
       errorRegNo = '';
       errorChassis = '';
       errorEngineNum = '';
+      errorUserType = '';
       errorOwnerName = '';
       errorVehicleType = '';
       errorVehicleSubType = '';
@@ -572,6 +605,7 @@ class KycscreenController extends GetxController with Helper {
       errorEngineNum = '';
       errorOwnerName = '';
       errorVehicleType = '';
+      errorUserType = '';
       errorVehicleSubType = '';
       errorVehicleAddress1 = '';
       errorVehicleAddress2 = '';
@@ -591,6 +625,7 @@ class KycscreenController extends GetxController with Helper {
       errorVehicleSubType = '';
       errorVehicleAddress1 = '';
       errorVehicleAddress2 = '';
+      errorUserType = '';
       errorVehicleCity = '';
       errorVehicleState = '';
       errorVehicleCountry = '';
@@ -814,7 +849,8 @@ class KycscreenController extends GetxController with Helper {
       "pin": pinVehicleController.text ?? "",
       "currentCity": currentCityVehicleController.text ?? '',
       "lat": locationDetail['lat'],
-      "lng": locationDetail['lng']
+      "lng": locationDetail['lng'],
+      "vehicleMode":userTypeController.text??""
     };
     print(">>>>>> add vehicle" + jsonEncode(sendData).toString());
     MyWidgets.showLoading3();
@@ -1240,6 +1276,8 @@ class KycscreenController extends GetxController with Helper {
 
   List<KeyvalueModel> vehicleTypeList = [];
   List<KeyvalueModel> subVehicleTypeList = [];
+  List<KeyvalueModel> userTypeList = [KeyvalueModel(key: "cab",name: "cab"),
+    KeyvalueModel(key: "logistic",name: "logistic")];
   List<Vehicle> vehicles = [];
 
   getFareInfo() {

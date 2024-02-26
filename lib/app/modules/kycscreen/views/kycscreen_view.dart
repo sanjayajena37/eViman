@@ -569,6 +569,47 @@ class KycscreenView extends GetView<KycscreenController> {
                                     },
                                     child: const Text('Select Your Location'),
                                   ),
+                                  SizedBox(
+                                    height: 7,
+                                  ),
+                                  Card(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(24),
+                                    ),
+                                    shadowColor: Colors.grey.withOpacity(
+                                      Theme
+                                          .of(context)
+                                          .brightness == Brightness.dark
+                                          ? 0.6
+                                          : 0.6,
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: GetBuilder<KycscreenController>(
+                                        assignId: true,
+                                        id: "userTy",
+                                        builder: (logic) {
+                                          return SizedBox(
+                                              height: 35,
+                                              child: Center(
+                                                child: DropDown.staticDropdown(
+                                                    "User Type",
+                                                    "userType",
+                                                    controller
+                                                        .userTypeList,
+                                                        (KeyvalueModel val) {
+                                                      controller
+                                                          .userTypeController
+                                                          .text = val.key;
+                                                    }),
+                                              ));
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 7,
+                                  ),
                                   CommonTextFieldView(
                                     titleText: "RegDNumber",
                                     contextNew: context,
@@ -976,6 +1017,12 @@ class KycscreenView extends GetView<KycscreenController> {
                                       ),
                                     ),
                                   ),
+                                  SizedBox(
+                                    height: 7,
+                                  ),
+
+
+
                                   /* CommonTextFieldView(
                                 titleText: "Vehicle Type",
                                 contextNew: context,
