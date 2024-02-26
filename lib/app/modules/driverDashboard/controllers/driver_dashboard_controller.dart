@@ -445,8 +445,8 @@ class DriverDashboardController extends GetxController
     // infoDialog1();
     getRiderId();
     getCurrentLocation();
-    assetsAudioPlayer = AssetsAudioPlayer.newPlayer();
-    openPlayer();
+    assetsAudioPlayer = AssetsAudioPlayer();
+
     // infoDialog2();
     // askPermissions();
     // timerController  =LinearTimerController(this);
@@ -455,9 +455,13 @@ class DriverDashboardController extends GetxController
   }
 
   openPlayer(){
+    assetsAudioPlayer = AssetsAudioPlayer();
     // Audio("assets/audios/song1.mp3")
-    assetsAudioPlayer?.open(Audio("assets/audios/song1.mp3"),showNotification: true,loopMode: LoopMode.single,
+    assetsAudioPlayer?.open(Audio("assets/audio/excuseme_boss.mp3"),showNotification: true,
+        loopMode: LoopMode.single,autoStart: true,
+        playInBackground: PlayInBackground.disabledRestoreOnForeground,
         respectSilentMode: false);
+    // assetsAudioPlayer?.stop();
   }
 
   // Add more colors as needed
@@ -472,6 +476,7 @@ class DriverDashboardController extends GetxController
     positionStream?.cancel();
     // timerController?.dispose();
     unsubscribe();
+    assetsAudioPlayer?.dispose();
     // locationUpdateTimer?.cancel();
     // locationService.stopLocationUpdates();
     super.onClose();

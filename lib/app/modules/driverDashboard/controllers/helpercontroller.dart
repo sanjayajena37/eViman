@@ -375,6 +375,7 @@ extension HelperController on DriverDashboardController {
                         snapSize.refresh();
                         maxChildSize.refresh();
                         assetsAudioPlayer?.stop();
+                        assetsAudioPlayer?.dispose();
                         Get.back();
                       }
                     },

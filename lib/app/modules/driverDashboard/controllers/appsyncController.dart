@@ -116,7 +116,9 @@ extension AppSyncController on DriverDashboardController {
                             "0"))
                     .then((value2) {
                       try{
-                        assetsAudioPlayer?.play();
+                        assetsAudioPlayer?.stop();
+                        openPlayer();
+                        // assetsAudioPlayer?.play();
                       }catch(e){
                         if (kDebugMode) {
                           print("exception$e");
