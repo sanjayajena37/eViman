@@ -116,6 +116,10 @@
            android:name="io.flutter.app.android.SplashScreenUntilFirstFrame"
            android:value="false" />
 
+       <meta-data
+           android:name="assets.audio.player.notification.icon"
+           android:resource="@drawable/ic_launcher"/>
+
        <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
        <!-- Necessary for apps that target Android 9.0 or higher -->
        <uses-library android:name="org.apache.http.legacy" android:required="false" />

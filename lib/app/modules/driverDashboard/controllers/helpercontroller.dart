@@ -55,14 +55,14 @@ extension HelperController on DriverDashboardController {
   Future<String> goOnline1(bool val) async {
     Completer<String> completer = Completer();
 
-    try{
+    try {
       Map sendData = {
         "online": (val) ? 1 : 0,
       };
       // print(">>>>>update-online-status" + sendData.toString());
       Get.find<ConnectorController>().PATCH_METHOD_TOKEN(
           api:
-          "https://backend.eviman.co.in/api/vehicles/v1/update-status/$vehicleIdNew",
+              "https://backend.eviman.co.in/api/vehicles/v1/update-status/$vehicleIdNew",
           json: sendData,
           token: authToken ?? "",
           fun: (map) {
@@ -107,12 +107,9 @@ extension HelperController on DriverDashboardController {
             } else {}
           });
       return completer.future;
-    }catch(e){
+    } catch (e) {
       return completer.future;
     }
-
-
-
   }
 
   showModalbottomSheet() {
@@ -377,6 +374,7 @@ extension HelperController on DriverDashboardController {
                         unsubscribe2();
                         snapSize.refresh();
                         maxChildSize.refresh();
+                        assetsAudioPlayer?.stop();
                         Get.back();
                       }
                     },
@@ -391,7 +389,6 @@ extension HelperController on DriverDashboardController {
                         .getBoldStyle()
                         .copyWith(color: Colors.white, fontSize: 16),
                   ),
-
                   const SizedBox(
                     height: 7,
                   ),
@@ -565,7 +562,7 @@ extension HelperController on DriverDashboardController {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                         "(Expected Price ₹${receiveData?['incomingBooking']['amount']??0.00})",
+                        "(Expected Price ₹${receiveData?['incomingBooking']['amount'] ?? 0.00})",
                         style: TextStyles(context)
                             .getBoldStyle()
                             .copyWith(color: Colors.white, fontSize: 20),
@@ -616,7 +613,6 @@ extension HelperController on DriverDashboardController {
                             print(">>>>>>>>>>" + receiveData.toString());
                             if (receiveData != null) {
                               try {
-
                                 incomingBookingModel =
                                     IncomingBooikingModel.fromJson(
                                         (receiveData ?? {})
@@ -626,12 +622,27 @@ extension HelperController on DriverDashboardController {
                                         .toString());
                                 subscribeBookingDetails(incomingBookingModel
                                     ?.incomingBooking?.bookingId);
-                                createRide().then((value) {
-                                  if(value.toString().trim() == "true"){
+                                createRide(
+                                        paymentId:
+                                            receiveData['incomingBooking']
+                                                ['paymentId'],
+                                        paymentmode:
+                                            receiveData['incomingBooking']
+                                                ['paymentmode'])
+                                    .then((value) {
+                                  if (value.toString().trim() == "true") {
                                     maxChildSize = Rx<double>(0.7);
                                     initialChildSize = Rx<double>(0.5);
-                                    snapSize = Rx<List<double>>(
-                                        [0.1, 0.2, 0.25, 0.3, 0.35, 0.4, 0.5, 0.6]);
+                                    snapSize = Rx<List<double>>([
+                                      0.1,
+                                      0.2,
+                                      0.25,
+                                      0.3,
+                                      0.35,
+                                      0.4,
+                                      0.5,
+                                      0.6
+                                    ]);
                                     pickUpDist = pickUpDistance;
                                     travelDist = travelDistance;
                                     snapSize.refresh();
@@ -640,35 +651,35 @@ extension HelperController on DriverDashboardController {
                                     update(['drag']);
                                     sourceLocation = LatLng(
                                         double.tryParse(incomingBookingModel
-                                            ?.incomingBooking?.clientLat ??
-                                            "20.288187") ??
+                                                    ?.incomingBooking
+                                                    ?.clientLat ??
+                                                "20.288187") ??
                                             20.288187,
                                         double.tryParse(incomingBookingModel
-                                            ?.incomingBooking?.clientLng ??
-                                            "85.817814") ??
+                                                    ?.incomingBooking
+                                                    ?.clientLng ??
+                                                "85.817814") ??
                                             85.817814);
                                     destination = LatLng(
                                         double.tryParse(incomingBookingModel
-                                            ?.incomingBooking
-                                            ?.destinationLat ??
-                                            "20.288187") ??
+                                                    ?.incomingBooking
+                                                    ?.destinationLat ??
+                                                "20.288187") ??
                                             20.290983,
                                         double.tryParse(incomingBookingModel
-                                            ?.incomingBooking
-                                            ?.destinationLng ??
-                                            "85.817814") ??
+                                                    ?.incomingBooking
+                                                    ?.destinationLng ??
+                                                "85.817814") ??
                                             85.845584);
                                     // getPolyPoints();
                                     setCustomMarkerIcon();
                                     Get.back();
-                                  }else{
+                                  } else {
                                     incomingBookingModel = null;
                                     Snack.callError("Something went wrong");
                                   }
                                 });
-
-                              }
-                              catch (e) {
+                              } catch (e) {
                                 userDetails = "";
                                 maxChildSize = Rx<double>(0.2);
                                 snapSize = Rx<List<double>>([0.1, 0.2]);
@@ -731,7 +742,7 @@ extension HelperController on DriverDashboardController {
         'https://www.google.com/maps/search/?api=1&query=$latitude,$longitude';
 
     if (await canLaunchUrl(Uri.parse(url))) {
-      await launchUrl(Uri.parse(url),mode:LaunchMode.externalApplication );
+      await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
     } else {
       throw 'Could not launch Google Maps';
     }
@@ -814,7 +825,8 @@ extension HelperController on DriverDashboardController {
                                             "")
                                     .then((value) {
                                   callOrStopServices().then((value) async {
-                                    await SharedPreferencesKeys().setStringData(key: "startDate",
+                                    await SharedPreferencesKeys().setStringData(
+                                        key: "startDate",
                                         text: DateTime.now().toString());
                                     Future.delayed(
                                       const Duration(seconds: 10),
@@ -1046,8 +1058,6 @@ extension HelperController on DriverDashboardController {
       // ignore: use_build_context_synchronously
     }
   }
-
-
 
   void startIsolate() async {
     ReceivePort? receivePort = ReceivePort();
