@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -7,10 +8,44 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 
 import '../../MainClass.dart';
+import '../../main.dart';
 import '../data/ApiFactory.dart';
 import '../modules/ConnectorController.dart';
+import '../routes/app_pages.dart';
 
-Future<void> handleBackgroundMessage(RemoteMessage? message) async {}
+@pragma("vm:entry-point")
+@pragma("vm:entry-point", true)
+@pragma("vm:entry-point", !bool.fromEnvironment("dart.vm.product"))
+@pragma("vm:entry-point", "get")
+@pragma("vm:entry-point", "call")
+Future<void> handleBackgroundMessage(RemoteMessage? message) async {
+  await Firebase.initializeApp();
+  // FirebaseApi().handleMessage(null);
+ /* final _localNotification = FlutterLocalNotificationsPlugin();
+  _localNotification.show(
+      122344555,
+     "eViman",
+     "Please be ready for trips",
+    NotificationDetails(
+        android: AndroidNotificationDetails(
+             "eViman-rider",
+            "foregrounf service",
+            channelDescription:"",
+            icon: '@mipmap/ic_launcher',
+            ongoing: true,
+            enableVibration: true,
+            importance: Importance.high,
+            autoCancel: true,
+            sound:
+            const RawResourceAndroidNotificationSound('excuseme_boss'),
+            channelShowBadge: true,
+            enableLights: true,
+            color: Colors.green,
+            colorized: true,
+            playSound: true)),
+  );*/
+
+}
 
 class FirebaseApi {
   // Private constructor to prevent instantiation from outside.
@@ -73,9 +108,10 @@ class FirebaseApi {
   }
 
   void handleMessage(RemoteMessage? message) {
-    if (message == null) return;
+    // if (message == null) return;
 
-    navigatorKey.currentState?.pushNamed("/logesticdashboard", arguments: {});
+    navigatorKey.currentState?.pushReplacementNamed("/logesticDash", arguments: {});
+    // Get.toNamed(Routes.LOGESTICDASHBOARD);
 
     // get in notification page final message = ModalRoute.of(context)!.settings.arguments as RemoteMessage;
   }
@@ -86,10 +122,14 @@ class FirebaseApi {
     await FirebaseMessaging.instance
         .setForegroundNotificationPresentationOptions(
             sound: true, alert: true, badge: true);
+
+    //onMessageReceived onMessageReceived
+
     FirebaseMessaging.instance.getInitialMessage().then(handleMessage);
 
     FirebaseMessaging.onMessageOpenedApp.listen(handleMessage);
     FirebaseMessaging.onBackgroundMessage(handleBackgroundMessage);
+
     FirebaseMessaging.onMessage.listen((message) {
       final notification = message.notification;
       if (notification == null) return;
@@ -116,6 +156,14 @@ class FirebaseApi {
                 playSound: true)),
       );
     });
+  }
+
+  Future forgroundMessage() async {
+    await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
   }
 
   Future initLocalNotifications() async {

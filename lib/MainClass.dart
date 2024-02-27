@@ -11,6 +11,7 @@ import 'package:get/get_state_manager/src/simple/get_state.dart';
 import 'app/constants/themes.dart';
 import 'app/data/BinderData.dart';
 import 'app/logic/controllers/theme_provider.dart';
+import 'app/modules/logesticdashboard/views/logesticdashboard_view.dart';
 import 'app/routes/app_pages.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
@@ -57,6 +58,11 @@ class _MainClassState extends State<MainClass> {
         return GetMaterialApp(
           theme: theme,
           navigatorKey: navigatorKey,
+          routes: {
+            "/logesticDash": (context) => LogesticdashboardView(
+            ),
+          },
+          // getPages:,
           themeMode:ThemeMode.light ,
           darkTheme:theme ,
             title: "Application",

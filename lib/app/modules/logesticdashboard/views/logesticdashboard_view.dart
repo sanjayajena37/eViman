@@ -14,6 +14,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:upgrader/upgrader.dart';
 
+import '../../../../MainClass.dart';
 import '../../../constants/text_styles.dart';
 import '../../../logic/controllers/theme_provider.dart';
 import '../../../providers/Utils.dart';
@@ -31,11 +32,13 @@ import 'package:lottie/lottie.dart' as lottie;
 class LogesticdashboardView extends StatelessWidget {
   LogesticdashboardView({Key? key}) : super(key: key);
 
+  // @override
   LogesticdashboardController controllerX =
-  Get.put<LogesticdashboardController>(LogesticdashboardController());
+      Get.put<LogesticdashboardController>(LogesticdashboardController());
 
   @override
   Widget build(BuildContext context) {
+    controllerX.getPendingRides();
     return AdvancedDrawer(
       backdrop: Container(
         width: double.infinity,
@@ -64,10 +67,7 @@ class LogesticdashboardView extends StatelessWidget {
               padding: EdgeInsets.zero,
               children: [
                 SizedBox(
-                  height: MediaQuery
-                      .of(context)
-                      .size
-                      .height * 0.22,
+                  height: MediaQuery.of(context).size.height * 0.22,
                   child: DrawerHeader(
                     // decoration: const BoxDecoration(color: Colors.),
                     child: Column(
@@ -82,80 +82,80 @@ class LogesticdashboardView extends StatelessWidget {
                               children: [
                                 Row(
                                   mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     ClipOval(
                                       child: SizedBox.fromSize(
                                           size: const Size.fromRadius(
                                               40), // Image radius
                                           child: (controllerX
-                                              .profileViewModel
-                                              ?.riderData
-                                              ?.profile_image !=
-                                              null &&
-                                              controllerX
-                                                  .profileViewModel
-                                                  ?.riderData
-                                                  ?.profile_image
-                                                  .toString()
-                                                  .trim() !=
-                                                  "")
+                                                          .profileViewModel
+                                                          ?.riderData
+                                                          ?.profile_image !=
+                                                      null &&
+                                                  controllerX
+                                                          .profileViewModel
+                                                          ?.riderData
+                                                          ?.profile_image
+                                                          .toString()
+                                                          .trim() !=
+                                                      "")
                                               ? CachedNetworkImage(
-                                            imageUrl: controllerX
-                                                .profileViewModel
-                                                ?.riderData
-                                                ?.profile_image ??
-                                                "",
-                                            imageBuilder: (context,
-                                                imageProvider) =>
-                                                Container(
-                                                  decoration: BoxDecoration(
-                                                      image: DecorationImage(
-                                                        image: imageProvider,
-                                                        fit: BoxFit.cover,
+                                                  imageUrl: controllerX
+                                                          .profileViewModel
+                                                          ?.riderData
+                                                          ?.profile_image ??
+                                                      "",
+                                                  imageBuilder: (context,
+                                                          imageProvider) =>
+                                                      Container(
+                                                    decoration: BoxDecoration(
+                                                        image: DecorationImage(
+                                                          image: imageProvider,
+                                                          fit: BoxFit.cover,
+                                                        ),
+                                                        border: Border.all(
+                                                            color: Colors.red,
+                                                            width: 1,
+                                                            style: BorderStyle
+                                                                .solid),
+                                                        borderRadius:
+                                                            BorderRadius.all(
+                                                                Radius.circular(
+                                                                    40))),
+                                                  ),
+                                                  progressIndicatorBuilder:
+                                                      (context, url,
+                                                              downloadProgress) =>
+                                                          Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      SizedBox(
+                                                        height:
+                                                            Get.height * 0.04,
+                                                        width: Get.width * 0.15,
+                                                        child: Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(18.0),
+                                                          child: CircularProgressIndicator(
+                                                              value:
+                                                                  downloadProgress
+                                                                      .progress),
+                                                        ),
                                                       ),
-                                                      border: Border.all(
-                                                          color: Colors.red,
-                                                          width: 1,
-                                                          style: BorderStyle
-                                                              .solid),
-                                                      borderRadius:
-                                                      BorderRadius.all(
-                                                          Radius.circular(
-                                                              40))),
-                                                ),
-                                            progressIndicatorBuilder:
-                                                (context, url,
-                                                downloadProgress) =>
-                                                Column(
-                                                  mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .center,
-                                                  children: [
-                                                    SizedBox(
-                                                      height:
-                                                      Get.height * 0.04,
-                                                      width: Get.width * 0.15,
-                                                      child: Padding(
-                                                        padding:
-                                                        const EdgeInsets
-                                                            .all(18.0),
-                                                        child: CircularProgressIndicator(
-                                                            value:
-                                                            downloadProgress
-                                                                .progress),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                            errorWidget:
-                                                (context, url, error) =>
-                                                Icon(Icons.error),
-                                          )
+                                                    ],
+                                                  ),
+                                                  errorWidget:
+                                                      (context, url, error) =>
+                                                          Icon(Icons.error),
+                                                )
                                               : Image.asset(
-                                            'assets/images/man.jpg',
-                                            fit: BoxFit.cover,
-                                          )),
+                                                  'assets/images/man.jpg',
+                                                  fit: BoxFit.cover,
+                                                )),
                                     ),
                                     SizedBox(
                                       width: 10,
@@ -165,7 +165,7 @@ class LogesticdashboardView extends StatelessWidget {
                                       builder: (controllerX) {
                                         return Row(
                                           mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
+                                              MainAxisAlignment.spaceAround,
                                           children: [
                                             // driverINfoWidget("assets/icon/time.png", "10.2", "Hours online"),
                                             driverINfoWidget(
@@ -195,9 +195,7 @@ class LogesticdashboardView extends StatelessWidget {
                                     Container(
                                       // width: Get.width * 0.5,
                                       child: Text(
-                                        "${controllerX.profileViewModel?.riderData?.firstName ??
-                                            ""} ${controllerX.profileViewModel?.riderData
-                                            ?.lastName ?? ""}",
+                                        "${controllerX.profileViewModel?.riderData?.firstName ?? ""} ${controllerX.profileViewModel?.riderData?.lastName ?? ""}",
                                         style: TextStyles(context)
                                             .getBoldStyle()
                                             .copyWith(fontSize: 18),
@@ -211,7 +209,7 @@ class LogesticdashboardView extends StatelessWidget {
                                       // width: Get.width * 0.5,
                                       child: Text(
                                         controllerX.profileViewModel?.riderData
-                                            ?.email ??
+                                                ?.email ??
                                             "",
                                         style: TextStyles(context)
                                             .getBoldStyle()
@@ -234,9 +232,7 @@ class LogesticdashboardView extends StatelessWidget {
                     controllerX.advancedDrawerController.hideDrawer();
                   },
                   leading:
-                  Icon(Icons.home, color: Theme
-                      .of(context)
-                      .primaryColor),
+                      Icon(Icons.home, color: Theme.of(context).primaryColor),
                   title: Text(
                     'Home',
                     style: TextStyles(context)
@@ -249,9 +245,7 @@ class LogesticdashboardView extends StatelessWidget {
                     Get.toNamed(Routes.PROFILESCREEN);
                   },
                   leading: Icon(Icons.account_circle_rounded,
-                      color: Theme
-                          .of(context)
-                          .primaryColor),
+                      color: Theme.of(context).primaryColor),
                   title: Text(
                     'Profile',
                     style: TextStyles(context)
@@ -264,9 +258,7 @@ class LogesticdashboardView extends StatelessWidget {
                     Get.toNamed(Routes.VEHICLE_DETAILS);
                   },
                   leading: Icon(Icons.electric_car,
-                      color: Theme
-                          .of(context)
-                          .primaryColor),
+                      color: Theme.of(context).primaryColor),
                   title: Text(
                     'Vehicle Details',
                     style: TextStyles(context)
@@ -279,9 +271,7 @@ class LogesticdashboardView extends StatelessWidget {
                     Get.toNamed(Routes.EARNINGPAGE);
                   },
                   leading:
-                  Icon(Icons.money, color: Theme
-                      .of(context)
-                      .primaryColor),
+                      Icon(Icons.money, color: Theme.of(context).primaryColor),
                   title: Text(
                     'My Earning',
                     style: TextStyles(context)
@@ -307,9 +297,7 @@ class LogesticdashboardView extends StatelessWidget {
                     Get.toNamed(Routes.HISTORYSCREEN);
                   },
                   leading: Icon(Icons.history,
-                      color: Theme
-                          .of(context)
-                          .primaryColor),
+                      color: Theme.of(context).primaryColor),
                   title: Text(
                     'History',
                     style: TextStyles(context)
@@ -332,13 +320,11 @@ class LogesticdashboardView extends StatelessWidget {
                   onTap: () {
                     Get.toNamed(Routes.INVITESCREEN,
                         arguments: (controllerX
-                            .profileViewModel?.riderData?.referralCode ??
+                                .profileViewModel?.riderData?.referralCode ??
                             "XXXXXXXXXXXXX"));
                   },
                   leading: Icon(Icons.card_giftcard_outlined,
-                      color: Theme
-                          .of(context)
-                          .primaryColor),
+                      color: Theme.of(context).primaryColor),
                   title: Text(
                     'Refer and Earn',
                     style: TextStyles(context)
@@ -354,9 +340,7 @@ class LogesticdashboardView extends StatelessWidget {
                         subject: 'Look what I made!');
                   },
                   leading:
-                  Icon(Icons.share, color: Theme
-                      .of(context)
-                      .primaryColor),
+                      Icon(Icons.share, color: Theme.of(context).primaryColor),
                   title: Text(
                     'Share',
                     style: TextStyles(context)
@@ -370,9 +354,7 @@ class LogesticdashboardView extends StatelessWidget {
                     controllerX.openPlayStorePage();
                   },
                   leading: Icon(Icons.star_rate,
-                      color: Theme
-                          .of(context)
-                          .primaryColor),
+                      color: Theme.of(context).primaryColor),
                   title: Text(
                     'Rate Us',
                     style: TextStyles(context)
@@ -386,9 +368,7 @@ class LogesticdashboardView extends StatelessWidget {
                     // controllerX.openPlayStorePage();
                   },
                   leading:
-                  Icon(Icons.image, color: Theme
-                      .of(context)
-                      .primaryColor),
+                      Icon(Icons.image, color: Theme.of(context).primaryColor),
                   title: Text(
                     'Gallery',
                     style: TextStyles(context)
@@ -416,9 +396,7 @@ class LogesticdashboardView extends StatelessWidget {
                     controllerX.gotoSplashScreen();
                   },
                   leading:
-                  Icon(Icons.logout, color: Theme
-                      .of(context)
-                      .primaryColor),
+                      Icon(Icons.logout, color: Theme.of(context).primaryColor),
                   title: Text(
                     'Logout',
                     style: TextStyles(context)
@@ -437,6 +415,7 @@ class LogesticdashboardView extends StatelessWidget {
           appBar: AppBar(
             bottom: TabBar(
               controller: controllerX.tabController,
+              // isScrollable: true,
               onTap: (index) {
                 if (index == 0) {
                   controllerX.getPendingRides();
@@ -446,12 +425,15 @@ class LogesticdashboardView extends StatelessWidget {
               },
               tabs: [
                 Tab(text: "Pending Rides"),
-                Tab(text: "Upcoming Rides",),
+                Tab(
+                  text: "Upcoming Rides",
+                ),
                 // Tab(icon: Icon(Icons.directions_car)),
               ],
               dividerColor: Colors.red,
               indicatorColor: Colors.red,
-              labelStyle: TextStyles(context).getBoldStyle().copyWith(fontSize: 17),
+              labelStyle:
+                  TextStyles(context).getBoldStyle().copyWith(fontSize: 17),
             ),
             backgroundColor: Color(0xFFFFFFFF),
             title: Padding(
@@ -461,28 +443,22 @@ class LogesticdashboardView extends StatelessWidget {
                 children: [
                   Card(
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(
-                          5.0), //<-- SEE HERE
+                      borderRadius: BorderRadius.circular(5.0), //<-- SEE HERE
                     ),
                     margin: EdgeInsets.all(2),
                     elevation: 5,
                     child: IconButton(
-                      onPressed:
-                      controllerX.handleMenuButtonPressed,
+                      onPressed: controllerX.handleMenuButtonPressed,
                       padding: EdgeInsets.all(2),
-                      visualDensity: VisualDensity(
-                          horizontal: -4, vertical: -4),
-                      icon: ValueListenableBuilder<
-                          AdvancedDrawerValue>(
-                        valueListenable:
-                        controllerX.advancedDrawerController,
+                      visualDensity:
+                          VisualDensity(horizontal: -4, vertical: -4),
+                      icon: ValueListenableBuilder<AdvancedDrawerValue>(
+                        valueListenable: controllerX.advancedDrawerController,
                         builder: (_, value, __) {
                           return AnimatedSwitcher(
                             duration: Duration(milliseconds: 250),
                             child: Icon(
-                              value.visible
-                                  ? Icons.clear
-                                  : Icons.menu,
+                              value.visible ? Icons.clear : Icons.menu,
                               color: Colors.black,
                               key: ValueKey<bool>(value.visible),
                             ),
@@ -495,42 +471,31 @@ class LogesticdashboardView extends StatelessWidget {
                     onTap: () {
                       controllerX.getRideAnalytics();
                     },
-                    child:
-                    GetBuilder<LogesticdashboardController>(
+                    child: GetBuilder<LogesticdashboardController>(
                       id: "amt",
                       builder: (controllerX) {
                         return Card(
                             elevation: 5,
-                            color: Theme
-                                .of(context)
-                                .cardColor,
+                            color: Theme.of(context).cardColor,
                             shape: RoundedRectangleBorder(
-                              borderRadius:
-                              BorderRadius.circular(8.0),
+                              borderRadius: BorderRadius.circular(8.0),
                             ),
                             child: Row(
                               children: [
                                 Padding(
-                                  padding:
-                                  const EdgeInsets.all(8.0),
+                                  padding: const EdgeInsets.all(8.0),
                                   child: Text(
-                                    "₹${double.parse(controllerX.totalAmount ?? "0")
-                                        .toStringAsFixed(2)}",
-                                    style: Theme
-                                        .of(context)
+                                    "₹${double.parse(controllerX.totalAmount ?? "0").toStringAsFixed(2)}",
+                                    style: Theme.of(context)
                                         .textTheme
                                         .headline5!
                                         .copyWith(
-                                        fontSize: 25,
-                                        color: Colors.white),
+                                            fontSize: 25, color: Colors.white),
                                   ),
                                 ),
                                 const Padding(
                                   padding: EdgeInsets.only(
-                                      right: 5.0,
-                                      left: 0,
-                                      top: 0,
-                                      bottom: 0),
+                                      right: 5.0, left: 0, top: 0, bottom: 0),
                                   child: Icon(
                                     Icons.refresh,
                                     color: Colors.white,
@@ -549,23 +514,23 @@ class LogesticdashboardView extends StatelessWidget {
                       // controllerX.goOnline(value);
                     },
                   ),*/
-                  Container()
+                  Container(
+                    width: Get.width*0.14,
+                    // child: Text("jks",style: TextStyle(color: Colors.black),),
+                  )
                 ],
               ),
             ),
           ),
           body: UpgradeAlert(
-            upgrader: Upgrader(
-              dialogStyle: UpgradeDialogStyle.cupertino,
-              canDismissDialog: false,
-            ),
-            child: maiWidgetFun(context),
-          ),
+              upgrader: Upgrader(dialogStyle: UpgradeDialogStyle.cupertino,canDismissDialog: false,),
+              child: maiWidgetFun(context)),
         ),
       ),
     );
   }
 
+  var refreshKey = GlobalKey<RefreshIndicatorState>();
   Widget maiWidgetFun(BuildContext context) {
     try {
       return TabBarView(
@@ -576,202 +541,283 @@ class LogesticdashboardView extends StatelessWidget {
             id: "lst",
             builder: (controllerX) {
               return SizedBox(
-                height:
-                MediaQuery
-                    .of(context)
-                    .size
-                    .height * 0.75,
-                child: (controllerX.pendingRidesDataModel !=
-                    null &&
-                    controllerX.pendingRidesDataModel?.rides !=
-                        null &&
-                    (controllerX.pendingRidesDataModel?.rides
-                        ?.length ??
-                        0) >
-                        0)
+                height: MediaQuery.of(context).size.height * 0.75,
+                child: (controllerX.pendingRidesDataModel != null &&
+                        controllerX.pendingRidesDataModel?.rides != null &&
+                        (controllerX.pendingRidesDataModel?.rides?.length ??
+                                0) >
+                            0)
                     ? RefreshIndicator(
-                      onRefresh: () {
-                    return Future.delayed(const Duration(seconds: 1),() {
-                      controllerX.getPendingRides();
-                    },);
-                  },
-                      child: ListView.builder(
-                      itemCount: controllerX.pendingRidesDataModel?.rides?.length ?? 0,
-                      physics: const AlwaysScrollableScrollPhysics(),
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: EdgeInsets.only(
-                              left: 8.0,
-                              right: 8,
-                              bottom: 5,
-                              top: 2),
-                          child: GetBuilder<LogesticdashboardController>(
-                            // assignId: true,
-                            id: "lstData",
-                            builder: (controllerX) {
-                              return Container(
-                                child: InkWell(
-                                  onTap: () {
-
-                                  },
-                                  child: UpComingRidesWidget(
-                                      totalAmount: (controllerX.pendingRidesDataModel
-                                          ?.rides?[index].totalAmount ?? "0.00")
-                                          .toString(),
-                                      paidAmount: (controllerX.pendingRidesDataModel
-                                          ?.rides?[index].amountPaid ?? "0")
-                                          .toString(),
-                                      status: "Waiting...",
-                                      fromDate: controllerX.pendingRidesDataModel
-                                          ?.rides?[index].fromDate ?? "",
-                                      toDate: controllerX.pendingRidesDataModel
-                                          ?.rides?[index].toDate ?? "",
-                                      onTapCancel: () {
+                        onRefresh: () {
+                          return Future.delayed(
+                            const Duration(seconds: 1),
+                            () {
+                              controllerX.getPendingRides();
+                            },
+                          );
+                        },
+                        child: ListView.builder(
+                            itemCount: controllerX
+                                    .pendingRidesDataModel?.rides?.length ??
+                                0,
+                            physics: const AlwaysScrollableScrollPhysics(),
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding: EdgeInsets.only(
+                                    left: 8.0, right: 8, bottom: 5, top: 2),
+                                child: GetBuilder<LogesticdashboardController>(
+                                  // assignId: true,
+                                  id: "lstData",
+                                  builder: (controllerX) {
+                                    return Container(
+                                      child: InkWell(
+                                        onTap: () {},
+                                        child: UpComingRidesWidget(
+                                            totalAmount: (controllerX
+                                                        .pendingRidesDataModel
+                                                        ?.rides?[index]
+                                                        .totalAmount ??
+                                                    "0.00")
+                                                .toString(),
+                                            paidAmount:
+                                                (controllerX.pendingRidesDataModel?.rides?[index].amountPaid ?? "0")
+                                                    .toString(),
+                                            status: "Waiting...",
+                                            fromDate: controllerX
+                                                    .pendingRidesDataModel
+                                                    ?.rides?[index]
+                                                    .fromDate ??
+                                                "",
+                                            toDate: controllerX
+                                                    .pendingRidesDataModel
+                                                    ?.rides?[index]
+                                                    .toDate ??
+                                                "",
+                                            onTapCancel: () {
 //ACCEPT
-                                        controllerX.upDateRideStatusComplete("REJECT",
-                                            bookingId: (controllerX.pendingRidesDataModel
-                                                ?.rides?[index].id ?? "").toString()
-                                            , riderId: controllerX.riderIdNew).then((value) {
-                                          if (value) {
-                                            controllerX.pendingRidesDataModel?.rides?[index]
-                                                .acceptClick = false;
-                                            controllerX.pendingRidesDataModel?.rides?[index]
-                                                .rejectClick = true;
-                                            controllerX.update(['lstData']);
-                                          } else {
-                                            Get.snackbar("",
-                                                "Something went wrong\nPlease try after sometime");
-                                          }
-                                        });
-                                      },
-                                      acceptClick: controllerX.pendingRidesDataModel
-                                          ?.rides?[index].acceptClick ?? false,
-                                      rejectClick: controllerX.pendingRidesDataModel
-                                          ?.rides?[index].rejectClick ?? false,
-                                      imgVisibility: false,
-                                      onTapAccept: () {
-                                        print(">>>>>>>>>>>>>Index${index}");
-                                        controllerX.upDateRideStatusComplete("ACCEPT",
-                                            bookingId: (controllerX.pendingRidesDataModel
-                                                ?.rides?[index].id ?? "").toString()
-                                            , riderId: controllerX.riderIdNew).then((value) {
-                                          if (value) {
-                                            controllerX.pendingRidesDataModel?.rides?[index]
-                                                .acceptClick = true;
-                                            controllerX.pendingRidesDataModel?.rides?[index]
-                                                .rejectClick = false;
-                                            controllerX.update(['lstData']);
-                                          } else {
-                                            Get.snackbar("",
-                                                "Something went wrong\nPlease try after sometime");
-                                          }
-                                        });
-                                      },
-                                      destination:
-                                      controllerX.pendingRidesDataModel?.rides?[index]
-                                          .dropAddress ?? "",
-                                      source: controllerX.pendingRidesDataModel
-                                          ?.rides?[index].pickupAddress ??
-                                          "Korua, L.N. College",
-                                      driverName: "eVIMAN"),
+                                              controllerX
+                                                  .upDateRideStatusComplete(
+                                                      "REJECT",
+                                                      bookingId: (controllerX
+                                                                  .pendingRidesDataModel
+                                                                  ?.rides?[
+                                                                      index]
+                                                                  .id ??
+                                                              "")
+                                                          .toString(),
+                                                      riderId: controllerX
+                                                          .riderIdNew)
+                                                  .then((value) {
+                                                if (value) {
+                                                  controllerX
+                                                      .pendingRidesDataModel
+                                                      ?.rides?[index]
+                                                      .acceptClick = false;
+                                                  controllerX
+                                                      .pendingRidesDataModel
+                                                      ?.rides?[index]
+                                                      .rejectClick = true;
+                                                  controllerX
+                                                      .update(['lstData']);
+                                                  controllerX.getPendingRides();
+                                                } else {
+                                                  Get.snackbar("",
+                                                      "Something went wrong\nPlease try after sometime");
+                                                }
+                                              });
+                                            },
+                                            acceptClick: controllerX
+                                                    .pendingRidesDataModel
+                                                    ?.rides?[index]
+                                                    .acceptClick ??
+                                                false,
+                                            rejectClick: controllerX.pendingRidesDataModel?.rides?[index].rejectClick ?? false,
+                                            imgVisibility: false,
+                                            onTapAccept: () {
+                                              print(
+                                                  ">>>>>>>>>>>>>Index${index}");
+                                              controllerX
+                                                  .upDateRideStatusComplete(
+                                                      "ACCEPT",
+                                                      bookingId: (controllerX
+                                                                  .pendingRidesDataModel
+                                                                  ?.rides?[
+                                                                      index]
+                                                                  .id ??
+                                                              "")
+                                                          .toString(),
+                                                      riderId: controllerX
+                                                          .riderIdNew)
+                                                  .then((value) {
+                                                if (value) {
+                                                  controllerX
+                                                      .pendingRidesDataModel
+                                                      ?.rides?[index]
+                                                      .acceptClick = true;
+                                                  controllerX
+                                                      .pendingRidesDataModel
+                                                      ?.rides?[index]
+                                                      .rejectClick = false;
+                                                  controllerX.getPendingRides();
+                                                  controllerX
+                                                      .update(['lstData']);
+                                                } else {
+                                                  Get.snackbar("",
+                                                      "Something went wrong\nPlease try after sometime");
+                                                }
+                                              });
+                                            },
+                                            destination: controllerX.pendingRidesDataModel?.rides?[index].dropAddress ?? "",
+                                            source: controllerX.pendingRidesDataModel?.rides?[index].pickupAddress ?? "Korua, L.N. College",
+                                            driverName: "eVIMAN"),
+                                      ),
+                                    );
+                                  },
                                 ),
                               );
+                            }),
+                      )
+                    : Center(
+                        child: RefreshIndicator(
+                            onRefresh: () {
+                              return Future.delayed(
+                                const Duration(seconds: 1),
+                                () {
+                                  controllerX.getPendingRides();
+                                },
+                              );
                             },
-                          ),
-                        );
-                      }),
-                    )
-                    : const Center(
-                  child: Text("No Pending Rides Found"),
-                ),
+                            child: ListView.builder(
+                              itemCount: 1,
+                                physics: const AlwaysScrollableScrollPhysics(),
+                                itemBuilder: (context,index) {
+                                return Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    SizedBox(
+                                      height: Get.height*0.4,
+                                    ),
+                                    Text("No Pending Rides Found"),
+                                  ],
+                                );
+                              }
+                            )),
+                      ),
               );
             },
           ),
-
           GetBuilder<LogesticdashboardController>(
               id: "lst2",
               builder: (controllerX) {
-            return Container(
-                child: SizedBox(
-                  height:
-                  MediaQuery
-                      .of(context)
-                      .size
-                      .height * 0.75,
-                  child: (controllerX.upcomingRidesDataModel !=
-                      null &&
-                      controllerX.upcomingRidesDataModel?.rides !=
-                          null &&
-                      (controllerX.upcomingRidesDataModel?.rides
-                          ?.length ??
-                          0) >
-                          0)
-                      ? RefreshIndicator(
+                return Container(
+                    child: SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.75,
+                      child: (controllerX.upcomingRidesDataModel != null &&
+                              controllerX.upcomingRidesDataModel?.rides != null &&
+                              (controllerX.upcomingRidesDataModel?.rides
+                                          ?.length ??
+                                      0) >
+                                  0)
+                          ? RefreshIndicator(
                         onRefresh: () {
-                      return Future.delayed(const Duration(seconds: 1),() {
-                        controllerX.getUpcomingRides();
-                      },);
-                    },
-                        child: ListView.builder(
-                        itemCount: controllerX.upcomingRidesDataModel?.rides?.length ?? 0,
-                        physics: const AlwaysScrollableScrollPhysics(),
-                        itemBuilder: (context, index) {
-                          return Padding(
-                            padding: EdgeInsets.only(
-                                left: 8.0,
-                                right: 8,
-                                bottom: 5,
-                                top: 2),
-                            child:Container(
-                              child: InkWell(
-                                onTap: () {
-                                  Get.toNamed(Routes.UP_COMING_RIDE_DETAILS_PAGE,
-                                      arguments: controllerX.upcomingRidesDataModel
-                                          ?.rides?[index].toJson());
-                                },
-                                child: UpComingRidesWidget(
-                                    totalAmount: (controllerX.upcomingRidesDataModel
-                                        ?.rides?[index].totalAmount ?? "0.00")
-                                        .toString(),
-                                    paidAmount: (controllerX.upcomingRidesDataModel
-                                        ?.rides?[index].amountPaid ?? "0")
-                                        .toString(),
-                                    status: "Waiting...",
-                                    fromDate: controllerX.upcomingRidesDataModel
-                                        ?.rides?[index].fromDate ?? "",
-                                    toDate: controllerX.upcomingRidesDataModel
-                                        ?.rides?[index].toDate ?? "",
-                                    onTapCancel: () {
-
-
-                                    },
-                                    acceptClick: controllerX.upcomingRidesDataModel
-                                        ?.rides?[index].acceptClick ?? false,
-                                    rejectClick: controllerX.upcomingRidesDataModel
-                                        ?.rides?[index].rejectClick ?? false,
-                                    imgVisibility: false,
-                                    btnVisibility: false,
-                                    onTapAccept: () {
-                                      print(">>>>>>>>>>>>>Index${index}");
-                                    },
-                                    destination:
-                                    controllerX.upcomingRidesDataModel?.rides?[index]
-                                        .dropAddress ?? "",
-                                    source: controllerX.upcomingRidesDataModel
-                                        ?.rides?[index].pickupAddress ??
-                                        "Korua, L.N. College",
-                                    driverName: "eVIMAN"),
-                              ),
-                            ),
+                          return Future.delayed(
+                            const Duration(seconds: 1),
+                                () {
+                              controllerX.getUpcomingRides();
+                            },
                           );
-                        }),
-                      )
-                      : const Center(
-                    child: Text("No Upcoming Rides Found"),
-                  ),
-                )
-            );
-          })
+                        },
+                            child: ListView.builder(
+                                itemCount: controllerX
+                                        .upcomingRidesDataModel?.rides?.length ??
+                                    0,
+                                physics: const AlwaysScrollableScrollPhysics(),
+                                itemBuilder: (context, index) {
+                                  return Padding(
+                                    padding: EdgeInsets.only(
+                                        left: 8.0, right: 8, bottom: 5, top: 2),
+                                    child: Container(
+                                      child: InkWell(
+                                        onTap: () async {
+                                         bool sta = await Get.toNamed(
+                                              Routes.UP_COMING_RIDE_DETAILS_PAGE,
+                                              arguments: controllerX
+                                                  .upcomingRidesDataModel
+                                                  ?.rides?[index]
+                                                  .toJson());
+                                         if(sta){
+                                           controllerX.getUpcomingRides();
+                                         }
+                                        },
+                                        child: UpComingRidesWidget(
+                                            totalAmount: (controllerX
+                                                        .upcomingRidesDataModel
+                                                        ?.rides?[index]
+                                                        .totalAmount ??
+                                                    "0.00")
+                                                .toString(),
+                                            paidAmount:
+                                                (controllerX.upcomingRidesDataModel?.rides?[index].amountPaid ?? "0")
+                                                    .toString(),
+                                            status: "Waiting...",
+                                            fromDate: controllerX
+                                                    .upcomingRidesDataModel
+                                                    ?.rides?[index]
+                                                    .fromDate ??
+                                                "",
+                                            toDate: controllerX
+                                                    .upcomingRidesDataModel
+                                                    ?.rides?[index]
+                                                    .toDate ??
+                                                "",
+                                            onTapCancel: () {},
+                                            acceptClick: controllerX
+                                                    .upcomingRidesDataModel
+                                                    ?.rides?[index]
+                                                    .acceptClick ??
+                                                false,
+                                            rejectClick: controllerX.upcomingRidesDataModel?.rides?[index].rejectClick ?? false,
+                                            imgVisibility: false,
+                                            btnVisibility: false,
+                                            onTapAccept: () {
+                                              print(">>>>>>>>>>>>>Index${index}");
+                                            },
+                                            destination: controllerX.upcomingRidesDataModel?.rides?[index].dropAddress ?? "",
+                                            source: controllerX.upcomingRidesDataModel?.rides?[index].pickupAddress ?? "Korua, L.N. College",
+                                            driverName: "eVIMAN"),
+                                      ),
+                                    ),
+                                  );
+                                }),
+                          )
+                          :  Center(
+                        child: RefreshIndicator(
+                            onRefresh: () {
+                              return Future.delayed(
+                                const Duration(seconds: 1),
+                                    () {
+                                  controllerX.getUpcomingRides();
+                                },
+                              );
+                            },
+                            child: ListView.builder(
+                                itemCount: 1,
+                                physics: const AlwaysScrollableScrollPhysics(),
+                                itemBuilder: (context,index) {
+                                  return Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      SizedBox(
+                                        height: Get.height*0.4,
+                                      ),
+                                      Text("No Upcoming Rides Found"),
+                                    ],
+                                  );
+                                }
+                            )),
+                      ),
+                    ));
+              })
         ],
       );
     } catch (e) {
@@ -779,288 +825,5 @@ class LogesticdashboardView extends StatelessWidget {
     }
   }
 
-
-  Widget maiWidgetFun1(BuildContext context) {
-    try {
-      return GetBuilder<LogesticdashboardController>(
-          id: "top",
-          builder: (controllerX) {
-            return SafeArea(
-              child: GetBuilder<LogesticdashboardController>(
-                  id: "map",
-                  builder: (controllerX) {
-                    return SingleChildScrollView(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Card(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(
-                                        5.0), //<-- SEE HERE
-                                  ),
-                                  margin: EdgeInsets.all(2),
-                                  elevation: 5,
-                                  child: IconButton(
-                                    onPressed:
-                                    controllerX.handleMenuButtonPressed,
-                                    padding: EdgeInsets.all(2),
-                                    visualDensity: VisualDensity(
-                                        horizontal: -4, vertical: -4),
-                                    icon: ValueListenableBuilder<
-                                        AdvancedDrawerValue>(
-                                      valueListenable:
-                                      controllerX.advancedDrawerController,
-                                      builder: (_, value, __) {
-                                        return AnimatedSwitcher(
-                                          duration: Duration(milliseconds: 250),
-                                          child: Icon(
-                                            value.visible
-                                                ? Icons.clear
-                                                : Icons.menu,
-                                            key: ValueKey<bool>(value.visible),
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                ),
-                                InkWell(
-                                  onTap: () {
-                                    controllerX.getRideAnalytics();
-                                  },
-                                  child:
-                                  GetBuilder<LogesticdashboardController>(
-                                    id: "amt",
-                                    builder: (controllerX) {
-                                      return Card(
-                                          elevation: 5,
-                                          color: Theme
-                                              .of(context)
-                                              .cardColor,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                            BorderRadius.circular(8.0),
-                                          ),
-                                          child: Row(
-                                            children: [
-                                              Padding(
-                                                padding:
-                                                const EdgeInsets.all(8.0),
-                                                child: Text(
-                                                  "₹${double.parse(controllerX.totalAmount ?? "0")
-                                                      .toStringAsFixed(2)}",
-                                                  style: Theme
-                                                      .of(context)
-                                                      .textTheme
-                                                      .headline5!
-                                                      .copyWith(
-                                                      fontSize: 25,
-                                                      color: Colors.white),
-                                                ),
-                                              ),
-                                              const Padding(
-                                                padding: EdgeInsets.only(
-                                                    right: 5.0,
-                                                    left: 0,
-                                                    top: 0,
-                                                    bottom: 0),
-                                                child: Icon(
-                                                  Icons.refresh,
-                                                  color: Colors.white,
-                                                  size: 15,
-                                                ),
-                                              )
-                                            ],
-                                          ));
-                                    },
-                                  ),
-                                ),
-                                CupertinoSwitch(
-                                  value: true,
-                                  dragStartBehavior: DragStartBehavior.start,
-                                  onChanged: (value) {
-                                    // controllerX.goOnline(value);
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  "UpComing Rides",
-                                  style: TextStyles(context)
-                                      .getBoldStyle()
-                                      .copyWith(fontSize: 20),
-                                ),
-                                SizedBox(
-                                  width: MediaQuery
-                                      .of(context)
-                                      .size
-                                      .width * 0.22,
-                                  child: CommonButton(
-                                    padding: const EdgeInsets.only(
-                                        left: 1, right: 5, bottom: 0, top: 1),
-                                    buttonText: "Refresh",
-
-                                    onTap: () {},
-                                    radius: 6,
-                                    height: 30,
-                                    // isIcon: true,
-                                    // icon: Icons.refresh,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          /*  Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                "UpComing Rides",
-                                style: TextStyles(context)
-                                    .getBoldStyle()
-                                    .copyWith(fontSize: 20),
-                              )
-                            ],
-                          ),*/
-                          GetBuilder<LogesticdashboardController>(
-                            assignId: true,
-                            id: "lst",
-                            builder: (controllerX) {
-                              return SizedBox(
-                                height:
-                                MediaQuery
-                                    .of(context)
-                                    .size
-                                    .height * 0.75,
-                                child: (controllerX.pendingRidesDataModel !=
-                                    null &&
-                                    controllerX.pendingRidesDataModel?.rides !=
-                                        null &&
-                                    (controllerX.pendingRidesDataModel?.rides
-                                        ?.length ??
-                                        0) >
-                                        0)
-                                    ? ListView.builder(
-                                    itemCount: controllerX.pendingRidesDataModel?.rides?.length,
-                                    physics: const BouncingScrollPhysics(),
-                                    itemBuilder: (context, index) {
-                                      return Padding(
-                                        padding: EdgeInsets.only(
-                                            left: 8.0,
-                                            right: 8,
-                                            bottom: 5,
-                                            top: 2),
-                                        child: GetBuilder<LogesticdashboardController>(
-                                          assignId: true,
-                                          id: "lst",
-                                          builder: (controllerX) {
-                                            return Container(
-                                              child: InkWell(
-                                                onTap: () {
-                                                  if (controllerX.pendingRidesDataModel
-                                                      ?.rides?[index].acceptClick == true) {
-                                                    Get.toNamed(Routes.UP_COMING_RIDE_DETAILS_PAGE,
-                                                        arguments: controllerX.pendingRidesDataModel
-                                                            ?.rides?[index].toJson());
-                                                  }
-                                                },
-                                                child: UpComingRidesWidget(
-                                                    totalAmount: (controllerX.pendingRidesDataModel
-                                                        ?.rides?[index].totalAmount ?? "0.00")
-                                                        .toString(),
-                                                    paidAmount: (controllerX.pendingRidesDataModel
-                                                        ?.rides?[index].amountPaid ?? "0")
-                                                        .toString(),
-                                                    status: "Waiting...",
-                                                    fromDate: controllerX.pendingRidesDataModel
-                                                        ?.rides?[index].fromDate ?? "",
-                                                    toDate: controllerX.pendingRidesDataModel
-                                                        ?.rides?[index].toDate ?? "",
-                                                    onTapCancel: () {
-//ACCEPT
-                                                      controllerX.upDateRideStatusComplete("REJECT",
-                                                          bookingId: (controllerX
-                                                              .pendingRidesDataModel?.rides?[index]
-                                                              .id ?? "").toString()
-                                                          , riderId: controllerX.riderIdNew).then((
-                                                          value) {
-                                                        if (value) {
-                                                          controllerX.pendingRidesDataModel
-                                                              ?.rides?[index]
-                                                              .acceptClick = false;
-                                                          controllerX.pendingRidesDataModel
-                                                              ?.rides?[index]
-                                                              .rejectClick = true;
-                                                          controllerX.update(['lst']);
-                                                        } else {
-                                                          Get.snackbar("",
-                                                              "Something went wrong\nPlease try after sometime");
-                                                        }
-                                                      });
-                                                    },
-                                                    acceptClick: controllerX.pendingRidesDataModel
-                                                        ?.rides?[index].acceptClick ?? false,
-                                                    rejectClick: controllerX.pendingRidesDataModel
-                                                        ?.rides?[index].rejectClick ?? false,
-                                                    imgVisibility: false,
-                                                    onTapAccept: () {
-                                                      print(">>>>>>>>>>>>>Index${index}");
-                                                      controllerX.upDateRideStatusComplete("ACCEPT",
-                                                          bookingId: (controllerX
-                                                              .pendingRidesDataModel?.rides?[index]
-                                                              .id ?? "").toString()
-                                                          , riderId: controllerX.riderIdNew).then((
-                                                          value) {
-                                                        if (value) {
-                                                          controllerX.pendingRidesDataModel
-                                                              ?.rides?[index]
-                                                              .acceptClick = true;
-                                                          controllerX.pendingRidesDataModel
-                                                              ?.rides?[index]
-                                                              .rejectClick = false;
-                                                          controllerX.update(['lst']);
-                                                        } else {
-                                                          Get.snackbar("",
-                                                              "Something went wrong\nPlease try after sometime");
-                                                        }
-                                                      });
-                                                    },
-                                                    destination:
-                                                    controllerX.pendingRidesDataModel?.rides?[index]
-                                                        .dropAddress ?? "",
-                                                    source: controllerX.pendingRidesDataModel
-                                                        ?.rides?[index].pickupAddress ??
-                                                        "Korua, L.N. College",
-                                                    driverName: "eVIMAN"),
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                      );
-                                    })
-                                    : Container(),
-                              );
-                            },
-                          )
-                        ],
-                      ),
-                    );
-                  }),
-            );
-          });
-    } catch (e) {
-      return const Center(child: CircularProgressIndicator());
-    }
-  }
 
 }

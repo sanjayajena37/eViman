@@ -81,7 +81,7 @@ class UpComingRideDetailsPageController extends GetxController with Helper{
         fun: (map) {
           closeDialogIfOpen();
           print(">>>>>>>>>>>>>>>>>>>>>map$map");
-          Get.back();
+          Get.back(result: true);
         });
   }
   closeDialogIfOpen() {
