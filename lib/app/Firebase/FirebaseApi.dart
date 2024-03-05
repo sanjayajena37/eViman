@@ -8,6 +8,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 
 import '../../MainClass.dart';
+import '../../firebase_options.dart';
 import '../../main.dart';
 import '../data/ApiFactory.dart';
 import '../modules/ConnectorController.dart';
@@ -19,32 +20,7 @@ import '../routes/app_pages.dart';
 @pragma("vm:entry-point", "get")
 @pragma("vm:entry-point", "call")
 Future<void> handleBackgroundMessage(RemoteMessage? message) async {
-  await Firebase.initializeApp();
-  // FirebaseApi().handleMessage(null);
- /* final _localNotification = FlutterLocalNotificationsPlugin();
-  _localNotification.show(
-      122344555,
-     "eViman",
-     "Please be ready for trips",
-    NotificationDetails(
-        android: AndroidNotificationDetails(
-             "eViman-rider",
-            "foregrounf service",
-            channelDescription:"",
-            icon: '@mipmap/ic_launcher',
-            ongoing: true,
-            enableVibration: true,
-            importance: Importance.high,
-            autoCancel: true,
-            sound:
-            const RawResourceAndroidNotificationSound('excuseme_boss'),
-            channelShowBadge: true,
-            enableLights: true,
-            color: Colors.green,
-            colorized: true,
-            playSound: true)),
-  );*/
-
+  await Firebase.initializeApp(options: currentPlatform,);
 }
 
 class FirebaseApi {
