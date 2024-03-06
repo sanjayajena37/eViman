@@ -45,7 +45,7 @@ class UpComingRideDetailsPageController extends GetxController with Helper{
         filePath: "assets/json/question.json");
     if (isOk) {
       upDateRideStatusComplete
-        ("CANCEL BY RIDER",(ridesData?.totalAmount??"0.00").toString(),
+        ("CANCELLED BY RIDER",(ridesData?.totalAmount??"0.00").toString(),
           bookingId:ridesData?.bookingId??"");
     }
   }
@@ -100,6 +100,7 @@ class UpComingRideDetailsPageController extends GetxController with Helper{
   }
   @override
   void onInit() {
+    getRiderId();
     getData();
     super.onInit();
   }
