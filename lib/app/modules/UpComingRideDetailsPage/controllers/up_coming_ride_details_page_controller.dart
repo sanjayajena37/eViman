@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -65,24 +66,35 @@ class UpComingRideDetailsPageController extends GetxController with Helper{
 
   Future<void> upDateRideStatusComplete(String? sta,  String? amount,
       {String? bookingId}) async {
-    MyWidgets.showLoading3();
-    Map<String, dynamic> postData = {
-      "bookingId": bookingId ?? "",
-      "bookingStatus": sta ?? "",
-      "updatedById": riderIdNew ?? "",
-      "updatedByUserType": "Rider",
-      "amountReceived": double.tryParse((amount??"0").toString() ?? "0") ?? 0 //Pass when bookingStatus is COMPLETED
-    };
-    print(">>>>>>>>>>>>>>>complete" + (postData).toString());
-    Get.find<ConnectorController>().POSTMETHOD_TOKEN(
-        api: "https://backend.eviman.co.in/api/rides/v1/logistics/status/update",
-        token: authToken ?? "token",
-        json: postData,
-        fun: (map) {
-          closeDialogIfOpen();
-          print(">>>>>>>>>>>>>>>>>>>>>map$map");
-          Get.back(result: true);
-        });
+    try {
+      MyWidgets.showLoading3();
+      Map<String, dynamic> postData = {
+        "bookingId": bookingId ?? "",
+        "bookingStatus": sta ?? "",
+        "updatedById": riderIdNew ?? "",
+        "updatedByUserType": "Rider",
+        "amountReceived": double.tryParse((amount ?? "0").toString() ?? "0") ??
+            0 //Pass when bookingStatus is COMPLETED
+      };
+      print(">>>>>>>>>>>>>>>complete" + (postData).toString());
+      Get.find<ConnectorController>().POSTMETHOD_TOKEN(
+          api: "https://backend.eviman.co.in/api/rides/v1/logistics/status/update",
+          token: authToken ?? "token",
+          json: postData,
+          fun: (map) {
+            closeDialogIfOpen();
+            print(">>>>>>>>>>>>>>>>>>>>>map$map");
+            if (map['success'] == true) {
+              Get.back(result: true);
+            } else {
+              Get.snackbar(
+                  "Error", (map['errorMessage'] ?? "Something went wrong").toString(),backgroundColor: Colors.red,snackPosition:SnackPosition.BOTTOM );
+            }
+          });
+    }catch(e){
+      Get.snackbar(
+          "", ( "Something went wrong"));
+    }
   }
   closeDialogIfOpen() {
     if (Get.isDialogOpen ?? false) {
