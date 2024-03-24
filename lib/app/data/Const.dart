@@ -20,8 +20,4 @@ class Const {
 
   static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
-  
-
-
-
 }

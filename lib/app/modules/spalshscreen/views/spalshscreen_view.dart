@@ -148,7 +148,8 @@ class SpalshscreenView extends GetView<SpalshscreenController> {
                   ],
                 ),
               ],
-            ) : SizedBox(
+            ) :
+            SizedBox(
               width: Get.width,
               height: Get.height * 0.9,
               child: Column(

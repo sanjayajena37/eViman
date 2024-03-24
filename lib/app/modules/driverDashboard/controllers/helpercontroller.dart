@@ -591,6 +591,8 @@ extension HelperController on DriverDashboardController {
                             maxChildSize = Rx<double>(0.2);
                             initialChildSize = Rx<double>(0.1);
                             snapSize = Rx<List<double>>([0.1, 0.2]);
+                            assetsAudioPlayer?.stop();
+                            assetsAudioPlayer?.dispose();
                             update(['drag']);
                             unsubscribe2();
                             snapSize.refresh();
@@ -649,6 +651,8 @@ extension HelperController on DriverDashboardController {
                                     snapSize.refresh();
                                     maxChildSize.refresh();
                                     initialChildSize.refresh();
+                                    assetsAudioPlayer?.stop();
+                                    assetsAudioPlayer?.dispose();
                                     update(['drag']);
                                     sourceLocation = LatLng(
                                         double.tryParse(incomingBookingModel
