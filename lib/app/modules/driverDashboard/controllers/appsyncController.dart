@@ -61,6 +61,8 @@ extension AppSyncController on DriverDashboardController {
             // incomingBookingModel = null;
             // subscribeBookingDetailsModel = null;
             userDetails = "";
+            assetsAudioPlayer?.stop();
+            assetsAudioPlayer?.dispose();
             closeDialogIfOpen();
           }
           else if (userDetails == "" && incomingBookingModel == null) {
@@ -205,6 +207,8 @@ extension AppSyncController on DriverDashboardController {
             incomingBookingModel = null;
             subscribeBookingDetailsModel = null;
             polylineCoordinates = [];
+            assetsAudioPlayer?.stop();
+            assetsAudioPlayer?.dispose();
             unsubscribe2();
             update(['top']);
           } else {

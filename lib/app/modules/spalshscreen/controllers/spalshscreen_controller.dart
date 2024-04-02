@@ -106,7 +106,9 @@ class SpalshscreenController extends GetxController with Helper{
     var status = await permission.Permission.location.status;
     var status1 = await permission.Permission.locationAlways.status;
     // var status2 = await permission.Permission.notification.status;
-    print(">>>>>>>>>>>>>>status$status");
+    if (kDebugMode) {
+      print(">>>>>>>>>>>>>>status$status");
+    }
 
     if (status.isDenied || status.isPermanentlyDenied || status1.isDenied || status1.isPermanentlyDenied ) {
       bool isOk = await showCommonPopupNew6(
@@ -117,7 +119,9 @@ class SpalshscreenController extends GetxController with Helper{
           isYesOrNoPopup: true
       );
       if (isOk) {
-        print(">>>>>>>>>>>>>>>sta loc"+status.toString());
+        if (kDebugMode) {
+          print(">>>>>>>>>>>>>>>sta loc$status");
+        }
         if(status.isDenied){
           await permission. Permission.location.request();
           await permission. Permission.notification.request();
@@ -140,7 +144,9 @@ class SpalshscreenController extends GetxController with Helper{
     var status = await permission.Permission.location.status;
     // var status1 = await permission.Permission.locationAlways.status;
     // var status2 = await permission.Permission.notification.status;
-    print(">>>>>>>>>>>>>>status$status");
+    if (kDebugMode) {
+      print(">>>>>>>>>>>>>>status$status");
+    }
     if (status.isDenied || status.isPermanentlyDenied ) {
       bool isOk = await showCommonPopupNew6(
         // "eViman App need your run time location permission.It's required to give smooth less service to you",
@@ -189,7 +195,9 @@ class SpalshscreenController extends GetxController with Helper{
       }
       return;
     } catch (e) {
-      print(">>>>>>\n\n" + e.toString());
+      if (kDebugMode) {
+        print(">>>>>>\n\n$e");
+      }
       return;
     }
   }
@@ -199,7 +207,7 @@ class SpalshscreenController extends GetxController with Helper{
       MyWidgets.showLoading3();
       Get.find<ConnectorController>().GETMETHODCALL(
           api:
-          "https://backend.eviman.co.in/api/vehicles/v1/online-status/"+id,
+          "https://backend.eviman.co.in/api/vehicles/v1/online-status/$id",
           fun: (map) {
             Get.back();
             if(map is Map && map['status'] != null && map['status'] == 0){
@@ -220,17 +228,18 @@ class SpalshscreenController extends GetxController with Helper{
     String? loginTime = await SharedPreferencesKeys().getStringData(key: 'loginTime');
     if(loginTime != null && loginTime != ""){
       DateTime loginDate = DateTime.parse(loginTime);
-      print(">>>>>>>>>>difference${DateTime.now().difference(loginDate).inDays}");
+      if (kDebugMode) {
+        print(">>>>>>>>>>difference${DateTime.now().difference(loginDate).inDays}");
+      }
       if(DateTime.now().difference(loginDate).inDays >= 20){
         await SharedPreferencesKeys().setStringData(key: "authToken", text: "");
-        await SharedPreferencesKeys()
-            .setStringData(key: "isLogin", text: "false");
+        await SharedPreferencesKeys().setStringData(key: "isLogin", text: "false");
         await SharedPreferencesKeys().setStringData(key: "riderId", text: "");
         callOrStopServices().then((value) {
           Get.delete<LoginscreenController>();
           Get.delete<DriverDashboardController>();
           Get.delete<LogesticdashboardController>();
-          Get.offAndToNamed(Routes.LOGINSCREEN);
+          Get.offAllNamed(Routes.LOGINSCREEN);
         });
         permissionAllow = false;
         Snack.callError("Login Expired");

@@ -581,6 +581,7 @@ class DriverDashboardView extends StatelessWidget {
                                   myLocationButtonEnabled: true,
                                   mapToolbarEnabled: true,
                                   padding: EdgeInsets.all(25),
+                            // polylines:,
                                   /*    polylines:
                             (controllerX
                                             .routeCoordinates.isNotEmpty)
