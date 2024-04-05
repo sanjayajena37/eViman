@@ -39,19 +39,8 @@ class SpalshscreenController extends GetxController with Helper{
     Timer.periodic(const Duration(seconds: 2), (timer) {
       if(permissionAllow){
         getLoginDetails();
-
-      /*  Utils.checkInternetConnectivity().then((value) {
-          if (value) {
-            getLoginDetails();
-          } else {
-            Snack.callError("Please turn on your internet");
-          }
-        });*/
       }
     });
-    /*if(kDebugMode){
-      FirebaseCrashlytics.instance.crash();
-    }*/
     super.onReady();
   }
 
@@ -245,10 +234,13 @@ class SpalshscreenController extends GetxController with Helper{
         Snack.callError("Login Expired");
       }else{
         if(isLogin == "true"){
+          if (kDebugMode) {
+            print(">>>>>>>>>>>>>>>>>>>>vehicleMode$vehicleMode");
+          }
 
           if(vehicleMode == "cab"){
             getOnlineDetails(vehicleId??"");
-            Get.delete<SpalshscreenController>();
+            // Get.delete<SpalshscreenController>();
             Get.offAllNamed(Routes.DRIVER_DASHBOARD);
             permissionAllow = false;
           }else if(vehicleMode == "logistic"){
@@ -273,7 +265,8 @@ class SpalshscreenController extends GetxController with Helper{
           });
         }
       }
-    }else{
+    }
+    else{
       callOrStopServices().then((value) {
         Get.delete<SpalshscreenController>();
         Get.offAllNamed(Routes.INTROSCREEN);

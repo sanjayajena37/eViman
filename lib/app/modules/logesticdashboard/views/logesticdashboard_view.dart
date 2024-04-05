@@ -20,12 +20,13 @@ import '../../../logic/controllers/theme_provider.dart';
 import '../../../providers/Utils.dart';
 import '../../../routes/app_pages.dart';
 import '../../../widgets/CommonHistory.dart';
+import '../../../widgets/CustomeTittleText.dart';
 import '../../../widgets/DateTime/DateWithThreeTextField.dart';
 import '../../../widgets/MovableContainer.dart';
 import '../../../widgets/UpComingRidesWidget.dart';
 import '../../../widgets/common_button.dart';
 import '../../../widgets/remove_focuse.dart';
-import '../../driverDashboard/views/driver_dashboard_view.dart';
+// import '../../driverDashboard/views/driver_dashboard_view.dart';
 import '../controllers/logesticdashboard_controller.dart';
 import 'package:lottie/lottie.dart' as lottie;
 
@@ -823,6 +824,38 @@ class LogesticdashboardView extends StatelessWidget {
     } catch (e) {
       return const Center(child: CircularProgressIndicator());
     }
+  }
+
+  Widget driverINfoWidget(String img, String tittle, String Subtittle) {
+    return Column(
+      children: [
+        Image.asset(
+          img,
+          height: 30,
+          width: 30,
+          // color: Color(0xFF4FBE9F),
+          color: Theme.of(Get.context!).primaryColor,
+          // color: Colors.blue,
+        ),
+        const SizedBox(
+          height: 5,
+        ),
+        CustomeTittleText(
+          text: tittle,
+          textsize: 10,
+          color: Colors.black,
+        ),
+        const SizedBox(
+          height: 5,
+        ),
+        CustomeSubTittleText(
+          text: Subtittle,
+          textsize: 10,
+          color: Colors.black,
+          fontWeight: FontWeight.normal,
+        ),
+      ],
+    );
   }
 
 

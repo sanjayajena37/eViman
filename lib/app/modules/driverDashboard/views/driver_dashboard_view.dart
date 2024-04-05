@@ -1355,36 +1355,39 @@ class DriverDashboardView extends StatelessWidget {
       return const Center(child: CircularProgressIndicator());
     }
   }
+
+  Widget driverINfoWidget(String img, String tittle, String Subtittle) {
+    return Column(
+      children: [
+        Image.asset(
+          img,
+          height: 30,
+          width: 30,
+          // color: Color(0xFF4FBE9F),
+          color: Theme.of(Get.context!).primaryColor,
+          // color: Colors.blue,
+        ),
+        const SizedBox(
+          height: 5,
+        ),
+        CustomeTittleText(
+          text: tittle,
+          textsize: 10,
+          color: Colors.black,
+        ),
+        const SizedBox(
+          height: 5,
+        ),
+        CustomeSubTittleText(
+          text: Subtittle,
+          textsize: 10,
+          color: Colors.black,
+          fontWeight: FontWeight.normal,
+        ),
+      ],
+    );
+  }
+
 }
 
-Widget driverINfoWidget(String img, String tittle, String Subtittle) {
-  return Column(
-    children: [
-      Image.asset(
-        img,
-        height: 30,
-        width: 30,
-        // color: Color(0xFF4FBE9F),
-        color: Theme.of(Get.context!).primaryColor,
-        // color: Colors.blue,
-      ),
-      const SizedBox(
-        height: 5,
-      ),
-      CustomeTittleText(
-        text: tittle,
-        textsize: 10,
-        color: Colors.black,
-      ),
-      const SizedBox(
-        height: 5,
-      ),
-      CustomeSubTittleText(
-        text: Subtittle,
-        textsize: 10,
-        color: Colors.black,
-        fontWeight: FontWeight.normal,
-      ),
-    ],
-  );
-}
+

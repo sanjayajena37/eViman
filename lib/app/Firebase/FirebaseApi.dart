@@ -84,7 +84,8 @@ class FirebaseApi {
   }
 
   void handleMessage(RemoteMessage? message) {
-    // if (message == null) return;
+    if (message == null) return;
+    print(">>>>>>>>>>>>>>>>>>>>>>>>>>>callFireBaseRoute");
 
     navigatorKey.currentState?.pushReplacementNamed("/logesticDash", arguments: {});
     // Get.toNamed(Routes.LOGESTICDASHBOARD);
