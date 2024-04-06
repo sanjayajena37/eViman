@@ -18,6 +18,7 @@ class CommonTextFieldView extends StatelessWidget {
   final TextInputType keyboardType;
   final TextEditingController? controller;
   final double? pad;
+  final double? height;
   final BuildContext? contextNew;
 
    CommonTextFieldView({
@@ -34,6 +35,7 @@ class CommonTextFieldView extends StatelessWidget {
     this.maxLength,
      this.pad = 16,
      this.contextNew,
+     this.height,
      this.enable = true
   }) : super(key: key);
 
@@ -63,7 +65,7 @@ class CommonTextFieldView extends StatelessWidget {
             child: Padding(
               padding:  EdgeInsets.only(left: pad!, right:  pad!),
               child: SizedBox(
-                height: 48,
+                height: height??48,
                 child: Center(
                   child: TextField(
                     controller: controller,

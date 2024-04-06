@@ -9,9 +9,10 @@ import 'common_button.dart';
 class UploadDocumentAndView extends StatelessWidget {
   final File? fileData;
   final String? imageUrl;
+  final String? buttonText;
   final VoidCallback? callback;
   const UploadDocumentAndView(
-      {super.key, this.fileData, this.imageUrl, this.callback});
+      {super.key, this.fileData, this.imageUrl, this.callback,this.buttonText});
 
   @override
   Widget build(BuildContext context) {
@@ -88,7 +89,7 @@ class UploadDocumentAndView extends StatelessWidget {
             ),
             CommonButton(
               padding: const EdgeInsets.only(left: 4, right: 4, bottom: 5),
-              buttonText: "Upload Document",
+              buttonText: buttonText??"Upload Document",
               radius: 7,
               onTap: callback,
             ),

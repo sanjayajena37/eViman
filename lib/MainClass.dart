@@ -11,7 +11,10 @@ import 'package:get/get_state_manager/src/simple/get_state.dart';
 import 'app/constants/themes.dart';
 import 'app/data/BinderData.dart';
 import 'app/logic/controllers/theme_provider.dart';
+import 'app/modules/logesticdashboard/views/logesticdashboard_view.dart';
 import 'app/routes/app_pages.dart';
+
+final navigatorKey = GlobalKey<NavigatorState>();
 
 class MainClass extends StatefulWidget {
   const MainClass({Key? key}) : super(key: key);
@@ -26,7 +29,8 @@ class _MainClassState extends State<MainClass> {
     _setStatusBarNavigationBarTheme(theme);
     //we call some theme basic data set in app like color, font, theme mode, language
     Get.find<ThemeController>()
-        .checkAndSetThemeMode(MediaQuery.of(context).platformBrightness);
+        // .checkAndSetThemeMode(MediaQuery.of(context).platformBrightness);
+        .checkAndSetThemeMode(Brightness.light);
   }
 
   void _setStatusBarNavigationBarTheme(ThemeData themeData) {
@@ -53,6 +57,14 @@ class _MainClassState extends State<MainClass> {
         final ThemeData theme = AppTheme.getThemeData;
         return GetMaterialApp(
           theme: theme,
+          navigatorKey: navigatorKey,
+          routes: {
+            "/logesticDash": (context) => LogesticdashboardView(
+            ),
+          },
+          // getPages:,
+          themeMode:ThemeMode.light ,
+          darkTheme:theme ,
             title: "Application",
             initialRoute: AppPages.INITIAL,
             getPages: AppPages.routes,

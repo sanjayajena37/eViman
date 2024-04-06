@@ -52,7 +52,7 @@ class AppTheme {
       isLightMode ? const Color(0xFF1A1A1A) : const Color(0xFFF7F7F7);
 
   static ThemeData get getThemeData =>
-      isLightMode ? _buildLightTheme() : _buildDarkTheme();
+      isLightMode ? _buildLightTheme() : _buildDarkTheme1();
 
   static TextTheme _buildTextTheme(TextTheme base) {
     FontFamilyType fontType = FontFamilyType.workSans;
@@ -174,6 +174,36 @@ class AppTheme {
       primaryTextTheme: _buildTextTheme(base.textTheme),
       platform: TargetPlatform.iOS,
       visualDensity: VisualDensity.adaptivePlatformDensity,
+    );
+  }
+
+  static ThemeData _buildDarkTheme1() {
+    final ColorScheme colorScheme = const ColorScheme.dark().copyWith(
+      primary: primaryColor,
+      secondary: primaryColor,
+    );
+    final ThemeData base = ThemeData.dark();
+
+    return base.copyWith(
+      colorScheme: colorScheme,
+      primaryColor: primaryColor,
+      scaffoldBackgroundColor: scaffoldBackgroundColor,
+      backgroundColor: backgroundColor,
+      canvasColor: scaffoldBackgroundColor,
+      buttonTheme: _buttonThemeData(colorScheme),
+      dialogTheme: _dialogTheme(),
+      cardTheme: _cardTheme(),
+      textTheme: _buildTextTheme(base.textTheme),
+      primaryTextTheme: _buildTextTheme(base.textTheme),
+      platform: TargetPlatform.android,
+      visualDensity: VisualDensity.adaptivePlatformDensity,
+      cardColor: Colors.black,
+      listTileTheme: ListTileThemeData(
+        textColor: Colors.black,
+        iconColor:  Colors.black,
+        selectedColor: Colors.grey,
+      ),
+
     );
   }
 

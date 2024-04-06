@@ -3,12 +3,12 @@ part of 'driver_dashboard_controller.dart';
 extension HelperController on DriverDashboardController {
   goOnline(bool val) {
     Map sendData = {
-      "status": (val) ? 1 : 0,
+      "online": (val) ? 1 : 0,
     };
     print(">>>>>update-online-status" + sendData.toString());
     Get.find<ConnectorController>().PATCH_METHOD_TOKEN(
-        api: "http://65.1.169.159:3000/api/riders/v1/update-online-status/" +
-            riderIdNew.toString(),
+        api: "https://backend.eviman.co.in/api/vehicles/v1/update-status/" +
+            vehicleIdNew.toString(),
         json: sendData,
         token: authToken ?? "",
         fun: (map) {
@@ -54,57 +54,62 @@ extension HelperController on DriverDashboardController {
 
   Future<String> goOnline1(bool val) async {
     Completer<String> completer = Completer();
-    Map sendData = {
-      "status": (val) ? 1 : 0,
-    };
-    // print(">>>>>update-online-status" + sendData.toString());
-    Get.find<ConnectorController>().PATCH_METHOD_TOKEN(
-        api:
-            "http://65.1.169.159:3000/api/riders/v1/update-online-status/$riderIdNew",
-        json: sendData,
-        token: authToken ?? "",
-        fun: (map) {
-          print(">>>>>>" + map.toString());
-          if (map is Map &&
-              map.containsKey("success") &&
-              map['success'] == true) {
-            if (val == false) {
-              callOrStopServices().then((value) {
+
+    try {
+      Map sendData = {
+        "online": (val) ? 1 : 0,
+      };
+      // print(">>>>>update-online-status" + sendData.toString());
+      Get.find<ConnectorController>().PATCH_METHOD_TOKEN(
+          api:
+              "https://backend.eviman.co.in/api/vehicles/v1/update-status/$vehicleIdNew",
+          json: sendData,
+          token: authToken ?? "",
+          fun: (map) {
+            print(">>>>>>" + map.toString());
+            if (map is Map &&
+                map.containsKey("success") &&
+                map['success'] == true) {
+              if (val == false) {
+                callOrStopServices().then((value) {
+                  userDetails = "";
+                  incomingBookingModel = null;
+                  unsubscribe();
+                  unsubscribe2();
+                });
+                isDisappear = Rx<bool>(false);
                 userDetails = "";
+                initialChildSize = Rx<double>(0.1);
+                maxChildSize = Rx<double>(0.1);
+                snapSize = Rx<List<double>>([0.1]);
                 incomingBookingModel = null;
-                unsubscribe();
-                unsubscribe2();
-              });
-              isDisappear = Rx<bool>(false);
-              userDetails = "";
-              initialChildSize = Rx<double>(0.1);
-              maxChildSize = Rx<double>(0.1);
-              snapSize = Rx<List<double>>([0.1]);
-              incomingBookingModel = null;
-              polylineCoordinates = [];
-              isDisappear.refresh();
-              update(['top']);
-              completer.complete("");
-              // stopBackgroundService();
-            } else {
-              // callBackgroundService();
-              calBackgroundServices("true");
-              userDetails = "";
-              subscribeIncomingBooking();
-              isDisappear = Rx<bool>(true);
-              isDisappear.refresh();
-              userDetails = "";
-              initialChildSize = Rx<double>(0.1);
-              maxChildSize = Rx<double>(0.1);
-              snapSize = Rx<List<double>>([0.1]);
-              incomingBookingModel = null;
-              polylineCoordinates = [];
-              update(['top']);
-              completer.complete("");
-            }
-          } else {}
-        });
-    return completer.future;
+                polylineCoordinates = [];
+                isDisappear.refresh();
+                update(['top']);
+                completer.complete("");
+                // stopBackgroundService();
+              } else {
+                // callBackgroundService();
+                calBackgroundServices("true");
+                userDetails = "";
+                subscribeIncomingBooking();
+                isDisappear = Rx<bool>(true);
+                isDisappear.refresh();
+                userDetails = "";
+                initialChildSize = Rx<double>(0.1);
+                maxChildSize = Rx<double>(0.1);
+                snapSize = Rx<List<double>>([0.1]);
+                incomingBookingModel = null;
+                polylineCoordinates = [];
+                update(['top']);
+                completer.complete("");
+              }
+            } else {}
+          });
+      return completer.future;
+    } catch (e) {
+      return completer.future;
+    }
   }
 
   showModalbottomSheet() {
@@ -290,7 +295,7 @@ extension HelperController on DriverDashboardController {
         AlertDialog(
           content: Stack(children: [
             Container(
-              height: Get.height * 0.46,
+              height: Get.height * 0.5,
               width: screenSizeWidth,
               padding: const EdgeInsets.only(
                   left: 16, right: 16, top: 16, bottom: 16),
@@ -369,6 +374,8 @@ extension HelperController on DriverDashboardController {
                         unsubscribe2();
                         snapSize.refresh();
                         maxChildSize.refresh();
+                        assetsAudioPlayer?.stop();
+                        assetsAudioPlayer?.dispose();
                         Get.back();
                       }
                     },
@@ -553,6 +560,20 @@ extension HelperController on DriverDashboardController {
                     ),
                   ),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "(Expected Price ₹${receiveData?['incomingBooking']['amount'] ?? 0.00})",
+                        style: TextStyles(context)
+                            .getBoldStyle()
+                            .copyWith(color: Colors.white, fontSize: 20),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 3,
+                  ),
+                  Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Expanded(
@@ -570,6 +591,8 @@ extension HelperController on DriverDashboardController {
                             maxChildSize = Rx<double>(0.2);
                             initialChildSize = Rx<double>(0.1);
                             snapSize = Rx<List<double>>([0.1, 0.2]);
+                            assetsAudioPlayer?.stop();
+                            assetsAudioPlayer?.dispose();
                             update(['drag']);
                             unsubscribe2();
                             snapSize.refresh();
@@ -593,49 +616,74 @@ extension HelperController on DriverDashboardController {
                             print(">>>>>>>>>>" + receiveData.toString());
                             if (receiveData != null) {
                               try {
-                                maxChildSize = Rx<double>(0.7);
-                                initialChildSize = Rx<double>(0.5);
-                                snapSize = Rx<List<double>>(
-                                    [0.1, 0.2, 0.25, 0.3, 0.35, 0.4, 0.5, 0.6]);
-                                pickUpDist = pickUpDistance;
-                                travelDist = travelDistance;
-                                snapSize.refresh();
-                                maxChildSize.refresh();
-                                initialChildSize.refresh();
                                 incomingBookingModel =
                                     IncomingBooikingModel.fromJson(
                                         (receiveData ?? {})
                                             as Map<String, dynamic>);
-                                update(['drag']);
                                 print(">>>>>>>>>>" +
                                     (incomingBookingModel?.toJson())
                                         .toString());
                                 subscribeBookingDetails(incomingBookingModel
                                     ?.incomingBooking?.bookingId);
-                                createRide();
-                                sourceLocation = LatLng(
-                                    double.tryParse(incomingBookingModel
-                                                ?.incomingBooking?.clientLat ??
-                                            "20.288187") ??
-                                        20.288187,
-                                    double.tryParse(incomingBookingModel
-                                                ?.incomingBooking?.clientLng ??
-                                            "85.817814") ??
-                                        85.817814);
-                                destination = LatLng(
-                                    double.tryParse(incomingBookingModel
-                                                ?.incomingBooking
-                                                ?.destinationLat ??
-                                            "20.288187") ??
-                                        20.290983,
-                                    double.tryParse(incomingBookingModel
-                                                ?.incomingBooking
-                                                ?.destinationLng ??
-                                            "85.817814") ??
-                                        85.845584);
-                                getPolyPoints();
-                                setCustomMarkerIcon();
-                                Get.back();
+                                createRide(
+                                        paymentId:
+                                            receiveData['incomingBooking']
+                                                ['paymentId'],
+                                        paymentmode:
+                                            receiveData['incomingBooking']
+                                                ['paymentmode'])
+                                    .then((value) {
+                                  if (value.toString().trim() == "true") {
+                                    maxChildSize = Rx<double>(0.7);
+                                    initialChildSize = Rx<double>(0.5);
+                                    snapSize = Rx<List<double>>([
+                                      0.1,
+                                      0.2,
+                                      0.25,
+                                      0.3,
+                                      0.35,
+                                      0.4,
+                                      0.5,
+                                      0.6
+                                    ]);
+                                    pickUpDist = pickUpDistance;
+                                    travelDist = travelDistance;
+                                    snapSize.refresh();
+                                    maxChildSize.refresh();
+                                    initialChildSize.refresh();
+                                    assetsAudioPlayer?.stop();
+                                    assetsAudioPlayer?.dispose();
+                                    update(['drag']);
+                                    sourceLocation = LatLng(
+                                        double.tryParse(incomingBookingModel
+                                                    ?.incomingBooking
+                                                    ?.clientLat ??
+                                                "20.288187") ??
+                                            20.288187,
+                                        double.tryParse(incomingBookingModel
+                                                    ?.incomingBooking
+                                                    ?.clientLng ??
+                                                "85.817814") ??
+                                            85.817814);
+                                    destination = LatLng(
+                                        double.tryParse(incomingBookingModel
+                                                    ?.incomingBooking
+                                                    ?.destinationLat ??
+                                                "20.288187") ??
+                                            20.290983,
+                                        double.tryParse(incomingBookingModel
+                                                    ?.incomingBooking
+                                                    ?.destinationLng ??
+                                                "85.817814") ??
+                                            85.845584);
+                                    // getPolyPoints();
+                                    setCustomMarkerIcon();
+                                    Get.back();
+                                  } else {
+                                    incomingBookingModel = null;
+                                    Snack.callError("Something went wrong");
+                                  }
+                                });
                               } catch (e) {
                                 userDetails = "";
                                 maxChildSize = Rx<double>(0.2);
@@ -649,6 +697,8 @@ extension HelperController on DriverDashboardController {
                                 unsubscribe2();
                                 snapSize.refresh();
                                 maxChildSize.refresh();
+                                assetsAudioPlayer?.stop();
+                                assetsAudioPlayer?.dispose();
                                 Get.back();
                               }
 
@@ -699,7 +749,7 @@ extension HelperController on DriverDashboardController {
         'https://www.google.com/maps/search/?api=1&query=$latitude,$longitude';
 
     if (await canLaunchUrl(Uri.parse(url))) {
-      await launchUrl(Uri.parse(url));
+      await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
     } else {
       throw 'Could not launch Google Maps';
     }
@@ -729,8 +779,7 @@ extension HelperController on DriverDashboardController {
                   SizedBox(
                     height: 3,
                   ),
-                  Text(
-                      "Otp: ${subscribeBookingDetailsModel?.subscribeBookingDetails?.otp ?? ""}"),
+                  // Text("Otp: ${subscribeBookingDetailsModel?.subscribeBookingDetails?.otp ?? ""}"),
                   PinFieldAutoFill(
                     textInputAction: TextInputAction.done,
                     codeLength: 4,
@@ -783,7 +832,8 @@ extension HelperController on DriverDashboardController {
                                             "")
                                     .then((value) {
                                   callOrStopServices().then((value) async {
-                                    await SharedPreferencesKeys().setStringData(key: "startDate",
+                                    await SharedPreferencesKeys().setStringData(
+                                        key: "startDate",
                                         text: DateTime.now().toString());
                                     Future.delayed(
                                       const Duration(seconds: 10),
@@ -1014,12 +1064,6 @@ extension HelperController on DriverDashboardController {
 
       // ignore: use_build_context_synchronously
     }
-  }
-
-  void handleMenuButtonPressed() {
-    // NOTICE: Manage Advanced Drawer state through the Controller.
-    // _advancedDrawerController.value = AdvancedDrawerValue.visible();
-    advancedDrawerController.showDrawer();
   }
 
   void startIsolate() async {

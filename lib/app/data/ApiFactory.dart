@@ -1,6 +1,6 @@
 class ApiFactory {
   // static String BASEURL="http://4.188.234.4:5002";
-  static String BASEURL="http://65.1.169.159:3000/api/";
+  static String BASEURL="https://backend.eviman.co.in/api/";
 
   // static String BASEURL2="http://4.188.234.4:3000";
   static String BASEURL2="http://192.168.0.162:3000";
@@ -10,4 +10,5 @@ class ApiFactory {
   static String CREATE_PROFILE =BASEURL+ "riders/v1/create-profile";
   static String UPDATE_PROFILE =BASEURL+ "riders/v1/update-profile/";
   static String GATE_PROFILE =BASEURL+ "riders/v1/profile/";
+  static String FCM_TOKEN =BASEURL+ "fcm/v1/add";
 }

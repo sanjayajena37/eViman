@@ -1,10 +1,13 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:isolate';
 import 'dart:ui';
 
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
@@ -18,9 +21,11 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter_android/google_maps_flutter_android.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shake/shake.dart';
+import 'package:upgrader/upgrader.dart';
 import 'package:vibration/vibration.dart';
 
 import 'MainClass.dart';
+import 'app/Firebase/FirebaseApi.dart';
 import 'app/constants/shared_preferences_keys.dart';
 import 'app/data/BinderData.dart';
 import 'app/logic/controllers/theme_provider.dart';
@@ -31,34 +36,41 @@ import 'package:google_maps_flutter_android/google_maps_flutter_android.dart';
 import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
 import 'package:dio/dio.dart' as service1;
 import 'package:geolocator/geolocator.dart' as geoLoc;
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+
+import 'firebase_options.dart';
+
+
+
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-
-/*  await Permission.locationAlways.isDenied.then((value) {
-    if(value){
-      Permission.locationAlways.request();
-    }
-  }) ;
-  await Permission.location.isDenied.then((value) {
-    if(value){
-      Permission.location.request();
-    }
-  }) ;
-  await Permission.notification.isDenied.then((value) {
-    if(value){
-      Permission.notification.request();
-    }
-  }) ;*/
+  // WidgetsFlutterBinding.ensureInitialized();
+  runZonedGuarded<Future<void>>(() async {
+    WidgetsFlutterBinding.ensureInitialized();
   await Get.putAsync<ThemeController>(() => ThemeController.init(),
       permanent: true);
-  // final int helloAlarmID = 0;
-  // await AndroidAlarmManager.initialize();
-  // await AndroidAlarmManager.periodic(const Duration(seconds: 3), helloAlarmID, BackgroundTask.printHello);
 
-  // initializeWorkManager();
   await initializeService();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  FirebaseApi().initNotifications();
 
+
+  await Upgrader.clearSavedSettings();
+  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
+  PlatformDispatcher.instance.onError = (error, stack) {
+    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+    return true;
+  };
+  Isolate.current.addErrorListener(RawReceivePort((pair) async {
+    final List<dynamic> errorAndStacktrace = pair;
+    await FirebaseCrashlytics.instance.recordError(
+      errorAndStacktrace.first,
+      errorAndStacktrace.last,
+    );
+  }).sendPort);
   await SystemChrome.setPreferredOrientations(
           [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown])
       .then((_) => runApp(MainClass()));
@@ -70,7 +82,11 @@ Future<void> main() async {
     mapsImplementation.useAndroidViewSurface = true;
     mapsImplementation.initializeWithRenderer(AndroidMapRenderer.latest);
   }
+  }, (error, stack) => FirebaseCrashlytics.instance.recordError(error, stack));
 }
+
+
+
 
 @pragma("vm:entry-point")
 @pragma("vm:entry-point", true)
@@ -84,13 +100,8 @@ Future<void> onStart(ServiceInstance service) async {
       FlutterLocalNotificationsPlugin();
 
   String sta = "false";
-  StreamSubscription<geoLoc.Position>? positionStream;
-  geoLoc.GeolocatorPlatform geolocator = geoLoc.GeolocatorPlatform.instance;
   List<Map<String, double>> locationData = [];
-  geoLoc.LocationSettings locationSettings = geoLoc.AndroidSettings(
-      accuracy: geoLoc.LocationAccuracy.high,
-      distanceFilter: 500,
-      forceLocationManager: true);
+  StreamSubscription<geoLoc.Position>? positionStream;
 
   if (service is AndroidServiceInstance) {
     service.on('setAsBackground').listen((event) {
@@ -110,25 +121,38 @@ Future<void> onStart(ServiceInstance service) async {
   String? authToken =
       await SharedPreferencesKeys().getStringData(key: 'authToken');
 
-  positionStream =
-      geolocator.getPositionStream(locationSettings: locationSettings).listen(
-    (geoLoc.Position position) async {
-      // sendPort.send(position.toJson());
-      final data = {
-        'latitude': position.latitude,
-        'longitude': position.longitude,
-      };
+  if (riderId != null && authToken != null && riderId != "" && authToken != "") {
 
-      locationData.add(data);
-      print(">>>>>>>>>message from isolate JKS3" + locationData.toString());
+    geoLoc.GeolocatorPlatform geolocator = geoLoc.GeolocatorPlatform.instance;
 
-      checkInternetConnectivity().then((value) async {
-        if(value){
+    geoLoc.LocationSettings locationSettings = geoLoc.AndroidSettings(
+        accuracy: geoLoc.LocationAccuracy.high,
+        distanceFilter: 500,
+        intervalDuration: const Duration(seconds: 10),
+        forceLocationManager: true);
 
-          String ? isInternetError = await SharedPreferencesKeys().getStringData(key: 'isInternetError');
-          String ? listData = await SharedPreferencesKeys().getStringData(key: 'latLngForDst');
-          if(isInternetError == "yes"){
-           /* flutterLocalNotificationsPlugin.show(
+
+    positionStream =
+        geolocator.getPositionStream(locationSettings: locationSettings).listen(
+              (geoLoc.Position position) async {
+            // sendPort.send(position.toJson());
+            final data = {
+              'latitude': position.latitude,
+              'longitude': position.longitude,
+            };
+
+            locationData.add(data);
+            if (kDebugMode) {
+              print(">>>>>>>>>message from isolate JKS3$locationData");
+            }
+
+            checkInternetConnectivity().then((value) async {
+              if(value){
+
+                String ? isInternetError = await SharedPreferencesKeys().getStringData(key: 'isInternetError');
+                String ? listData = await SharedPreferencesKeys().getStringData(key: 'latLngForDst');
+                if(isInternetError == "yes"){
+                  /* flutterLocalNotificationsPlugin.show(
               888,
               "Eviman App",
               "Currently I am testing(balanced)",
@@ -141,50 +165,60 @@ Future<void> onStart(ServiceInstance service) async {
                   )),
             );*/
 
-            Map<String,dynamic> postDataNew = {
-              "data":listData??"" ,
-              "dateTime":"",
-              "rider_id":riderId??""
-            };
-            print(">>>>>>>>>>>>>>>postData"+postDataNew.toString());
+                  Map<String,dynamic> postDataNew = {
+                    "data":listData??"" ,
+                    "dateTime":"",
+                    "rider_id":riderId??""
+                  };
+                  if (kDebugMode) {
+                    print(">>>>>>>>>>>>>>>postData$postDataNew");
+                  }
 
-            try {
-              var dio = Dio();
-              service1.Response response = await dio.post(
-                "http://65.1.169.159:3000/api/rider_data/v1/create-rider-data",
-                options: Options(headers: {
-                  "Authorization":
-                  "Bearer " + ((authToken != null) ? authToken ?? '' : "")
-                }),
-                data: (postDataNew != null) ? jsonEncode(postDataNew) : null,
-              );
-              if (response.statusCode == 200 || response.statusCode == 201) {
-                try {} catch (e) {
-                  print("Message is: " + e.toString());
+                  try {
+                    var dio = Dio();
+                    service1.Response response = await dio.post(
+                      "https://backend.eviman.co.in/api/rider_data/v1/create-rider-data",
+                      options: Options(headers: {
+                        "Authorization":
+                        "Bearer ${(authToken != null) ? authToken ?? '' : ""}"
+                      }),
+                      data: (postDataNew != null) ? jsonEncode(postDataNew) : null,
+                    );
+                    if (response.statusCode == 200 || response.statusCode == 201) {
+                      try {} catch (e) {
+                        if (kDebugMode) {
+                          print("Message is: $e");
+                        }
+                      }
+                    }
+                    else if (response.statusCode == 417) {
+                    } else {
+                      if (kDebugMode) {
+                        print("Message is: >>1");
+                      }
+                    }
+                  } on DioError catch (e) {
+                    switch (e.type) {
+                      case DioErrorType.connectTimeout:
+                      case DioErrorType.cancel:
+                      case DioErrorType.sendTimeout:
+                      case DioErrorType.receiveTimeout:
+                      case DioErrorType.other:
+                        if (kDebugMode) {
+                          print("Message is: >>1$e");
+                        }
+                        break;
+                      case DioErrorType.response:
+                        if (kDebugMode) {
+                          print(
+                            "Message is: >>1${e.response?.data ?? ""}");
+                        }
+                    }
+                  }
+
                 }
-              }
-              else if (response.statusCode == 417) {
-              } else {
-                print("Message is: >>1");
-              }
-            } on DioError catch (e) {
-              switch (e.type) {
-                case DioErrorType.connectTimeout:
-                case DioErrorType.cancel:
-                case DioErrorType.sendTimeout:
-                case DioErrorType.receiveTimeout:
-                case DioErrorType.other:
-                  print("Message is: >>1" + e.toString());
-                  break;
-                case DioErrorType.response:
-                  print(
-                      "Message is: >>1" + (e.response?.data ?? "").toString());
-              }
-            }
-
-          }
-          else{
-           /* flutterLocalNotificationsPlugin.show(
+                else{
+                  /* flutterLocalNotificationsPlugin.show(
               888,
               "Eviman App",
               "Currently I am testing(normal)",
@@ -197,53 +231,61 @@ Future<void> onStart(ServiceInstance service) async {
                   )),
             );*/
 
-            Map<String,dynamic> postDataNew = {
-              "data":jsonEncode({'list': locationData}),
-              "dateTime":"",
-              "rider_id":riderId??""
-            };
-            print(">>>>>>>>>>>>>>>postData"+postDataNew.toString());
-            try {
-              var dio = Dio();
-              service1.Response response = await dio.post(
-                "http://65.1.169.159:3000/api/rider_data/v1/create-rider-data",
-                options: Options(headers: {
-                  "Authorization":
-                  "Bearer " + ((authToken != null) ? authToken ?? '' : "")
-                }),
-                data: (postDataNew != null) ? jsonEncode(postDataNew) : null,
-              );
-              if (response.statusCode == 200 || response.statusCode == 201) {
-                try {} catch (e) {
-                  print("Message is: " + e.toString());
+                  Map<String,dynamic> postDataNew = {
+                    "data":jsonEncode({'list': locationData}),
+                    "dateTime":"",
+                    "rider_id":riderId??""
+                  };
+                  if (kDebugMode) {
+                    print(">>>>>>>>>>>>>>>postData$postDataNew");
+                  }
+                  try {
+                    var dio = Dio();
+                    service1.Response response = await dio.post(
+                      "https://backend.eviman.co.in/api/rider_data/v1/create-rider-data",
+                      options: Options(headers: {
+                        "Authorization":
+                        "Bearer ${(authToken != null) ? authToken ?? '' : ""}"
+                      }),
+                      data: (postDataNew != null) ? jsonEncode(postDataNew) : null,
+                    );
+                    if (response.statusCode == 200 || response.statusCode == 201) {
+                      try {} catch (e) {
+                        if (kDebugMode) {
+                          print("Message is: $e");
+                        }
+                      }
+                    }
+                    else if (response.statusCode == 417) {
+                    } else {
+                      if (kDebugMode) {
+                        print("Message is: >>1");
+                      }
+                    }
+                  } on DioError catch (e) {
+                    switch (e.type) {
+                      case DioErrorType.connectTimeout:
+                      case DioErrorType.cancel:
+                      case DioErrorType.sendTimeout:
+                      case DioErrorType.receiveTimeout:
+                      case DioErrorType.other:
+                        if (kDebugMode) {
+                          print("Message is: >>1$e");
+                        }
+                        break;
+                      case DioErrorType.response:
+                        if (kDebugMode) {
+                          print("Message is: >>1${e.response?.data ?? ""}");
+                        }
+                    }
+                  }
+
                 }
-              }
-              else if (response.statusCode == 417) {
-              } else {
-                print("Message is: >>1");
-              }
-            } on DioError catch (e) {
-              switch (e.type) {
-                case DioErrorType.connectTimeout:
-                case DioErrorType.cancel:
-                case DioErrorType.sendTimeout:
-                case DioErrorType.receiveTimeout:
-                case DioErrorType.other:
-                  print("Message is: >>1" + e.toString());
-                  break;
-                case DioErrorType.response:
-                  print(
-                      "Message is: >>1" + (e.response?.data ?? "").toString());
-              }
-            }
-
-          }
-
-          await SharedPreferencesKeys().setStringData(key: "isInternetError", text: "no");
-        }else{
-          await SharedPreferencesKeys().setStringData(key: "isInternetError", text: "yes");
-          await SharedPreferencesKeys().setStringData(key: "latLngForDst", text: jsonEncode({"list": locationData}));
-          /*flutterLocalNotificationsPlugin.show(
+                await SharedPreferencesKeys().setStringData(key: "isInternetError", text: "no");
+              }else{
+                await SharedPreferencesKeys().setStringData(key: "isInternetError", text: "yes");
+                await SharedPreferencesKeys().setStringData(key: "latLngForDst", text: jsonEncode({"list": locationData}));
+                /*flutterLocalNotificationsPlugin.show(
             888,
             "Eviman App",
             "Currently I am testing with offline(pending)",
@@ -255,93 +297,121 @@ Future<void> onStart(ServiceInstance service) async {
                   ongoing: true,
                 )),
           );*/
-        }
-      });
+              }
+            });
 
 
-    },
-    onError: (e) {
-      print(">>>>>>>>>>exception" + e.toString());
-      // sendPort.send("Error: $e");
-    },
-    cancelOnError: true,
-  );
-
-  Timer.periodic(const Duration(seconds: 10), (timer) async {
-    Position? curentPosition;
-    vehicleId = await SharedPreferencesKeys().getStringData(key: 'vehicleId');
-    authToken = await SharedPreferencesKeys().getStringData(key: 'authToken');
-    // print(">>>>>>>>>>>authToken????\n " + authToken.toString());
-    if (vehicleId != null && authToken != null) {
-      if (service is AndroidServiceInstance) {
-        if (await service.isForegroundService()) {
-          await Geolocator.getCurrentPosition(
-                  desiredAccuracy: LocationAccuracy.high,
-                  forceAndroidLocationManager: true)
-              .then((Position position) async {
-            curentPosition = position;
-            print("bg location ${position.latitude}");
-            Placemark? locationDetails;
-            List<Placemark> placeMarks = await placemarkFromCoordinates(
-                position.latitude, position.longitude);
-            if (placeMarks.isNotEmpty) {
-              locationDetails = placeMarks.first;
+          },
+          onError: (e) {
+            if (kDebugMode) {
+              print(">>>>>>>>>>exception$e");
             }
-            Map<String, dynamic> postData = {
-              "currentCity": locationDetails?.locality ?? "",
-              "currentLocality": locationDetails?.subLocality ?? "",
-              "lat": (position.latitude ?? 0).toString(),
-              "lng": (position.longitude ?? 0).toString()
-            };
-            // print(">>>>>postData" + postData.toString());
-            // print(">>>>>>>>api" + "http://65.1.169.159:3000/api/vehicles/v1/update/location/" + (vehicleId ?? 0).toString());
-            try {
-              var dio = Dio();
-              service1.Response response = await dio.patch(
-                "http://65.1.169.159:3000/api/vehicles/v1/update/location/${vehicleId ?? 0}",
-                options: Options(headers: {
-                  "Authorization":
-                      "Bearer " + ((authToken != null) ? authToken ?? '' : "")
-                }),
-                data: (postData != null) ? jsonEncode(postData) : null,
-              );
-              if (response.statusCode == 200 || response.statusCode == 201) {
-                try {} catch (e) {
-                  print("Message is: " + e.toString());
+            // sendPort.send("Error: $e");
+          },
+          cancelOnError: true,
+        );
+  }
+
+
+
+  if (vehicleId != null && authToken != null && vehicleId != "" && authToken != ""){
+    Timer.periodic(const Duration(seconds: 20), (timer) async {
+      Position? curentPosition;
+      vehicleId = await SharedPreferencesKeys().getStringData(key: 'vehicleId');
+      authToken = await SharedPreferencesKeys().getStringData(key: 'authToken');
+      print("background Service call\n ");
+      if (vehicleId != null && authToken != null && vehicleId != "" && authToken != "") {
+        if (service is AndroidServiceInstance) {
+          if (await service.isForegroundService()) {
+            await Geolocator.getCurrentPosition(
+                desiredAccuracy: LocationAccuracy.high,
+                forceAndroidLocationManager: true)
+                .then((Position position) async {
+              curentPosition = position;
+              if (kDebugMode) {
+                print("bg location ${position.latitude}");
+              }
+            /*  Placemark? locationDetails;
+              List<Placemark> placeMarks = await placemarkFromCoordinates(
+                  position.latitude, position.longitude);
+              if (placeMarks.isNotEmpty) {
+                locationDetails = placeMarks.first;
+                for(int i=0;i<placeMarks.length;i++){
+                  if(placeMarks[i].subLocality != null && placeMarks[i].locality != null){
+                    locationDetails = placeMarks[i];
+                    break;
+                  }
                 }
-              } else if (response.statusCode == 417) {
-              } else {
-                print("Message is: >>1");
+
+              }*/
+              Map<String, dynamic> postData = {
+                "currentCity": await getLocality(position),
+                "currentLocality": await getSubLocality(position),
+                "lat": (position.latitude ?? 0).toString(),
+                "lng": (position.longitude ?? 0).toString()
+              };
+              if (kDebugMode) {
+                print(">>>>>postData$postData");
               }
-            } on DioError catch (e) {
-              switch (e.type) {
-                case DioErrorType.connectTimeout:
-                case DioErrorType.cancel:
-                case DioErrorType.sendTimeout:
-                case DioErrorType.receiveTimeout:
-                case DioErrorType.other:
-                  print("Message is: >>1" + e.toString());
-                  break;
-                case DioErrorType.response:
-                  print(
-                      "Message is: >>1" + (e.response?.data ?? "").toString());
+              // print(">>>>>>>>api" + "https://backend.eviman.co.in/api/vehicles/v1/update/location/" + (vehicleId ?? 0).toString());
+              try {
+                var dio = Dio();
+                service1.Response response = await dio.patch(
+                  "https://backend.eviman.co.in/api/vehicles/v1/update/location/${vehicleId ?? 0}",
+                  options: Options(headers: {
+                    "Authorization":
+                    "Bearer ${(authToken != null) ? authToken ?? '' : ""}"
+                  }),
+                  data: (postData != null) ? jsonEncode(postData) : null,
+                );
+                if (response.statusCode == 200 || response.statusCode == 201) {
+                  try {} catch (e) {
+                    if (kDebugMode) {
+                      print("Message is: $e");
+                    }
+                  }
+                } else if (response.statusCode == 417) {
+                } else {
+                  if (kDebugMode) {
+                    print("Message is: >>1");
+                  }
+                }
+              } on DioError catch (e) {
+                switch (e.type) {
+                  case DioErrorType.connectTimeout:
+                  case DioErrorType.cancel:
+                  case DioErrorType.sendTimeout:
+                  case DioErrorType.receiveTimeout:
+                  case DioErrorType.other:
+                    if (kDebugMode) {
+                      print("Message is: >>1$e");
+                    }
+                    break;
+                  case DioErrorType.response:
+                    if (kDebugMode) {
+                      print(
+                        "Message is: >>1${e.response?.data ?? ""}");
+                    }
+                }
               }
-            }
-          }).catchError((e) {
-            Fluttertoast.showToast(msg: e.toString());
-          });
+            }).catchError((e) {
+              // Fluttertoast.showToast(msg: e.toString());
+            });
+          }
         }
       }
-    } else {
-      if (service is AndroidServiceInstance) {
-        if (await service.isForegroundService()) {
-          await Geolocator.getCurrentPosition(
-                  desiredAccuracy: LocationAccuracy.high,
-                  forceAndroidLocationManager: true)
-              .then((Position position) {
-            curentPosition = position;
-            print("bg location ${position.latitude}");
-            /*flutterLocalNotificationsPlugin.show(
+      else {
+        if (service is AndroidServiceInstance) {
+          if (await service.isForegroundService()) {
+            await Geolocator.getCurrentPosition(
+                desiredAccuracy: LocationAccuracy.high,
+                forceAndroidLocationManager: true)
+                .then((Position position) {
+              curentPosition = position;
+              if (kDebugMode) {
+                print("bg location ${position.latitude}");
+              }
+              /*flutterLocalNotificationsPlugin.show(
               888,
               "Eviman App",
               "Currently we are starting our background service for updating you current location",
@@ -353,14 +423,14 @@ Future<void> onStart(ServiceInstance service) async {
                 ongoing: true,
               )),
             );*/
-          }).catchError((e) {
-            Fluttertoast.showToast(msg: "To avail our app functionality it's mandatory to enable your location");
-          });
+            }).catchError((e) {
+              // Fluttertoast.showToast(msg: "To avail our app functionality it's mandatory to enable your location");
+            });
+          }
         }
       }
-    }
-  });
-
+    });
+  }
   // print(">>>>>>>>>>>authToken????\n " + authToken.toString());
 }
 
@@ -381,6 +451,11 @@ Future<void> initializeService() async {
       enableVibration: true,
       ledColor: Colors.green,
       showBadge: true);
+  bool locSta = true;
+ /* await handleLocationPermission().then((value) {
+    locSta = value;
+  });*/
+
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
   await flutterLocalNotificationsPlugin
@@ -388,17 +463,19 @@ Future<void> initializeService() async {
           AndroidFlutterLocalNotificationsPlugin>()
       ?.createNotificationChannel(channel);
 
+
+
   await service.configure(
     iosConfiguration: IosConfiguration(),
     androidConfiguration: AndroidConfiguration(
         onStart: onStart,
         isForegroundMode: true,
-        autoStart: true,
+        autoStart: false,
         notificationChannelId: "eViman-rider",
-        initialNotificationTitle: "Location service enable",
-        initialNotificationContent: "initializing eViman background service",
+        initialNotificationTitle: (locSta)? "Background service is enabled":"eViman waiting for your location permission",
+        initialNotificationContent: "Find the ride Fastest & Quickest",
         foregroundServiceNotificationId: 888,
-        autoStartOnBoot: true),
+        autoStartOnBoot: false),
   );
   await service.startService();
 }
@@ -422,4 +499,94 @@ Future<bool> checkInternetConnectivity() async {
   } else {
     return false;
   }
+}
+
+@pragma("vm:entry-point")
+@pragma("vm:entry-point", true)
+@pragma("vm:entry-point", !bool.fromEnvironment("dart.vm.product"))
+@pragma("vm:entry-point", "get")
+@pragma("vm:entry-point", "call")
+Future<String> getLocality(Position position) async {
+  String data = "";
+  List<Placemark> placeMarks = await placemarkFromCoordinates(
+      position.latitude, position.longitude);
+  try{
+    Placemark? locationDetails = placeMarks.firstWhere((element) => element.locality != null &&
+        (element.locality??"").toString().trim() != "" && element.locality != "null");
+
+    if(locationDetails != null && locationDetails.locality != null && locationDetails.locality != ""){
+
+      data = locationDetails.locality??"";
+    }else{
+      locationDetails = placeMarks.first;
+      data = locationDetails.locality?? locationDetails.subLocality ??"";
+    }
+    if (kDebugMode) {
+      print(">>>>>>>>>>>>locality Gets${locationDetails.locality} >>> $data");
+    }
+  }catch(e){
+    Placemark? locationDetails = placeMarks.first;
+    data = (locationDetails.locality)??(locationDetails.subLocality)??"";
+  }
+  return data;
+}
+
+
+@pragma("vm:entry-point")
+@pragma("vm:entry-point", true)
+@pragma("vm:entry-point", !bool.fromEnvironment("dart.vm.product"))
+@pragma("vm:entry-point", "get")
+@pragma("vm:entry-point", "call")
+Future<String> getSubLocality(Position position) async {
+  String data = "";
+  List<Placemark> placeMarks = await placemarkFromCoordinates(
+      position.latitude, position.longitude);
+  try{
+    Placemark? locationDetails = placeMarks.firstWhere((element) => element.subLocality != null &&
+        (element.subLocality??"").toString().trim() != "" && element.subLocality != "null");
+    // data = locationDetails.subLocality?? locationDetails.locality??"";
+
+    if(locationDetails != null && locationDetails.subLocality != null && locationDetails.subLocality != ""){
+      data = locationDetails.subLocality?? locationDetails.locality??"";
+      // data = locationDetails.subLocality??"";
+    }else{
+      locationDetails = placeMarks.first;
+      data = locationDetails.locality??"";
+    }
+    if (kDebugMode) {
+      print(">>>>>>>>>>>>subLocality Gets${locationDetails.subLocality}   >>>  $data");
+    }
+  }catch(e){
+    Placemark? locationDetails = placeMarks.first;
+    data = locationDetails.locality??"";
+  }
+  return data;
+}
+
+@pragma("vm:entry-point")
+@pragma("vm:entry-point", true)
+@pragma("vm:entry-point", !bool.fromEnvironment("dart.vm.product"))
+@pragma("vm:entry-point", "get")
+@pragma("vm:entry-point", "call")
+Future<bool> handleLocationPermission() async {
+  bool serviceEnabled;
+  geoLoc.LocationPermission permission;
+
+
+  permission = await geoLoc.Geolocator.checkPermission();
+  if(permission == geoLoc.LocationPermission.always){
+    return true;
+  }
+  if (permission == geoLoc.LocationPermission.denied || permission == geoLoc.LocationPermission.whileInUse ) {
+    return false;
+  }
+  if (permission == geoLoc.LocationPermission.deniedForever) {
+    // openAppSettings();
+    // ScaffoldMessenger.of(Get.context!).showSnackBar(const SnackBar(content: Text('Location permissions are permanently denied.')));
+    return false;
+  }
+  if(permission == geoLoc.LocationPermission.whileInUse){
+    return false;
+  }
+  return true;
 }

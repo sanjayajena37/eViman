@@ -10,11 +10,13 @@ class InvitescreenController extends GetxController  with GetSingleTickerProvide
 
   final count = 0.obs;
   FlutterGifController? flutterGifController;
+  String ?referralCode;
   @override
   void onInit() {
     flutterGifController = FlutterGifController(
       vsync: this,
     );
+    referralCode = Get.arguments;
     super.onInit();
   }
   void openCustomDialog(FlutterGifController controller) {

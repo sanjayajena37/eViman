@@ -192,7 +192,7 @@ class ConnectorController extends GetConnect {
       required String token,
       required Function fun}) async {
     print("<<>>>>>API CALL>>>>>>\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n" + api);
-    print("Token NAME:>" + token);
+    // print("Token NAME:>" + token);
     try {
       service.Response response = await dio.get(
         api,
@@ -462,6 +462,48 @@ class ConnectorController extends GetConnect {
           "Authorization": "Bearer " + ((token != null) ? token : "")
         }),
         data: (json != null) ? jsonEncode(json) : null,
+      );
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        try {
+          fun(response.data);
+        } catch (e) {
+          print("Message is: " + e.toString());
+        }
+      } else if (response.statusCode == 417) {
+        fun(response.data);
+      } else {
+        print("Message is: >>1");
+        fun(failedMap);
+      }
+    } on DioError catch (e) {
+      switch (e.type) {
+        case DioErrorType.connectTimeout:
+        case DioErrorType.cancel:
+        case DioErrorType.sendTimeout:
+        case DioErrorType.receiveTimeout:
+        case DioErrorType.other:
+          fun(failedMap);
+          break;
+        case DioErrorType.response:
+          fun(e.response?.data);
+      }
+    }
+  }
+
+  PATCH_METHOD_TOKEN1(
+      {required String api,
+        required String token,
+        dynamic? json,
+        required Function fun}) async {
+    try {
+      print("API NAME:>" + api);
+      print("Token NAME:>" + token);
+      service.Response response = await dio.patch(
+        api,
+        options: Options(headers: {
+          "Authorization": "Bearer " + ((token != null) ? token : "")
+        }),
+        // data: (json != null) ? jsonEncode(json) : null,
       );
       if (response.statusCode == 200 || response.statusCode == 201) {
         try {

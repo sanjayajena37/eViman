@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -64,10 +65,10 @@ class ProfilescreenController extends GetxController
   getProfileDetails() {
     MyWidgets.showLoading3();
     Get.find<ConnectorController>().GETMETHODCALL_TOKEN(
-        api: "http://65.1.169.159:3000/api/riders/v1/profile/${riderId ?? 0}",
+        api: "https://backend.eviman.co.in/api/riders/v1/profile/${riderId ?? 0}",
         token: authToken ?? "",
         fun: (map) {
-          print(">>>>" + map.toString());
+          log(">>>>" + map.toString());
           Get.back();
           if (map is Map &&
               map.containsKey("success") &&
@@ -181,7 +182,7 @@ class ProfilescreenController extends GetxController
     try {
       service.Response response;
       response = await dioIns.post(
-        "http://65.1.169.159:3000/api/uploads/v1/file",
+        "https://backend.eviman.co.in/api/uploads/v1/file",
         data: await getFormData(image),
         onSendProgress: (received, total) {
           if (total != -1) {
@@ -226,7 +227,7 @@ class ProfilescreenController extends GetxController
       bool aadhaar = false,
       bool pan = false}) async {
     try {
-      final image = await ImagePicker().pickImage(source: source);
+      final image = await ImagePicker().pickImage(source: source,imageQuality: 20);
       if (image == null) return;
       final imageTemporary = File(image.path);
       if (profile) {
@@ -308,7 +309,7 @@ class ProfilescreenController extends GetxController
     MyWidgets.showLoading3();
     Get.find<ConnectorController>().PATCH_METHOD_POST_TOKEN(
         api:
-            "http://65.1.169.159:3000/api/riders/v1/update-profile/${riderId ?? ""}",
+            "https://backend.eviman.co.in/api/riders/v1/update-profile/${riderId ?? ""}",
         json: postData,
         token: authToken ?? "",
         fun: (map) {

@@ -45,7 +45,7 @@ class EarningpageView extends GetView<EarningpageController> {
                       physics: const BouncingScrollPhysics(),
                       itemBuilder: (context, index) {
                         return Padding(
-                          padding: EdgeInsets.only(
+                          padding: const EdgeInsets.only(
                               left: 12.0, right: 12, bottom: 5, top: 2),
                           child: Container(
                             decoration: BoxDecoration(
@@ -79,13 +79,12 @@ class EarningpageView extends GetView<EarningpageController> {
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text("Amount",style: TextStyles(context).getBoldStyle().copyWith(fontSize: 15)),
-                                        Text("₹ ${controller.earningModel?.rideArray?[index].totalAmount??""}",style:  TextStyles(context).getDescriptionStyle().
+                                        Text("₹ ${controller.earningModel?.rideArray?[index].amount_paid??""}",style:  TextStyles(context).getDescriptionStyle().
                                         copyWith(color: Colors.blue))
                                       ],
                                     ),
                                   ],
                                 ),
-
                                 Container(
                                   child: Text("${controller.earningModel?.rideArray?[index].distance??""} K.M.",style:  TextStyles(context).getDescriptionStyle().
                                   copyWith(color: Colors.blue,fontSize: 18)),

@@ -38,8 +38,9 @@ class HistoryscreenView extends GetView<HistoryscreenController> {
                 assignId: true,
                 id: "his",
                 builder: (logic) {
-                  return ListView.builder(
-                      itemCount: controller.rideHistoryModel?.rides?.length,
+                  return ((controller.rideHistory).isEmpty)?Center(child: Text("Data Not Found")):
+                  ListView.builder(
+                      itemCount: (controller.rideHistory).length,
                       physics: BouncingScrollPhysics(),
                       itemBuilder: (context, index) {
                         return Padding(
@@ -48,8 +49,10 @@ class HistoryscreenView extends GetView<HistoryscreenController> {
                               bottom: 5,
                               top: 2),
                           child: CommonHistoryWidget(amount: (controller
-                              .rideHistoryModel?.rides?[index].totalAmount ??
-                              123).toString(),
+                              .rideHistoryModel?.rides?[index].amountPaid ??
+                              "").toString(),
+                              status:controller
+                                  .rideHistoryModel?.rides?[index].rideStatus??"" ,
                               date:Utils.convertDateFormat(controller
                                   .rideHistoryModel?.rides?[index].rideEndTime)?? "Today, 10:30 AM",
                               destination:controller

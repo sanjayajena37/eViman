@@ -67,7 +67,7 @@ Future<LocationData?> _getCurrentLocation() async {
 Future<http.Response> _sendLocationToAPI(
     double latitude, double longitude) async {
   final url =
-      Uri.parse('http://65.1.169.159:3000/api/vehicles/v1/update/location/29');
+      Uri.parse('https://backend.eviman.co.in/api/vehicles/v1/update/location/29');
   final response = await http.post(
     url,
     headers: {
