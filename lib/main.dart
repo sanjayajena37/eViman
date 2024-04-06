@@ -7,6 +7,7 @@ import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
@@ -141,7 +142,9 @@ Future<void> onStart(ServiceInstance service) async {
             };
 
             locationData.add(data);
-            print(">>>>>>>>>message from isolate JKS3" + locationData.toString());
+            if (kDebugMode) {
+              print(">>>>>>>>>message from isolate JKS3$locationData");
+            }
 
             checkInternetConnectivity().then((value) async {
               if(value){
@@ -167,7 +170,9 @@ Future<void> onStart(ServiceInstance service) async {
                     "dateTime":"",
                     "rider_id":riderId??""
                   };
-                  print(">>>>>>>>>>>>>>>postData"+postDataNew.toString());
+                  if (kDebugMode) {
+                    print(">>>>>>>>>>>>>>>postData$postDataNew");
+                  }
 
                   try {
                     var dio = Dio();
@@ -175,18 +180,22 @@ Future<void> onStart(ServiceInstance service) async {
                       "https://backend.eviman.co.in/api/rider_data/v1/create-rider-data",
                       options: Options(headers: {
                         "Authorization":
-                        "Bearer " + ((authToken != null) ? authToken ?? '' : "")
+                        "Bearer ${(authToken != null) ? authToken ?? '' : ""}"
                       }),
                       data: (postDataNew != null) ? jsonEncode(postDataNew) : null,
                     );
                     if (response.statusCode == 200 || response.statusCode == 201) {
                       try {} catch (e) {
-                        print("Message is: " + e.toString());
+                        if (kDebugMode) {
+                          print("Message is: $e");
+                        }
                       }
                     }
                     else if (response.statusCode == 417) {
                     } else {
-                      print("Message is: >>1");
+                      if (kDebugMode) {
+                        print("Message is: >>1");
+                      }
                     }
                   } on DioError catch (e) {
                     switch (e.type) {
@@ -195,11 +204,15 @@ Future<void> onStart(ServiceInstance service) async {
                       case DioErrorType.sendTimeout:
                       case DioErrorType.receiveTimeout:
                       case DioErrorType.other:
-                        print("Message is: >>1" + e.toString());
+                        if (kDebugMode) {
+                          print("Message is: >>1$e");
+                        }
                         break;
                       case DioErrorType.response:
-                        print(
-                            "Message is: >>1" + (e.response?.data ?? "").toString());
+                        if (kDebugMode) {
+                          print(
+                            "Message is: >>1${e.response?.data ?? ""}");
+                        }
                     }
                   }
 
@@ -223,25 +236,31 @@ Future<void> onStart(ServiceInstance service) async {
                     "dateTime":"",
                     "rider_id":riderId??""
                   };
-                  print(">>>>>>>>>>>>>>>postData"+postDataNew.toString());
+                  if (kDebugMode) {
+                    print(">>>>>>>>>>>>>>>postData$postDataNew");
+                  }
                   try {
                     var dio = Dio();
                     service1.Response response = await dio.post(
                       "https://backend.eviman.co.in/api/rider_data/v1/create-rider-data",
                       options: Options(headers: {
                         "Authorization":
-                        "Bearer " + ((authToken != null) ? authToken ?? '' : "")
+                        "Bearer ${(authToken != null) ? authToken ?? '' : ""}"
                       }),
                       data: (postDataNew != null) ? jsonEncode(postDataNew) : null,
                     );
                     if (response.statusCode == 200 || response.statusCode == 201) {
                       try {} catch (e) {
-                        print("Message is: " + e.toString());
+                        if (kDebugMode) {
+                          print("Message is: $e");
+                        }
                       }
                     }
                     else if (response.statusCode == 417) {
                     } else {
-                      print("Message is: >>1");
+                      if (kDebugMode) {
+                        print("Message is: >>1");
+                      }
                     }
                   } on DioError catch (e) {
                     switch (e.type) {
@@ -250,10 +269,14 @@ Future<void> onStart(ServiceInstance service) async {
                       case DioErrorType.sendTimeout:
                       case DioErrorType.receiveTimeout:
                       case DioErrorType.other:
-                        print("Message is: >>1" + e.toString());
+                        if (kDebugMode) {
+                          print("Message is: >>1$e");
+                        }
                         break;
                       case DioErrorType.response:
-                        print("Message is: >>1" + (e.response?.data ?? "").toString());
+                        if (kDebugMode) {
+                          print("Message is: >>1${e.response?.data ?? ""}");
+                        }
                     }
                   }
 
@@ -280,7 +303,9 @@ Future<void> onStart(ServiceInstance service) async {
 
           },
           onError: (e) {
-            print(">>>>>>>>>>exception" + e.toString());
+            if (kDebugMode) {
+              print(">>>>>>>>>>exception$e");
+            }
             // sendPort.send("Error: $e");
           },
           cancelOnError: true,
@@ -303,7 +328,9 @@ Future<void> onStart(ServiceInstance service) async {
                 forceAndroidLocationManager: true)
                 .then((Position position) async {
               curentPosition = position;
-              print("bg location ${position.latitude}");
+              if (kDebugMode) {
+                print("bg location ${position.latitude}");
+              }
             /*  Placemark? locationDetails;
               List<Placemark> placeMarks = await placemarkFromCoordinates(
                   position.latitude, position.longitude);
@@ -323,7 +350,9 @@ Future<void> onStart(ServiceInstance service) async {
                 "lat": (position.latitude ?? 0).toString(),
                 "lng": (position.longitude ?? 0).toString()
               };
-              print(">>>>>postData" + postData.toString());
+              if (kDebugMode) {
+                print(">>>>>postData$postData");
+              }
               // print(">>>>>>>>api" + "https://backend.eviman.co.in/api/vehicles/v1/update/location/" + (vehicleId ?? 0).toString());
               try {
                 var dio = Dio();
@@ -331,17 +360,21 @@ Future<void> onStart(ServiceInstance service) async {
                   "https://backend.eviman.co.in/api/vehicles/v1/update/location/${vehicleId ?? 0}",
                   options: Options(headers: {
                     "Authorization":
-                    "Bearer " + ((authToken != null) ? authToken ?? '' : "")
+                    "Bearer ${(authToken != null) ? authToken ?? '' : ""}"
                   }),
                   data: (postData != null) ? jsonEncode(postData) : null,
                 );
                 if (response.statusCode == 200 || response.statusCode == 201) {
                   try {} catch (e) {
-                    print("Message is: " + e.toString());
+                    if (kDebugMode) {
+                      print("Message is: $e");
+                    }
                   }
                 } else if (response.statusCode == 417) {
                 } else {
-                  print("Message is: >>1");
+                  if (kDebugMode) {
+                    print("Message is: >>1");
+                  }
                 }
               } on DioError catch (e) {
                 switch (e.type) {
@@ -350,11 +383,15 @@ Future<void> onStart(ServiceInstance service) async {
                   case DioErrorType.sendTimeout:
                   case DioErrorType.receiveTimeout:
                   case DioErrorType.other:
-                    print("Message is: >>1" + e.toString());
+                    if (kDebugMode) {
+                      print("Message is: >>1$e");
+                    }
                     break;
                   case DioErrorType.response:
-                    print(
-                        "Message is: >>1" + (e.response?.data ?? "").toString());
+                    if (kDebugMode) {
+                      print(
+                        "Message is: >>1${e.response?.data ?? ""}");
+                    }
                 }
               }
             }).catchError((e) {
@@ -371,7 +408,9 @@ Future<void> onStart(ServiceInstance service) async {
                 forceAndroidLocationManager: true)
                 .then((Position position) {
               curentPosition = position;
-              print("bg location ${position.latitude}");
+              if (kDebugMode) {
+                print("bg location ${position.latitude}");
+              }
               /*flutterLocalNotificationsPlugin.show(
               888,
               "Eviman App",
@@ -482,7 +521,9 @@ Future<String> getLocality(Position position) async {
       locationDetails = placeMarks.first;
       data = locationDetails.locality?? locationDetails.subLocality ??"";
     }
-    print(">>>>>>>>>>>>locality Gets${locationDetails.locality} >>> $data");
+    if (kDebugMode) {
+      print(">>>>>>>>>>>>locality Gets${locationDetails.locality} >>> $data");
+    }
   }catch(e){
     Placemark? locationDetails = placeMarks.first;
     data = (locationDetails.locality)??(locationDetails.subLocality)??"";
@@ -512,7 +553,9 @@ Future<String> getSubLocality(Position position) async {
       locationDetails = placeMarks.first;
       data = locationDetails.locality??"";
     }
-    print(">>>>>>>>>>>>subLocality Gets${locationDetails.subLocality}   >>>  $data");
+    if (kDebugMode) {
+      print(">>>>>>>>>>>>subLocality Gets${locationDetails.subLocality}   >>>  $data");
+    }
   }catch(e){
     Placemark? locationDetails = placeMarks.first;
     data = locationDetails.locality??"";

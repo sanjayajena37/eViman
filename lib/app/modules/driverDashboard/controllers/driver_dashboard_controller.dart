@@ -321,7 +321,9 @@ class DriverDashboardController extends GetxController
         api: "https://backend.eviman.co.in/api/rides/v1/get-rides-analytics",
         token: authToken ?? "",
         fun: (map) {
-          print(">>>>>>>>>>>rides-analytics"+map.toString());
+          if (kDebugMode) {
+            print(">>>>>>>>>>>rides-analytics$map");
+          }
           if(map is Map && map.containsKey("result") && map['result'] != null){
             totalDistanceNew = (map['result']['totalDistance']??"0.00").toString();
             totalAmount = (map['result']['totalAmount']??"0.00").toString();
