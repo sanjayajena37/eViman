@@ -7,6 +7,7 @@ import 'package:dateplan/app/modules/keyscreen/controllers/keyscreen_controller.
 import 'package:dateplan/app/widgets/Snack.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geocoding/geocoding.dart';
@@ -663,10 +664,9 @@ class KycscreenController extends GetxController with Helper {
       Snack.callError("Please enter your details");
     }
 
-    print(">>>>>>>> " +
-        currentStep1.toString() +
-        "      " +
-        currentStep.toString());
+    if (kDebugMode) {
+      print(">>>>>>>> $currentStep1      $currentStep");
+    }
   }
 
   TextEditingController referralCodeTextEditingController = TextEditingController();
@@ -696,7 +696,7 @@ class KycscreenController extends GetxController with Helper {
                 onChanged: (String txt) {},
               ),
             ),
-            SizedBox(
+            const SizedBox(
               width: 4,
             ),
             Obx(() {
@@ -750,7 +750,9 @@ class KycscreenController extends GetxController with Helper {
     Map<String, dynamic> postData = {
       "referralCode": referralCodeTextEditingController.text ?? ""
     };
-    print(">>>>>>>>>>>>postData" + postData.toString());
+    if (kDebugMode) {
+      print(">>>>>>>>>>>>postData$postData");
+    }
     try{
       isVerify.value=false;
       isVerify.refresh();
@@ -758,7 +760,9 @@ class KycscreenController extends GetxController with Helper {
           api: "https://backend.eviman.co.in/api/riders/v1/referral/verify",
           json: postData,
           fun: (map) {
-            print(">>>mapre" + map.toString());
+            if (kDebugMode) {
+              print(">>>mapre$map");
+            }
             if (map is Map && map.containsKey("success") &&
                 map['success'] == true) {
               isVerify.value = true;
@@ -800,7 +804,9 @@ class KycscreenController extends GetxController with Helper {
       "profile_image": profileImg ?? "",
       "referralCode": referralCode ?? ""
     };
-    print(">>>>>>" + jsonEncode(sendData).toString());
+    if (kDebugMode) {
+      print(">>>>>>${jsonEncode(sendData)}");
+    }
     MyWidgets.showLoading3();
     Get.find<ConnectorController>().POSTMETHOD(
         api: ApiFactory.CREATE_PROFILE,
@@ -811,7 +817,9 @@ class KycscreenController extends GetxController with Helper {
               map.containsKey('success') &&
               map['success'] == true) {
             riderId = (map['riderId'] ?? "").toString();
-            print(">>>>>" + (map['riderId'] ?? "").toString());
+            if (kDebugMode) {
+              print(">>>>>${map['riderId'] ?? ""}");
+            }
             if (currentStep < 2) {
               currentStep = currentStep + 1;
             }
@@ -823,7 +831,9 @@ class KycscreenController extends GetxController with Helper {
             Snack.callError(
                 ((map['errMessage']) ?? "Something went wrong").toString());
           }
-          print(">>>>>" + map.toString());
+          if (kDebugMode) {
+            print(">>>>>$map");
+          }
         });
   }
 
@@ -852,14 +862,18 @@ class KycscreenController extends GetxController with Helper {
       "lng": locationDetail['lng'],
       "vehicleMode":userTypeController.text??""
     };
-    print(">>>>>> add vehicle" + jsonEncode(sendData).toString());
+    if (kDebugMode) {
+      print(">>>>>> add vehicle${jsonEncode(sendData)}");
+    }
     MyWidgets.showLoading3();
     Get.find<ConnectorController>().POSTMETHOD_TOKEN(
         api: "https://backend.eviman.co.in/api/vehicles/v1/create",
         json: sendData,
         fun: (map) {
           Get.back();
-          print(">>>>>>>>>" + map.toString());
+          if (kDebugMode) {
+            print(">>>>>>>>>$map");
+          }
 
           if (map is Map &&
               map.containsKey('success') &&
@@ -875,7 +889,9 @@ class KycscreenController extends GetxController with Helper {
           } else {
             Snack.callError((map ?? "Something went wrong").toString());
           }
-          print(">>>>>" + map.toString());
+          if (kDebugMode) {
+            print(">>>>>$map");
+          }
         },
         token: authToken ?? "");
   }
@@ -898,10 +914,9 @@ class KycscreenController extends GetxController with Helper {
       currentStep1 = currentStep - 1;
       currentStep = currentStep - 1;
 
-      print(">>>>>>>> " +
-          currentStep1.toString() +
-          "      " +
-          currentStep.toString());
+      if (kDebugMode) {
+        print(">>>>>>>> $currentStep1      $currentStep");
+      }
       update(['ref']);
     }
   }
@@ -912,7 +927,7 @@ class KycscreenController extends GetxController with Helper {
   }
 
   Widget controlsBuilder(context, details) {
-    return Column(
+    return const Column(
       children: [
         SizedBox(
           height: 25,
@@ -978,7 +993,9 @@ class KycscreenController extends GetxController with Helper {
       }
       // imageData = imageTemporary;
     } on PlatformException catch (e) {
-      print("Failed  to pick image: $e");
+      if (kDebugMode) {
+        print("Failed  to pick image: $e");
+      }
     }
     Get.back();
   }
@@ -1075,7 +1092,9 @@ class KycscreenController extends GetxController with Helper {
         data: await getFormData(image),
         onSendProgress: (received, total) {
           if (total != -1) {
-            print((received / total * 100).toStringAsFixed(0) + '%');
+            if (kDebugMode) {
+              print('${(received / total * 100).toStringAsFixed(0)}%');
+            }
           }
         },
       );
@@ -1108,13 +1127,19 @@ class KycscreenController extends GetxController with Helper {
             update(['image0']);
           } else {}
         }
-        print(">>>>>>>>>>response" + response.data.toString());
+        if (kDebugMode) {
+          print(">>>>>>>>>>response${response.data}");
+        }
       } else {
-        print(">>>>>>>>>>response" + response.data.toString());
+        if (kDebugMode) {
+          print(">>>>>>>>>>response${response.data}");
+        }
         Snack.callError("Something went wrong");
       }
     } on dio.DioError catch (e) {
-      print(">>>>>>>>>>response" + e.toString());
+      if (kDebugMode) {
+        print(">>>>>>>>>>response$e");
+      }
     }
   }
 
@@ -1163,7 +1188,9 @@ class KycscreenController extends GetxController with Helper {
     var status = await permission.Permission.location.status;
     // var status1 = await permission.Permission.locationAlways.status;
     // var status2 = await permission.Permission.notification.status;
-    print(">>>>>>>>>>>>>>status$status");
+    if (kDebugMode) {
+      print(">>>>>>>>>>>>>>status$status");
+    }
     if (status.isDenied || status.isPermanentlyDenied) {
       bool isOk = await showCommonPopupNew6(
           "eViman App need your location permission.It's required to give smooth less service to you",
@@ -1174,7 +1201,9 @@ class KycscreenController extends GetxController with Helper {
         if (status.isPermanentlyDenied) {
           permission.openAppSettings();
         } else {
-          print(">>>>>>>>>>>>>>>>>>>>else in dialog call");
+          if (kDebugMode) {
+            print(">>>>>>>>>>>>>>>>>>>>else in dialog call");
+          }
           permission.Permission.location.request();
         }
       } else {
@@ -1182,7 +1211,9 @@ class KycscreenController extends GetxController with Helper {
         update(['all']);
       }
     } else {
-      print(">>>>>>>>>>>>>>>>>>>>else out dialog call");
+      if (kDebugMode) {
+        print(">>>>>>>>>>>>>>>>>>>>else out dialog call");
+      }
       // permission. Permission.notification.request();
       permissionAllow = true;
       update(['all']);
@@ -1286,7 +1317,9 @@ class KycscreenController extends GetxController with Helper {
         api: "https://backend.eviman.co.in/api/fareinfo/v1/get-fare-list",
         fun: (map) {
           Get.back();
-          print(">>>>>>>>>" + map.toString());
+          if (kDebugMode) {
+            print(">>>>>>>>>$map");
+          }
 
           if (map is Map &&
               map.containsKey('success') &&
@@ -1301,21 +1334,27 @@ class KycscreenController extends GetxController with Helper {
             }
             final Set<String> uniqueVehicleTypes =
             vehicles.map((vehicle) => vehicle.vehicleType).toSet();
-            print(">>>>>>>>>>>>vehicles" + uniqueVehicleTypes.toString());
+            if (kDebugMode) {
+              print(">>>>>>>>>>>>vehicles$uniqueVehicleTypes");
+            }
             vehicleTypeList.clear();
             List data = uniqueVehicleTypes.toList();
             for (int i = 0; i < (data.length ?? 0); i++) {
               vehicleTypeList.add(
-                  new KeyvalueModel(key: data[i] ?? "", name: data[i] ?? ""));
+                   KeyvalueModel(key: data[i] ?? "", name: data[i] ?? ""));
             }
-            print(">>>>>>>>>>>>vehicleTypeList" + vehicleTypeList.toString());
+            if (kDebugMode) {
+              print(">>>>>>>>>>>>vehicleTypeList$vehicleTypeList");
+            }
 
             // Snack.callSuccess((map['message'] ?? "").toString(),);
           } else {
             fareInfoModel = FareInfoModel(fareList: []);
             Snack.callError((map ?? "Something went wrong").toString());
           }
-          print(">>>>>" + map.toString());
+          if (kDebugMode) {
+            print(">>>>>$map");
+          }
         });
   }
 
@@ -1324,7 +1363,7 @@ class KycscreenController extends GetxController with Helper {
     fareInfoModel?.fareList?.forEach((element) {
       if (element.vehicleType.toString().trim().toLowerCase() ==
           key.toString().trim().toLowerCase()) {
-        subVehicleTypeList.add(new KeyvalueModel(
+        subVehicleTypeList.add(KeyvalueModel(
             key: element.vehicleSubType ?? "",
             name: element.vehicleSubType ?? ""));
       }

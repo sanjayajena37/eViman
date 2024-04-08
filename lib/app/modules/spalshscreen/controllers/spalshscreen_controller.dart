@@ -48,21 +48,6 @@ class SpalshscreenController extends GetxController with Helper{
 
   @override
   void onClose() {
-
-   /* Navigator.push(
-      context,
-      PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) => SecondScreen(),
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          const begin = Offset(1.0, 0.0);
-          const end = Offset.zero;
-          const curve = Curves.ease;
-          var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-          var offsetAnimation = animation.drive(tween);
-          return SlideTransition(position: offsetAnimation, child: child);
-        },
-      ),
-    );*/
     super.onClose();
   }
 
@@ -210,7 +195,6 @@ class SpalshscreenController extends GetxController with Helper{
   }
 
   getLoginDetails() async {
-
     String? isLogin = await SharedPreferencesKeys().getStringData(key: 'isLogin');
     String? vehicleId = await SharedPreferencesKeys().getStringData(key: 'vehicleId');
     String? vehicleMode = await SharedPreferencesKeys().getStringData(key: 'vehicleMode');
@@ -232,7 +216,11 @@ class SpalshscreenController extends GetxController with Helper{
         });
         permissionAllow = false;
         Snack.callError("Login Expired");
-      }else{
+      }
+      else{
+        if (kDebugMode) {
+          print(">>>>>>>>>>>>>>>>>>>>isLogin$isLogin");
+        }
         if(isLogin == "true"){
           if (kDebugMode) {
             print(">>>>>>>>>>>>>>>>>>>>vehicleMode$vehicleMode");
