@@ -425,6 +425,19 @@ class DriverDashboardView extends StatelessWidget {
                 ),*/
                     ListTile(
                       onTap: () {
+                        Get.toNamed(Routes.HELP_LINE_SCREEN);
+                      },
+                      leading: Icon(Icons.help_center,
+                          color: Theme.of(context).primaryColor),
+                      title: Text(
+                        'Help',
+                        style: TextStyles(context)
+                            .getRegularStyle()
+                            .copyWith(fontSize: 15),
+                      ),
+                    ),
+                    ListTile(
+                      onTap: () {
                         controllerX.gotoSplashScreen();
                       },
                       leading: Icon(Icons.logout,

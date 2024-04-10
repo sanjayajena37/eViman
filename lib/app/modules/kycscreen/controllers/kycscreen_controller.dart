@@ -1220,7 +1220,8 @@ class KycscreenController extends GetxController with Helper {
       // getRiderId();
       // getCurrentLocation();
       getCurrentLocation();
-      getFareInfo();
+      // getFareInfo();
+      getVehicleType();
     }
   }
 
@@ -1310,6 +1311,7 @@ class KycscreenController extends GetxController with Helper {
   List<KeyvalueModel> userTypeList = [KeyvalueModel(key: "cab",name: "cab"),
     KeyvalueModel(key: "logistic",name: "logistic")];
   List<Vehicle> vehicles = [];
+  KeyvalueModel? selectedVehicleSubType;
 
   getFareInfo() {
     MyWidgets.showLoading3();
@@ -1358,6 +1360,46 @@ class KycscreenController extends GetxController with Helper {
         });
   }
 
+  getVehicleType() {
+    MyWidgets.showLoading3();
+    Get.find<ConnectorController>().GETMETHODCALL(
+        api: "https://backend.eviman.co.in/api/fareinfo/v1/get-vehicle-type/cab",
+        fun: (map) {
+          Get.back();
+          if (kDebugMode) {
+            print(">>>>>>>>>$map");
+          }
+          if(map is Map && map['vehicleTypeList'] != null && map['vehicleTypeList'].length > 0 ){
+            vehicleTypeList.clear();
+            map['vehicleTypeList'].forEach((e){
+              vehicleTypeList.add(
+                  KeyvalueModel(key: e['vehicle_type']?? "", name: e['vehicle_type']?? ""));
+            });
+            update(['vehicle_type']);
+          }
+        });
+  }
+
+  getVehicleSubType(String key) {
+    MyWidgets.showLoading3();
+    Get.find<ConnectorController>().GETMETHODCALL(
+        api: "https://backend.eviman.co.in/api/fareinfo/v1/get-sub-type/$key",
+        fun: (map) {
+          Get.back();
+          if (kDebugMode) {
+            print(">>>>>>>>>$map");
+          }
+          if(map is Map && map['subType'] != null && map['subType'].length > 0 ){
+            subVehicleTypeList.clear();
+            map['subType'].forEach((e){
+              subVehicleTypeList.add(
+                  KeyvalueModel(key: e['vehicle_sub_type']?? "", name: e['vehicle_sub_type']?? ""));
+            });
+            update(['subt']);
+          }
+        });
+  }
+
   filterSubType(String key) {
     subVehicleTypeList.clear();
     fareInfoModel?.fareList?.forEach((element) {
@@ -1375,7 +1417,9 @@ class KycscreenController extends GetxController with Helper {
   void onReady() {
     // infoDialog1();
     getCurrentLocation();
-    getFareInfo();
+    // getFareInfo();
+    getVehicleType();
+
 
     super.onReady();
   }

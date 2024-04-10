@@ -18,6 +18,8 @@ import '../modules/earningpage/bindings/earningpage_binding.dart';
 import '../modules/earningpage/views/earningpage_view.dart';
 import '../modules/galleryscreen/bindings/galleryscreen_binding.dart';
 import '../modules/galleryscreen/views/galleryscreen_view.dart';
+import '../modules/help_line_screen/bindings/help_line_screen_binding.dart';
+import '../modules/help_line_screen/views/help_line_screen_view.dart';
 import '../modules/historyscreen/bindings/historyscreen_binding.dart';
 import '../modules/historyscreen/views/historyscreen_view.dart';
 import '../modules/home/bindings/home_binding.dart';
@@ -202,8 +204,13 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.UP_COMING_RIDE_DETAILS_PAGE,
-      page: () =>  UpComingRideDetailsPageView(),
+      page: () => UpComingRideDetailsPageView(),
       binding: UpComingRideDetailsPageBinding(),
+    ),
+    GetPage(
+      name: _Paths.HELP_LINE_SCREEN,
+      page: () =>  HelpLineScreenView(),
+      binding: HelpLineScreenBinding(),
     ),
   ];
 }

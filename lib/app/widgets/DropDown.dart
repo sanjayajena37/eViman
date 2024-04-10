@@ -11,7 +11,8 @@ class DropDown{
   static KeyvalueModel? selectedKey;
   static KeyvalueModel? selectedKey1;
   static staticDropdown(
-      String label, String callFrom, List<KeyvalueModel> list, Function fun) {
+      String label, String callFrom, List<KeyvalueModel> list, Function fun,
+      {KeyvalueModel? selectedItem}) {
     return (DropdownSearch<KeyvalueModel>(
       popupProps: PopupProps.modalBottomSheet (
         showSelectedItems: false,
@@ -43,7 +44,7 @@ class DropDown{
       ),
 
       //items: maritalStatus,
-      selectedItem: getData(callFrom),
+      selectedItem:selectedItem ?? getData(callFrom),
       items: list,
 
       onChanged: (KeyvalueModel? data) {
@@ -63,11 +64,8 @@ class DropDown{
       case "block":
         return selectedKey1;
         break;
- /*     case "expenseHead":
-        return ManageExpense.expenseHead;*/
-        break;
-
-    // vencounrty,venstate,venstate
+      default:
+        return null;
     }
   }
 
