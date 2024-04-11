@@ -55,13 +55,11 @@ class LoginscreenView extends StatelessWidget {
                                 .size
                                 .height * 0.06,
                           ),
-                          Container(
-                            // width:MediaQuery.of(context).size.width,
-                              child: Image.asset(
-                                "assets/images/logo.png",
-                                fit: BoxFit.fill,
-                                height: 200, width: 200,
-                              )),
+                          Image.asset(
+                            "assets/images/logo.png",
+                            fit: BoxFit.fill,
+                            height: 200, width: 200,
+                          ),
                           SizedBox(
                             height: MediaQuery
                                 .of(context)
@@ -80,7 +78,7 @@ class LoginscreenView extends StatelessWidget {
                             keyboardType: TextInputType.number,
                             onChanged: (String txt) {},
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 2,
                           ),
                           Padding(

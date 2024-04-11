@@ -76,14 +76,18 @@ class UpComingRideDetailsPageController extends GetxController with Helper{
         "amountReceived": double.tryParse((amount ?? "0").toString() ?? "0") ??
             0 //Pass when bookingStatus is COMPLETED
       };
-      print(">>>>>>>>>>>>>>>complete" + (postData).toString());
+      if (kDebugMode) {
+        print(">>>>>>>>>>>>>>>complete$postData");
+      }
       Get.find<ConnectorController>().POSTMETHOD_TOKEN(
           api: "https://backend.eviman.co.in/api/rides/v1/logistics/status/update",
           token: authToken ?? "token",
           json: postData,
           fun: (map) {
             closeDialogIfOpen();
-            print(">>>>>>>>>>>>>>>>>>>>>map$map");
+            if (kDebugMode) {
+              print(">>>>>>>>>>>>>>>>>>>>>map$map");
+            }
             if (map['success'] == true) {
               Get.back(result: true);
             } else {

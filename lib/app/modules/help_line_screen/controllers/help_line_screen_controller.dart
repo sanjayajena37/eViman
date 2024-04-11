@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -29,6 +30,15 @@ class HelpLineScreenController extends GetxController {
     // return dataList;
   }*/
 
+  makingPhoneCall(String? number) async {
+    var url = Uri.parse("tel:${number ?? ""}");
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
   Future<void> sendEmail() async {
     final Uri emailLaunchUri = Uri(
       scheme: 'mailto',
@@ -43,7 +53,9 @@ class HelpLineScreenController extends GetxController {
       await launchUrl(emailLaunchUri);
     } else {
       // Handle case where email app is not available
-      print('Could not launch email app');
+      if (kDebugMode) {
+        print('Could not launch email app');
+      }
     }
   }
 
@@ -64,12 +76,12 @@ class HelpLineScreenController extends GetxController {
 
   textMe() async {
     // Android
-    var uri = 'sms:+91 ${7008021012}?body=I am facing issues:';
+    var uri = 'sms:+91 ${9124384030}?body=I am facing issues:';
     if (await canLaunch(uri)) {
       await launch(uri);
     } else {
       // iOS
-      var uri = 'sms:+91 ${7008021012}?body=I am facing issues:';
+      var uri = 'sms:+91 ${9124384030}?body=I am facing issues:';
       if (await canLaunch(uri)) {
         await launch(uri);
       } else {

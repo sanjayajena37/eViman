@@ -50,10 +50,10 @@ class InvitescreenView extends GetView<InvitescreenController> {
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 15,
               ),
-              Container(
+              SizedBox(
                 width: Get.width*0.65,
                 height:Get.height*0.06 ,
                 child: CustomPaint(
@@ -64,14 +64,14 @@ class InvitescreenView extends GetView<InvitescreenController> {
                       Center(
                         child: Text(
                           controller.referralCode??'XXX',
-                          style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),
+                          style: const TextStyle(fontSize: 20,fontWeight: FontWeight.bold),
                         ),
                       ),
                       InkWell(
                           onTap: () async {
                             await Clipboard.setData( ClipboardData(text: (controller.referralCode?? "XXXXX")));
                           },
-                          child: Icon(Icons.copy))
+                          child: const Icon(Icons.copy))
                     ],
                   ),
                 ),

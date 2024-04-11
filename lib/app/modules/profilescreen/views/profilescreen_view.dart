@@ -128,7 +128,7 @@ class ProfilescreenView extends GetView<ProfilescreenController> {
                                                                                 imageProvider,
                                                                             fit:
                                                                                 BoxFit.cover,
-                                                                            colorFilter: ColorFilter.mode(Colors.red, BlendMode.colorBurn)),
+                                                                            colorFilter: const ColorFilter.mode(Colors.red, BlendMode.colorBurn)),
                                                                       ),
                                                                     ),
                                                                     progressIndicatorBuilder: (context,
@@ -157,7 +157,7 @@ class ProfilescreenView extends GetView<ProfilescreenController> {
                                                                     errorWidget: (context,
                                                                             url,
                                                                             error) =>
-                                                                        Icon(Icons
+                                                                        const Icon(Icons
                                                                             .error),
                                                                   )
                                                                 : Image.asset(
@@ -286,7 +286,7 @@ class ProfilescreenView extends GetView<ProfilescreenController> {
                                           const NeverScrollableScrollPhysics(),
                                       shrinkWrap: true,
                                       itemCount: profileInfoList.length,
-                                      padding: EdgeInsets.all(2),
+                                      padding: const EdgeInsets.all(2),
                                       itemBuilder: (context, index) {
                                         return Padding(
                                           padding: const EdgeInsets.only(
@@ -429,9 +429,7 @@ class ProfilescreenView extends GetView<ProfilescreenController> {
                       controllerX.updateApi();
                     },
                   )
-                : Container(
-                    child: Text(""),
-                  ),
+                : const Text(""),
           );
         },
       ),

@@ -73,7 +73,7 @@ class DriverDashboardView extends StatelessWidget {
             }
         },
         child: AdvancedDrawer(
-          backdrop: Container(
+          backdrop: const SizedBox(
             width: double.infinity,
             height: double.infinity,
           ),
@@ -92,365 +92,357 @@ class DriverDashboardView extends StatelessWidget {
             color: Colors.red,
           ),
           drawer: SafeArea(
-            child: Container(
-              child: ListTileTheme(
-                textColor: Colors.white,
-                iconColor: Colors.white,
-                child: ListView(
-                  padding: EdgeInsets.zero,
-                  children: [
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.22,
-                      child: DrawerHeader(
-                        // decoration: const BoxDecoration(color: Colors.),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            GetBuilder<DriverDashboardController>(
-                              id: "prof",
-                              builder: (controllerX) {
-                                return Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment. center,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                      MainAxisAlignment. spaceBetween,
-                                      children: [
-                                        ClipOval(
-                                          child: SizedBox.fromSize(
-                                            size: const Size
-                                                .fromRadius(
-                                                40), // Image radius
-                                            child: (controllerX
-                                                .profileViewModel
-                                                ?.riderData
-                                                ?.profile_image !=
-                                                null &&
-                                                controllerX
-                                                    .profileViewModel
-                                                    ?.riderData
-                                                    ?.profile_image
-                                                    .toString()
-                                                    .trim() !=
-                                                    "")
-                                                ? CachedNetworkImage(
-                                              imageUrl:
+            child: ListTileTheme(
+              textColor: Colors.white,
+              iconColor: Colors.white,
+              child: ListView(
+                padding: EdgeInsets.zero,
+                children: [
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.22,
+                    child: DrawerHeader(
+                      // decoration: const BoxDecoration(color: Colors.),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          GetBuilder<DriverDashboardController>(
+                            id: "prof",
+                            builder: (controllerX) {
+                              return Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment. center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                    MainAxisAlignment. spaceBetween,
+                                    children: [
+                                      ClipOval(
+                                        child: SizedBox.fromSize(
+                                          size: const Size
+                                              .fromRadius(
+                                              40), // Image radius
+                                          child: (controllerX
+                                              .profileViewModel
+                                              ?.riderData
+                                              ?.profile_image !=
+                                              null &&
                                               controllerX
                                                   .profileViewModel
                                                   ?.riderData
-                                                  ?.profile_image ??
-                                                  "",
-                                              imageBuilder:
-                                                  (context,
-                                                  imageProvider) =>
-                                                  Container(
-                                                    decoration:
-                                                    BoxDecoration(
-                                                      image: DecorationImage(
-                                                          image:
-                                                          imageProvider,
-                                                          fit:
-                                                          BoxFit.cover,),
-                                                      border: Border.all(color: Colors.red,width: 1,style: BorderStyle.solid),
-                                                      borderRadius: BorderRadius.all(Radius.circular(40))),
-                                                  ),
-                                              progressIndicatorBuilder: (context,
-                                                  url,
-                                                  downloadProgress) =>
-                                                  Column(
-                                                    mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .center,
-                                                    children: [
-                                                      SizedBox(
-                                                        height:
-                                                        Get.height * 0.04,
-                                                        width:
-                                                        Get.width * 0.15,
-                                                        child:
-                                                        Padding(
-                                                          padding:
-                                                          const EdgeInsets.all(18.0),
-                                                          child:
-                                                          CircularProgressIndicator(value: downloadProgress.progress),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                              errorWidget: (context,
-                                                  url,
-                                                  error) =>
-                                                  Icon(Icons
-                                                      .error),
-                                            )
-                                                : Image.asset(
-                                              'assets/images/man.jpg',
-                                              fit: BoxFit
-                                                  .cover,
-                                            )
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: 10,
-                                        ),
-                                        GetBuilder<DriverDashboardController>(
-                                          id: "analytics",
-                                          builder: (controllerX) {
-                                            return Row(
-                                              mainAxisAlignment:
-                                              MainAxisAlignment.spaceAround,
-                                              children: [
-                                                // driverINfoWidget("assets/icon/time.png", "10.2", "Hours online"),
-                                                driverINfoWidget(
-                                                    "assets/icon/meter.png",
-                                                    controllerX.totalDistanceNew ?? "30 kM",
-                                                    "Total Distance"),
-                                                SizedBox(
-                                                  width: 10,
-                                                ),
-                                                driverINfoWidget(
-                                                    "assets/icon/jobs.png",
-                                                    controllerX.totalRides ?? "0",
-                                                    "Total Jobs"),
-                                              ],
-                                            );
-                                          },
-                                        )
-                                      ],
-                                    ),
-                                    SizedBox(
-                                      height: 5,
-                                    ),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                          // width: Get.width * 0.5,
-                                          child: Text(
-                                            "${controllerX.profileViewModel?.riderData?.firstName ?? ""} ${controllerX.profileViewModel?.riderData?.lastName ?? ""}",
-                                            style: TextStyles(context)
-                                                .getBoldStyle()
-                                                .copyWith(fontSize: 18),
-                                            maxLines: 2,
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          height: 05,
-                                        ),
-                                        Container(
-                                          // width: Get.width * 0.5,
-                                          child: Text(
-                                            controllerX.profileViewModel
-                                                    ?.riderData?.email ??
+                                                  ?.profile_image
+                                                  .toString()
+                                                  .trim() !=
+                                                  "")
+                                              ? CachedNetworkImage(
+                                            imageUrl:
+                                            controllerX
+                                                .profileViewModel
+                                                ?.riderData
+                                                ?.profile_image ??
                                                 "",
-                                            style: TextStyles(context)
-                                                .getBoldStyle()
-                                                .copyWith(fontSize: 12),
-                                            maxLines: 2,
-                                          ),
+                                            imageBuilder:
+                                                (context,
+                                                imageProvider) =>
+                                                Container(
+                                                  decoration:
+                                                  BoxDecoration(
+                                                    image: DecorationImage(
+                                                        image:
+                                                        imageProvider,
+                                                        fit:
+                                                        BoxFit.cover,),
+                                                    border: Border.all(color: Colors.red,width: 1,style: BorderStyle.solid),
+                                                    borderRadius: const BorderRadius.all(Radius.circular(40))),
+                                                ),
+                                            progressIndicatorBuilder: (context,
+                                                url,
+                                                downloadProgress) =>
+                                                Column(
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .center,
+                                                  children: [
+                                                    SizedBox(
+                                                      height:
+                                                      Get.height * 0.04,
+                                                      width:
+                                                      Get.width * 0.15,
+                                                      child:
+                                                      Padding(
+                                                        padding:
+                                                        const EdgeInsets.all(18.0),
+                                                        child:
+                                                        CircularProgressIndicator(value: downloadProgress.progress),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                            errorWidget: (context,
+                                                url,
+                                                error) =>
+                                                const Icon(Icons
+                                                    .error),
+                                          )
+                                              : Image.asset(
+                                            'assets/images/man.jpg',
+                                            fit: BoxFit
+                                                .cover,
+                                          )
                                         ),
-                                      ],
-                                    ),
-                                  ],
-                                );
-                              },
-                            ),
+                                      ),
+                                      const SizedBox(
+                                        width: 10,
+                                      ),
+                                      GetBuilder<DriverDashboardController>(
+                                        id: "analytics",
+                                        builder: (controllerX) {
+                                          return Row(
+                                            mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                            children: [
+                                              // driverINfoWidget("assets/icon/time.png", "10.2", "Hours online"),
+                                              driverINfoWidget(
+                                                  "assets/icon/meter.png",
+                                                  controllerX.totalDistanceNew ?? "30 kM",
+                                                  "Total Distance"),
+                                              const SizedBox(
+                                                width: 10,
+                                              ),
+                                              driverINfoWidget(
+                                                  "assets/icon/jobs.png",
+                                                  controllerX.totalRides ?? "0",
+                                                  "Total Jobs"),
+                                            ],
+                                          );
+                                        },
+                                      )
+                                    ],
+                                  ),
+                                  const SizedBox(
+                                    height: 5,
+                                  ),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "${controllerX.profileViewModel?.riderData?.firstName ?? ""} ${controllerX.profileViewModel?.riderData?.lastName ?? ""}",
+                                        style: TextStyles(context)
+                                            .getBoldStyle()
+                                            .copyWith(fontSize: 18),
+                                        maxLines: 2,
+                                      ),
+                                      const SizedBox(
+                                        height: 05,
+                                      ),
+                                      Text(
+                                        controllerX.profileViewModel
+                                                ?.riderData?.email ??
+                                            "",
+                                        style: TextStyles(context)
+                                            .getBoldStyle()
+                                            .copyWith(fontSize: 12),
+                                        maxLines: 2,
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              );
+                            },
+                          ),
 
-                          ],
-                        ),
+                        ],
                       ),
                     ),
-                    ListTile(
-                      onTap: () {
-                        controllerX.advancedDrawerController.hideDrawer();
-                      },
-                      leading: Icon(Icons.home,
-                          color: Theme.of(context).primaryColor),
-                      title: Text(
-                        'Home',
-                        style: TextStyles(context)
-                            .getRegularStyle()
-                            .copyWith(fontSize: 15),
-                      ),
+                  ),
+                  ListTile(
+                    onTap: () {
+                      controllerX.advancedDrawerController.hideDrawer();
+                    },
+                    leading: Icon(Icons.home,
+                        color: Theme.of(context).primaryColor),
+                    title: Text(
+                      'Home',
+                      style: TextStyles(context)
+                          .getRegularStyle()
+                          .copyWith(fontSize: 15),
                     ),
-                    ListTile(
-                      onTap: () {
-                        Get.toNamed(Routes.PROFILESCREEN);
-                      },
-                      leading: Icon(Icons.account_circle_rounded,
-                          color: Theme.of(context).primaryColor),
-                      title: Text(
-                        'Profile',
-                        style: TextStyles(context)
-                            .getRegularStyle()
-                            .copyWith(fontSize: 15),
-                      ),
+                  ),
+                  ListTile(
+                    onTap: () {
+                      Get.toNamed(Routes.PROFILESCREEN);
+                    },
+                    leading: Icon(Icons.account_circle_rounded,
+                        color: Theme.of(context).primaryColor),
+                    title: Text(
+                      'Profile',
+                      style: TextStyles(context)
+                          .getRegularStyle()
+                          .copyWith(fontSize: 15),
                     ),
-                    ListTile(
-                      onTap: () {
-                        Get.toNamed(Routes.VEHICLE_DETAILS);
-                      },
-                      leading: Icon(Icons.electric_car,
-                          color: Theme.of(context).primaryColor),
-                      title: Text(
-                        'Vehicle Details',
-                        style: TextStyles(context)
-                            .getRegularStyle()
-                            .copyWith(fontSize: 15),
-                      ),
+                  ),
+                  ListTile(
+                    onTap: () {
+                      Get.toNamed(Routes.VEHICLE_DETAILS);
+                    },
+                    leading: Icon(Icons.electric_car,
+                        color: Theme.of(context).primaryColor),
+                    title: Text(
+                      'Vehicle Details',
+                      style: TextStyles(context)
+                          .getRegularStyle()
+                          .copyWith(fontSize: 15),
                     ),
-                    ListTile(
-                      onTap: () {
-                        Get.toNamed(Routes.EARNINGPAGE);
-                      },
-                      leading: Icon(Icons.money,
-                          color: Theme.of(context).primaryColor),
-                      title: Text(
-                        'My Earning',
-                        style: TextStyles(context)
-                            .getRegularStyle()
-                            .copyWith(fontSize: 15),
-                      ),
+                  ),
+                  ListTile(
+                    onTap: () {
+                      Get.toNamed(Routes.EARNINGPAGE);
+                    },
+                    leading: Icon(Icons.money,
+                        color: Theme.of(context).primaryColor),
+                    title: Text(
+                      'My Earning',
+                      style: TextStyles(context)
+                          .getRegularStyle()
+                          .copyWith(fontSize: 15),
                     ),
+                  ),
+                 /* ListTile(
+                    onTap: () {
+                      Get.toNamed(Routes.WALETSCREEN);
+                    },
+                    leading: Icon(Icons.wallet,
+                        color: Theme.of(context).primaryColor),
+                    title: Text(
+                      'My Wallet',
+                      style: TextStyles(context)
+                          .getRegularStyle()
+                          .copyWith(fontSize: 15),
+                    ),
+                  ),*/
+                  ListTile(
+                    onTap: () {
+                      Get.toNamed(Routes.HISTORYSCREEN);
+                    },
+                    leading: Icon(Icons.history,
+                        color: Theme.of(context).primaryColor),
+                    title: Text(
+                      'History',
+                      style: TextStyles(context)
+                          .getRegularStyle()
+                          .copyWith(fontSize: 15),
+                    ),
+                  ),
                    /* ListTile(
-                      onTap: () {
-                        Get.toNamed(Routes.WALETSCREEN);
-                      },
-                      leading: Icon(Icons.wallet,
-                          color: Theme.of(context).primaryColor),
-                      title: Text(
-                        'My Wallet',
-                        style: TextStyles(context)
-                            .getRegularStyle()
-                            .copyWith(fontSize: 15),
-                      ),
-                    ),*/
-                    ListTile(
-                      onTap: () {
-                        Get.toNamed(Routes.HISTORYSCREEN);
-                      },
-                      leading: Icon(Icons.history,
-                          color: Theme.of(context).primaryColor),
-                      title: Text(
-                        'History',
-                        style: TextStyles(context)
-                            .getRegularStyle()
-                            .copyWith(fontSize: 15),
-                      ),
-                    ),
-                     /* ListTile(
-                  onTap: () {},
-                  leading: Icon(Icons.notifications_active,
-                      color: Theme.of(context).primaryColor),
-                  title: Text(
-                    'Notification',
-                    style: TextStyles(context)
-                        .getRegularStyle()
-                        .copyWith(fontSize: 15),
-                  ),
-                ),*/
-                ListTile(
-                  onTap: () {
-                    Get.toNamed(Routes.INVITESCREEN,arguments: (controllerX.profileViewModel?.riderData?.referralCode??"XXXXXXXXXXXXX"));
-                  },
-                  leading: Icon(Icons.card_giftcard_outlined,
-                      color: Theme.of(context).primaryColor),
-                  title: Text(
-                    'Refer and Earn',
-                    style: TextStyles(context)
-                        .getRegularStyle()
-                        .copyWith(fontSize: 15),
-                  ),
+                onTap: () {},
+                leading: Icon(Icons.notifications_active,
+                    color: Theme.of(context).primaryColor),
+                title: Text(
+                  'Notification',
+                  style: TextStyles(context)
+                      .getRegularStyle()
+                      .copyWith(fontSize: 15),
                 ),
-                    ListTile(
-                      onTap: () {
-                        // Get.toNamed(Routes.INVITESCREEN);
-                        Share.share('Click this link 👉 https://play.google.com/store/apps/details?id=com.eviman.rider',
-                            subject: 'Look what I made!');
-                      },
-                      leading: Icon(Icons.share,
-                          color: Theme.of(context).primaryColor),
-                      title: Text(
-                        'Share',
-                        style: TextStyles(context)
-                            .getRegularStyle()
-                            .copyWith(fontSize: 15),
-                      ),
-                    ),
-                    ListTile(
-                      onTap: () {
-                        // Get.toNamed(Routes.INVITESCREEN);
-                        controllerX.openPlayStorePage();
-                      },
-                      leading: Icon(Icons.star_rate,
-                          color: Theme.of(context).primaryColor),
-                      title: Text(
-                        'Rate Us',
-                        style: TextStyles(context)
-                            .getRegularStyle()
-                            .copyWith(fontSize: 15),
-                      ),
-                    ),
-                    ListTile(
-                      onTap: () {
-                        Get.toNamed(Routes.GALLERYSCREEN);
-                        // controllerX.openPlayStorePage();
-                      },
-                      leading: Icon(Icons.image,
-                          color: Theme.of(context).primaryColor),
-                      title: Text(
-                        'Gallery',
-                        style: TextStyles(context)
-                            .getRegularStyle()
-                            .copyWith(fontSize: 15),
-                      ),
-                    ),
-              /*  ListTile(
-                  onTap: () {
-                    Get.toNamed(Routes.SETTINGSCREEN);
-                  },
-                  leading: Icon(
-                    Icons.settings,
-                    color: Theme.of(context).primaryColor,
-                  ),
-                  title: Text(
-                    'Settings',
-                    style: TextStyles(context)
-                        .getRegularStyle()
-                        .copyWith(fontSize: 15),
-                  ),
-                ),*/
-                    ListTile(
-                      onTap: () {
-                        Get.toNamed(Routes.HELP_LINE_SCREEN);
-                      },
-                      leading: Icon(Icons.help_center,
-                          color: Theme.of(context).primaryColor),
-                      title: Text(
-                        'Help',
-                        style: TextStyles(context)
-                            .getRegularStyle()
-                            .copyWith(fontSize: 15),
-                      ),
-                    ),
-                    ListTile(
-                      onTap: () {
-                        controllerX.gotoSplashScreen();
-                      },
-                      leading: Icon(Icons.logout,
-                          color: Theme.of(context).primaryColor),
-                      title: Text(
-                        'Logout',
-                        style: TextStyles(context)
-                            .getRegularStyle()
-                            .copyWith(fontSize: 15),
-                      ),
-                    ),
-                  ],
+              ),*/
+              ListTile(
+                onTap: () {
+                  Get.toNamed(Routes.INVITESCREEN,arguments: (controllerX.profileViewModel?.riderData?.referralCode??"XXXXXXXXXXXXX"));
+                },
+                leading: Icon(Icons.card_giftcard_outlined,
+                    color: Theme.of(context).primaryColor),
+                title: Text(
+                  'Refer and Earn',
+                  style: TextStyles(context)
+                      .getRegularStyle()
+                      .copyWith(fontSize: 15),
                 ),
+              ),
+                  ListTile(
+                    onTap: () {
+                      // Get.toNamed(Routes.INVITESCREEN);
+                      Share.share('Click this link 👉 https://play.google.com/store/apps/details?id=com.eviman.rider',
+                          subject: 'Look what I made!');
+                    },
+                    leading: Icon(Icons.share,
+                        color: Theme.of(context).primaryColor),
+                    title: Text(
+                      'Share',
+                      style: TextStyles(context)
+                          .getRegularStyle()
+                          .copyWith(fontSize: 15),
+                    ),
+                  ),
+                  ListTile(
+                    onTap: () {
+                      // Get.toNamed(Routes.INVITESCREEN);
+                      controllerX.openPlayStorePage();
+                    },
+                    leading: Icon(Icons.star_rate,
+                        color: Theme.of(context).primaryColor),
+                    title: Text(
+                      'Rate Us',
+                      style: TextStyles(context)
+                          .getRegularStyle()
+                          .copyWith(fontSize: 15),
+                    ),
+                  ),
+                  ListTile(
+                    onTap: () {
+                      Get.toNamed(Routes.GALLERYSCREEN);
+                      // controllerX.openPlayStorePage();
+                    },
+                    leading: Icon(Icons.image,
+                        color: Theme.of(context).primaryColor),
+                    title: Text(
+                      'Gallery',
+                      style: TextStyles(context)
+                          .getRegularStyle()
+                          .copyWith(fontSize: 15),
+                    ),
+                  ),
+            /*  ListTile(
+                onTap: () {
+                  Get.toNamed(Routes.SETTINGSCREEN);
+                },
+                leading: Icon(
+                  Icons.settings,
+                  color: Theme.of(context).primaryColor,
+                ),
+                title: Text(
+                  'Settings',
+                  style: TextStyles(context)
+                      .getRegularStyle()
+                      .copyWith(fontSize: 15),
+                ),
+              ),*/
+                  ListTile(
+                    onTap: () {
+                      Get.toNamed(Routes.HELP_LINE_SCREEN);
+                    },
+                    leading: Icon(Icons.help_center,
+                        color: Theme.of(context).primaryColor),
+                    title: Text(
+                      'Help',
+                      style: TextStyles(context)
+                          .getRegularStyle()
+                          .copyWith(fontSize: 15),
+                    ),
+                  ),
+                  ListTile(
+                    onTap: () {
+                      controllerX.gotoSplashScreen();
+                    },
+                    leading: Icon(Icons.logout,
+                        color: Theme.of(context).primaryColor),
+                    title: Text(
+                      'Logout',
+                      style: TextStyles(context)
+                          .getRegularStyle()
+                          .copyWith(fontSize: 15),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -566,10 +558,8 @@ class DriverDashboardView extends StatelessWidget {
                         id: "map",
                         builder: (controllerX) {
                           return (controllerX.currentLocation == null)
-                              ? Center(
-                                  child: Container(
-                                    child: CircularProgressIndicator(),
-                                  ),
+                              ? const Center(
+                                  child: CircularProgressIndicator(),
                                 )
                               : GoogleMap(
                                   initialCameraPosition: CameraPosition(
@@ -644,7 +634,7 @@ class DriverDashboardView extends StatelessWidget {
                             },*/
                                   markers: {
                                     Marker(
-                                        markerId: MarkerId("Current Location"),
+                                        markerId: const MarkerId("Current Location"),
                                         position: LatLng(
                                             controllerX
                                                 .currentLocation!.latitude!,
@@ -670,19 +660,19 @@ class DriverDashboardView extends StatelessWidget {
                             borderRadius:
                                 BorderRadius.circular(5.0), //<-- SEE HERE
                           ),
-                          margin: EdgeInsets.all(2),
+                          margin: const EdgeInsets.all(2),
                           elevation: 5,
                           child: IconButton(
                             onPressed: controllerX.handleMenuButtonPressed,
-                            padding: EdgeInsets.all(2),
+                            padding: const EdgeInsets.all(2),
                             visualDensity:
-                                VisualDensity(horizontal: -4, vertical: -4),
+                                const VisualDensity(horizontal: -4, vertical: -4),
                             icon: ValueListenableBuilder<AdvancedDrawerValue>(
                               valueListenable:
                                   controllerX.advancedDrawerController,
                               builder: (_, value, __) {
                                 return AnimatedSwitcher(
-                                  duration: Duration(milliseconds: 250),
+                                  duration: const Duration(milliseconds: 250),
                                   child: Icon(
                                     value.visible ? Icons.clear : Icons.menu,
                                     key: ValueKey<bool>(value.visible),
@@ -785,7 +775,7 @@ class DriverDashboardView extends StatelessWidget {
                                     child: ListView(
                                       controller: scrollSheetController,
                                       padding: EdgeInsets.zero,
-                                      physics: ClampingScrollPhysics(),
+                                      physics: const ClampingScrollPhysics(),
                                       children: [
                                         // Text(controllerX.subscribeBookingDetailsModel?.subscribeBookingDetails?.bookingId??""),
 
@@ -801,7 +791,7 @@ class DriverDashboardView extends StatelessWidget {
                                                   crossAxisAlignment:
                                                       CrossAxisAlignment.start,
                                                   children: [
-                                                    SizedBox(height: 20),
+                                                    const SizedBox(height: 20),
                                                     Row(
                                                       children: [
                                                         const Spacer(),
@@ -844,7 +834,7 @@ class DriverDashboardView extends StatelessWidget {
                                                                   maxRadius: 20,
                                                                   minRadius: 10,
                                                                 ),
-                                                                SizedBox(
+                                                                const SizedBox(
                                                                   width: 10,
                                                                 ),
                                                                 /* CustomeTittleText(
@@ -907,16 +897,16 @@ class DriverDashboardView extends StatelessWidget {
                                                           vertical: 0),
                                                       child: Row(
                                                         children: [
-                                                          Icon(
+                                                          const Icon(
                                                             Icons
                                                                 .location_searching_rounded,
                                                             size: 20,
                                                             color: Colors.black,
                                                           ),
-                                                          SizedBox(
+                                                          const SizedBox(
                                                             width: 10,
                                                           ),
-                                                          Container(
+                                                          SizedBox(
                                                             width: Get.width *
                                                                 0.86,
                                                             child: Text(
@@ -983,16 +973,16 @@ class DriverDashboardView extends StatelessWidget {
                                                           vertical: 2),
                                                       child: Row(
                                                         children: [
-                                                          Icon(
+                                                          const Icon(
                                                             Icons.location_on,
                                                             size: 20,
                                                             color: Color(
                                                                 0xffADD685),
                                                           ),
-                                                          SizedBox(
+                                                          const SizedBox(
                                                             width: 10,
                                                           ),
-                                                          Container(
+                                                          SizedBox(
                                                             width: Get.width *
                                                                 0.86,
                                                             child: Text(
@@ -1034,21 +1024,19 @@ class DriverDashboardView extends StatelessWidget {
                                                                   vertical: 2),
                                                               child: Row(
                                                                 children: [
-                                                                  SizedBox(
+                                                                  const SizedBox(
                                                                     width: 8,
                                                                   ),
-                                                                  Container(
-                                                                    child: Text(
-                                                                      "PickUp Distance: ",
-                                                                      style: TextStyles(
-                                                                              context)
-                                                                          .getDescriptionStyle()
-                                                                          .copyWith(
-                                                                              fontWeight: FontWeight.bold,
-                                                                              fontSize: 13),
-                                                                    ),
+                                                                  Text(
+                                                                    "PickUp Distance: ",
+                                                                    style: TextStyles(
+                                                                            context)
+                                                                        .getDescriptionStyle()
+                                                                        .copyWith(
+                                                                            fontWeight: FontWeight.bold,
+                                                                            fontSize: 13),
                                                                   ),
-                                                                  SizedBox(
+                                                                  const SizedBox(
                                                                     width: 5,
                                                                   ),
                                                                   Text(
@@ -1074,21 +1062,19 @@ class DriverDashboardView extends StatelessWidget {
                                                                   vertical: 2),
                                                               child: Row(
                                                                 children: [
-                                                                  SizedBox(
+                                                                  const SizedBox(
                                                                     width: 8,
                                                                   ),
-                                                                  Container(
-                                                                    child: Text(
-                                                                      "Travel Distance: ",
-                                                                      style: TextStyles(
-                                                                              context)
-                                                                          .getDescriptionStyle()
-                                                                          .copyWith(
-                                                                              fontWeight: FontWeight.bold,
-                                                                              fontSize: 13),
-                                                                    ),
+                                                                  Text(
+                                                                    "Travel Distance: ",
+                                                                    style: TextStyles(
+                                                                            context)
+                                                                        .getDescriptionStyle()
+                                                                        .copyWith(
+                                                                            fontWeight: FontWeight.bold,
+                                                                            fontSize: 13),
                                                                   ),
-                                                                  SizedBox(
+                                                                  const SizedBox(
                                                                     width: 5,
                                                                   ),
                                                                   Text(
@@ -1123,14 +1109,12 @@ class DriverDashboardView extends StatelessWidget {
                                                                         FilterQuality
                                                                             .high,
                                                                   ),
-                                                                  Container(
-                                                                    child: Text(
-                                                                        "OTP verified",
-                                                                        style: TextStyles(context).getBoldStyle().copyWith(
-                                                                            fontWeight:
-                                                                                FontWeight.bold,
-                                                                            fontSize: 15)),
-                                                                  ),
+                                                                  Text(
+                                                                      "OTP verified",
+                                                                      style: TextStyles(context).getBoldStyle().copyWith(
+                                                                          fontWeight:
+                                                                              FontWeight.bold,
+                                                                          fontSize: 15)),
                                                                 ],
                                                               )
                                                             : InkWell(
@@ -1194,7 +1178,7 @@ class DriverDashboardView extends StatelessWidget {
                                                       (String txt) {},
                                                 ),
                                               ),*/
-                                                    SizedBox(
+                                                    const SizedBox(
                                                       height: 25,
                                                     ),
                                                     Padding(
@@ -1223,7 +1207,7 @@ class DriverDashboardView extends StatelessWidget {
                                                               height: 37,
                                                             ),
                                                           ):Container(),
-                                                          SizedBox(
+                                                          const SizedBox(
                                                             width: 2,
                                                           ),
                                                           (controllerX
@@ -1250,7 +1234,7 @@ class DriverDashboardView extends StatelessWidget {
                                                                   ),
                                                                 )
                                                               : Container(),
-                                                          SizedBox(
+                                                          const SizedBox(
                                                             width: 2,
                                                           ),
                                                           Expanded(

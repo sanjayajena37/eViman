@@ -62,7 +62,7 @@ class SpalshscreenView extends GetView<SpalshscreenController> {
                       child: SizedBox(),
                     ),
                     Center(
-                      child: Container(
+                      child: SizedBox(
                         width: MediaQuery
                             .of(context)
                             .size
@@ -154,7 +154,7 @@ class SpalshscreenView extends GetView<SpalshscreenController> {
               height: Get.height * 0.9,
               child: Column(
                 children: [
-                  SizedBox(
+                  const SizedBox(
                     height: 15,
                   ),
                   Padding(
@@ -245,7 +245,7 @@ class SpalshscreenView extends GetView<SpalshscreenController> {
                             .copyWith(
                             fontSize: 15, color: Colors.red),
                       )),
-                  SizedBox(
+                  const SizedBox(
                     height: 4,
                   ),
                   Padding(
@@ -264,7 +264,7 @@ class SpalshscreenView extends GetView<SpalshscreenController> {
                           )),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 7,
                   ),
                   Padding(
@@ -283,7 +283,7 @@ class SpalshscreenView extends GetView<SpalshscreenController> {
                           )),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 7,
                   ),
                   Padding(

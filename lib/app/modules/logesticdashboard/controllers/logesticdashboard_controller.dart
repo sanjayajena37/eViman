@@ -96,7 +96,9 @@ class LogesticdashboardController extends GetxController
         api: "https://backend.eviman.co.in/api/riders/v1/profile/${riderIdNew ?? 0}",
         token: authToken ?? "",
         fun: (map) {
-          print(">>>>" + map.toString());
+          if (kDebugMode) {
+            print(">>>>$map");
+          }
           Get.back();
           if (map is Map && map.containsKey("success") && map['success'] == true) {
             profileViewModel = ProfileViewModel.fromJson(map as Map<String, dynamic>);
@@ -145,7 +147,9 @@ class LogesticdashboardController extends GetxController
               incomingBookingModel?.incomingBooking?.pickupAddress ?? "Angul, Odisha, India",
           "dropAddress": incomingBookingModel?.incomingBooking?.dropAddress ?? "Bhubaneswar, Odisha"
         };
-        print(">>>>>>>>>createRideData" + postData.toString());
+        if (kDebugMode) {
+          print(">>>>>>>>>createRideData$postData");
+        }
 
         MyWidgets.showLoading3();
         await Get.find<ConnectorController>().POSTMETHOD_TOKEN(
@@ -161,7 +165,9 @@ class LogesticdashboardController extends GetxController
                 completer.complete("false");
                 // Snack.callError((map ?? "Something went wrong").toString());
               }
-              print(">>>>>mapData create ride" + map.toString());
+              if (kDebugMode) {
+                print(">>>>>mapData create ride$map");
+              }
             });
       } catch (e) {
         closeDialogIfOpen();
@@ -233,7 +239,9 @@ class LogesticdashboardController extends GetxController
         api: "https://backend.eviman.co.in/api/rides/v1/get-rides-analytics",
         token: authToken ?? "",
         fun: (map) {
-          print(">>>>>>>>>>>rides-analytics" + map.toString());
+          if (kDebugMode) {
+            print(">>>>>>>>>>>rides-analytics$map");
+          }
           if (map is Map && map.containsKey("result") && map['result'] != null) {
             totalDistanceNew = (map['result']['totalDistance'] ?? "0.00").toString();
             totalAmount = (map['result']['totalAmount'] ?? "0.00").toString();
@@ -284,7 +292,9 @@ class LogesticdashboardController extends GetxController
           // json: postData,
           fun: (map) {
             closeDialogIfOpen();
-            print(">>>>>>>>>>>>>>>>>>>>>map$map");
+            if (kDebugMode) {
+              print(">>>>>>>>>>>>>>>>>>>>>map$map");
+            }
             completer.complete(true);
             // Get.back();
           });
@@ -305,7 +315,9 @@ class LogesticdashboardController extends GetxController
     tabController = TabController(length: 2, vsync: this);
     tabController?.addListener(() {
       selectedIndex = tabController?.index;
-      print("Selected Index: " + (tabController?.index).toString());
+      if (kDebugMode) {
+        print("Selected Index: ${tabController?.index}");
+      }
     });
     // getRiderId();
     super.onInit();

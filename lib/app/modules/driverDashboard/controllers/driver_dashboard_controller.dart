@@ -66,7 +66,6 @@ part 'appsyncController.dart';
 part 'helpercontroller.dart';
 part 'OtherFunctionController.dart';
 
-
 class DriverDashboardController extends GetxController
     with Helper, WidgetsBindingObserver, GetSingleTickerProviderStateMixin {
   List<Map<String, double>> locationDataFromIsolate = [];
@@ -115,22 +114,20 @@ class DriverDashboardController extends GetxController
   ProfileViewModel? profileViewModel;
   bool otpVerifiedStatus = false;
 
-   AssetsAudioPlayer? assetsAudioPlayer;
+  AssetsAudioPlayer? assetsAudioPlayer;
 
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
-
 
   String? pickUpDist;
   String? travelDist;
   String? travelDistMeter;
   SubscribeBookingDetailsModel? subscribeBookingDetailsModel;
 
-
   Future<void> upDateRideStatus(String? sta, {String? bookingId}) async {
-    print(">>>>>>>>>>>>>>>>subscribeBookingDetailsModel" +
-        (subscribeBookingDetailsModel?.subscribeBookingDetails?.bookingId ?? "")
-            .toString());
+    if (kDebugMode) {
+      print(">>>>>>>>>>>>>>>>subscribeBookingDetailsModel${subscribeBookingDetailsModel?.subscribeBookingDetails?.bookingId ?? ""}");
+    }
     MyWidgets.showLoading3();
     Map<String, dynamic> postData = {
       "bookingId": bookingId ?? "",
@@ -140,22 +137,26 @@ class DriverDashboardController extends GetxController
       "amountReceived": double.tryParse(amountEditingController.text ?? "0") ??
           0 //Pass when bookingStatus is COMPLETED
     };
-    print(">>>>>>>>>>>>>>>" + (postData).toString());
+    if (kDebugMode) {
+      print(">>>>>>>>>>>>>>>$postData");
+    }
     Get.find<ConnectorController>().PATCH_METHOD1_POST_TOKEN(
         api: "https://backend.eviman.co.in/api/rides/v1/update-ride-status",
         token: authToken ?? "token",
         json: postData,
         fun: (map) {
           Get.back();
-          print(">>>>>>>>>>mapSta" + map.toString());
+          if (kDebugMode) {
+            print(">>>>>>>>>>mapSta$map");
+          }
         });
   }
 
   Future<void> upDateRideStatusOtpVeryFy(String? sta,
       {String? bookingId}) async {
-    print(">>>>>>>>>>>>>>>>subscribeBookingDetailsModel" +
-        (subscribeBookingDetailsModel?.subscribeBookingDetails?.bookingId ?? "")
-            .toString());
+    if (kDebugMode) {
+      print(">>>>>>>>>>>>>>>>subscribeBookingDetailsModel${subscribeBookingDetailsModel?.subscribeBookingDetails?.bookingId ?? ""}");
+    }
     MyWidgets.showLoading3();
     Map<String, dynamic> postData = {
       "bookingId": bookingId ?? "",
@@ -165,7 +166,9 @@ class DriverDashboardController extends GetxController
       "amountReceived": double.tryParse(amountEditingController.text ?? "0") ??
           0 //Pass when bookingStatus is COMPLETED
     };
-    print(">>>>>>>>>>>>>>>" + (postData).toString());
+    if (kDebugMode) {
+      print(">>>>>>>>>>>>>>>$postData");
+    }
     Get.find<ConnectorController>().PATCH_METHOD1_POST_TOKEN(
         api: "https://backend.eviman.co.in/api/rides/v1/update-ride-status",
         token: authToken ?? "token",
@@ -180,24 +183,29 @@ class DriverDashboardController extends GetxController
           } else {
             Snack.callError((map ?? "Something went wrong").toString());
           }
-          print(">>>>>>>>>>mapSta" + map.toString());
+          if (kDebugMode) {
+            print(">>>>>>>>>>mapSta$map");
+          }
         });
   }
 
-  Future<void> upDateRideStatusComplete(String? sta,  String? amount,
+  Future<void> upDateRideStatusComplete(String? sta, String? amount,
       {String? bookingId}) async {
-    print(">>>>>>>>>>>>>>>>subscribeBookingDetailsModel" +
-        (subscribeBookingDetailsModel?.subscribeBookingDetails?.bookingId ?? "")
-            .toString());
+    if (kDebugMode) {
+      print(">>>>>>>>>>>>>>>>subscribeBookingDetailsModel${subscribeBookingDetailsModel?.subscribeBookingDetails?.bookingId ?? ""}");
+    }
     // MyWidgets.showLoading3();
     Map<String, dynamic> postData = {
       "bookingId": bookingId ?? "",
       "bookingStatus": sta ?? "",
       "updatedById": riderIdNew ?? "",
       "updatedByUserType": "Rider",
-      "amountReceived": double.tryParse((amount??"0").toString() ?? "0") ?? 0 //Pass when bookingStatus is COMPLETED
+      "amountReceived": double.tryParse((amount ?? "0").toString() ?? "0") ??
+          0 //Pass when bookingStatus is COMPLETED
     };
-    print(">>>>>>>>>>>>>>>complete" + (postData).toString());
+    if (kDebugMode) {
+      print(">>>>>>>>>>>>>>>complete$postData");
+    }
     Get.find<ConnectorController>().PATCH_METHOD1_POST_TOKEN(
         api: "https://backend.eviman.co.in/api/rides/v1/update-ride-status",
         token: authToken ?? "token",
@@ -205,44 +213,51 @@ class DriverDashboardController extends GetxController
         fun: (map) {
           // Get.back();
           completeRide();
-          print(">>>>>>>>>>mapSta" + map.toString());
+          if (kDebugMode) {
+            print(">>>>>>>>>>mapSta$map");
+          }
         });
   }
 
   String userDetails = "";
 
-
-  Future<String> createRide({String ? paymentmode ,String ? paymentId}) async {
+  Future<String> createRide({String? paymentmode, String? paymentId}) async {
     Completer<String> completer = Completer<String>();
     if (incomingBookingModel != null) {
-      try{
+      try {
         Map<String, dynamic> postData = {
-          "bookingId":
-          incomingBookingModel?.incomingBooking?.bookingId ?? "",
-          "paymentId":paymentId??"",
-          "paymentmode":paymentmode??"",
+          "bookingId": incomingBookingModel?.incomingBooking?.bookingId ?? "",
+          "paymentId": paymentId ?? "",
+          "paymentmode": paymentmode ?? "",
           "riderAssigned": riderIdNew ?? "",
           "vehicleAssigned": vehicleIdNew ?? "",
-          "vehicleTypeId":  incomingBookingModel?.incomingBooking?.fareInfo??"",
+          "vehicleTypeId":
+              incomingBookingModel?.incomingBooking?.fareInfo ?? "",
           "clientId": incomingBookingModel?.incomingBooking?.clientId ?? "",
-          "pickupLat":
-          incomingBookingModel?.incomingBooking?.clientLat ?? "",
-          "pickupLng":
-          incomingBookingModel?.incomingBooking?.clientLng ?? "",
+          "pickupLat": incomingBookingModel?.incomingBooking?.clientLat ?? "",
+          "pickupLng": incomingBookingModel?.incomingBooking?.clientLng ?? "",
           "dropLat":
-          incomingBookingModel?.incomingBooking?.destinationLat ?? "",
-          "pickupCoordinates":{"lat":(incomingBookingModel?.incomingBooking?.clientLat ?? ""),
-            "lng":( incomingBookingModel?.incomingBooking?.clientLng ?? "")},
-          "dropCoordinates":{"lat":(incomingBookingModel?.incomingBooking?.destinationLat ?? ""),
-            "lng":(incomingBookingModel?.incomingBooking?.destinationLng ?? "")},
+              incomingBookingModel?.incomingBooking?.destinationLat ?? "",
+          "pickupCoordinates": {
+            "lat": (incomingBookingModel?.incomingBooking?.clientLat ?? ""),
+            "lng": (incomingBookingModel?.incomingBooking?.clientLng ?? "")
+          },
+          "dropCoordinates": {
+            "lat":
+                (incomingBookingModel?.incomingBooking?.destinationLat ?? ""),
+            "lng": (incomingBookingModel?.incomingBooking?.destinationLng ?? "")
+          },
           "dropLng":
-          incomingBookingModel?.incomingBooking?.destinationLng ?? "",
-          "pickupAddress": incomingBookingModel?.incomingBooking?.pickupAddress ??
-              "Angul, Odisha, India",
+              incomingBookingModel?.incomingBooking?.destinationLng ?? "",
+          "pickupAddress":
+              incomingBookingModel?.incomingBooking?.pickupAddress ??
+                  "Angul, Odisha, India",
           "dropAddress": incomingBookingModel?.incomingBooking?.dropAddress ??
               "Bhubaneswar, Odisha"
         };
-        print(">>>>>>>>>createRideData" + postData.toString());
+        if (kDebugMode) {
+          print(">>>>>>>>>createRideData$postData");
+        }
 
         MyWidgets.showLoading3();
         await Get.find<ConnectorController>().POSTMETHOD_TOKEN(
@@ -260,20 +275,19 @@ class DriverDashboardController extends GetxController
                 completer.complete("false");
                 // Snack.callError((map ?? "Something went wrong").toString());
               }
-              print(">>>>>mapData create ride" + map.toString());
+              if (kDebugMode) {
+                print(">>>>>mapData create ride$map");
+              }
             });
-      }catch(e){
+      } catch (e) {
         closeDialogIfOpen();
         completer.complete("false");
       }
-
-    }
-    else{
+    } else {
       completer.complete("false");
     }
     return completer.future;
   }
-
 
   void cancelRide() async {
     bool isOk = await showCommonPopupNew3(
@@ -309,9 +323,6 @@ class DriverDashboardController extends GetxController
     if (isOk) {}
   }
 
-
-
-
   String totalDistanceNew = "0.00";
   String totalAmount = "0.00";
   String totalRides = "0.00";
@@ -324,26 +335,29 @@ class DriverDashboardController extends GetxController
           if (kDebugMode) {
             print(">>>>>>>>>>>rides-analytics$map");
           }
-          if(map is Map && map.containsKey("result") && map['result'] != null){
-            totalDistanceNew = (map['result']['totalDistance']??"0.00").toString();
-            totalAmount = (map['result']['totalAmount']??"0.00").toString();
-            totalRides = (map['result']['totalRides']??"0.00").toString();
-            update(['analytics','amt']);
-          }else{
-             totalDistanceNew = "0.00";
-             totalAmount = "0.00";
-             totalRides = "0.00";
-             update(['analytics','amt']);
+          if (map is Map &&
+              map.containsKey("result") &&
+              map['result'] != null) {
+            totalDistanceNew =
+                (map['result']['totalDistance'] ?? "0.00").toString();
+            totalAmount = (map['result']['totalAmount'] ?? "0.00").toString();
+            totalRides = (map['result']['totalRides'] ?? "0.00").toString();
+            update(['analytics', 'amt']);
+          } else {
+            totalDistanceNew = "0.00";
+            totalAmount = "0.00";
+            totalRides = "0.00";
+            update(['analytics', 'amt']);
           }
         });
   }
 
   calculateDistance(List<dynamic> latLngList) async {
     // calculateDistanceUsingAPI
-    dev.log(">>>>>>>>>>>DISTLIST" + latLngList.toString());
+    dev.log(">>>>>>>>>>>DISTLIST$latLngList");
     // MyWidgets.showLoading3();
     double totalDistance = 0;
-   /* if (latLngList.length > 1) {
+    /* if (latLngList.length > 1) {
       for (int i = 0; i < (latLngList.length - 1); i++) {
         await calculateDistanceUsingAPIReturnMeter(
                 originLong: latLngList[i]['longitude'],
@@ -361,14 +375,18 @@ class DriverDashboardController extends GetxController
     }*/
     // closeDialogIfOpen();
 
-    print(">>>>>>>>>>>>>>>>>travel distance$totalDistance");
+    if (kDebugMode) {
+      print(">>>>>>>>>>>>>>>>>travel distance$totalDistance");
+    }
     String? startDate =
         await SharedPreferencesKeys().getStringData(key: 'startDate');
     DateTime startDate1 = DateTime.parse(startDate!);
     DateTime endDate = DateTime.now();
     Duration duration = endDate.difference(startDate1);
     double distanceInKilometer = totalDistance / 1000;
-    getActualAmount(travelDist.toString().replaceAll("km", ""), duration.inMinutes.toString()).then((value) {
+    getActualAmount(travelDist.toString().replaceAll("km", ""),
+            duration.inMinutes.toString())
+        .then((value) {
       if (value.toString().trim() != "") {
         completeRide1(
             amount: value ?? "40",
@@ -390,14 +408,18 @@ class DriverDashboardController extends GetxController
       "distance": distance,
       "duration": duration
     };
-    print("postData"+postData.toString());
+    if (kDebugMode) {
+      print("postData$postData");
+    }
     try {
       Get.find<ConnectorController>().POSTMETHOD_TOKEN(
           api: "https://backend.eviman.co.in/api/rides/v1/actual-fare",
           token: authToken ?? "",
           json: postData,
           fun: (map) {
-            print(">>>>>>>>>>>>>>>>amountMap" + map.toString());
+            if (kDebugMode) {
+              print(">>>>>>>>>>>>>>>>amountMap$map");
+            }
             if (map is Map &&
                 map.containsKey("success") &&
                 map['success'] == true) {
@@ -423,21 +445,18 @@ class DriverDashboardController extends GetxController
   StreamSubscription<geoLoc.Position>? positionStream;
   Connectivity connectivity = Connectivity();
 
-
-
   @override
   void onInit() {
     WidgetsBinding.instance.addObserver(this);
-     advancedDrawerController = AdvancedDrawerController();
+    advancedDrawerController = AdvancedDrawerController();
     connectivitySubscription = connectivity.onConnectivityChanged;
-    animationController =  AnimationController(vsync: this, duration: Duration(milliseconds: 300));
+    animationController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 300));
     // getRiderId();
     super.onInit();
   }
 
-
   bool permissionAllow = false;
-
 
   @override
   void onReady() {
@@ -456,19 +475,19 @@ class DriverDashboardController extends GetxController
     super.onReady();
   }
 
-  openPlayer(){
+  openPlayer() {
     assetsAudioPlayer = AssetsAudioPlayer();
     // Audio("assets/audios/song1.mp3")
-    assetsAudioPlayer?.open(Audio("assets/audio/excuseme_boss.mp3"),showNotification: true,
-        loopMode: LoopMode.single,autoStart: true,
+    assetsAudioPlayer?.open(Audio("assets/audio/excuseme_boss.mp3"),
+        showNotification: true,
+        loopMode: LoopMode.single,
+        autoStart: true,
         playInBackground: PlayInBackground.disabledRestoreOnForeground,
         respectSilentMode: false);
     // assetsAudioPlayer?.stop();
   }
 
   // Add more colors as needed
-
-
 
   @override
   void onClose() {
@@ -484,7 +503,6 @@ class DriverDashboardController extends GetxController
     super.onClose();
   }
 
-
   LocationService locationService = LocationService();
   Timer? locationUpdateTimer;
 
@@ -492,7 +510,9 @@ class DriverDashboardController extends GetxController
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    print(">>>>>>>>>>>>>>>>jks" + state.toString());
+    if (kDebugMode) {
+      print(">>>>>>>>>>>>>>>>jks$state");
+    }
     /*if(state == AppLifecycleState.paused){
       getRiderId();
     }*/

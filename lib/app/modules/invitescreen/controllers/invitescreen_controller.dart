@@ -39,7 +39,7 @@ class InvitescreenController extends GetxController  with GetSingleTickerProvide
                   children: [
                     GifImage(
                       controller: controller,
-                      image: AssetImage("assets/json/invite_sent.gif"),
+                      image: const AssetImage("assets/json/invite_sent.gif"),
                     ),
                     // Image.asset(
                     //   "Assets/Images/invite_sent.gif",
@@ -55,12 +55,12 @@ class InvitescreenController extends GetxController  with GetSingleTickerProvide
             ),
           );
         },
-        transitionDuration: Duration(milliseconds: 200),
+        transitionDuration: const Duration(milliseconds: 200),
         barrierDismissible: true,
         barrierLabel: '',
         context: Get.context!,
         pageBuilder: (context, animation1, animation2) {
-          return SizedBox();
+          return const SizedBox();
         });
   }
 

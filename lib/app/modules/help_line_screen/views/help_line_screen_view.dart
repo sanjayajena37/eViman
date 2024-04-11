@@ -53,7 +53,7 @@ class HelpLineScreenView extends StatelessWidget {
                             children: [
                               InkWell(
                                 onTap: (){
-                                  controller.textMe();
+                                  controller.makingPhoneCall("9124384030");
                                 },
                                 child: Stack(
                                   children: [
@@ -63,7 +63,7 @@ class HelpLineScreenView extends StatelessWidget {
                                       decoration: BoxDecoration(
                                         // color: Colors.purpleAccent,
                                         borderRadius: BorderRadius.circular(25.0),
-                                        gradient: LinearGradient(
+                                        gradient: const LinearGradient(
                                           begin: Alignment.topLeft,
                                           end: Alignment.bottomRight,
                                           colors: [
@@ -120,7 +120,7 @@ class HelpLineScreenView extends StatelessWidget {
                                       decoration: BoxDecoration(
                                         // color: Colors.purpleAccent,
                                         borderRadius: BorderRadius.circular(25.0),
-                                        gradient: LinearGradient(
+                                        gradient: const LinearGradient(
                                           begin: Alignment.topLeft,
                                           end: Alignment.bottomRight,
                                           colors: [
@@ -184,7 +184,7 @@ class HelpLineScreenView extends StatelessWidget {
                                       decoration: BoxDecoration(
                                         color: Colors.purpleAccent,
                                         borderRadius: BorderRadius.circular(25.0),
-                                        gradient: LinearGradient(
+                                        gradient: const LinearGradient(
                                           begin: Alignment.topLeft,
                                           end: Alignment.bottomRight,
                                           colors: [
@@ -230,7 +230,7 @@ class HelpLineScreenView extends StatelessWidget {
                         ],
                       ),
                     ),
-                    // messagesListView()
+                    messagesListView()
 
 
 

@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:dateplan/app/data/ApiFactory.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:get/get.dart';
 import 'package:sms_autofill/sms_autofill.dart';
@@ -66,7 +67,9 @@ class LoginscreenController extends GetxController {
           }else{
             Snack.callError("Something went wrong");
           }
-          print(">>>>>" + map.toString());
+          if (kDebugMode) {
+            print(">>>>>$map");
+          }
         });
   }
 
@@ -81,7 +84,9 @@ class LoginscreenController extends GetxController {
       }
       return;
     } catch (e) {
-      print(">>>>>>\n\n" + e.toString());
+      if (kDebugMode) {
+        print(">>>>>>\n\n$e");
+      }
       return;
     }
   }

@@ -316,7 +316,9 @@ class KycscreenController extends GetxController with Helper {
   }
 
   bool allValidation3() {
-    print(">>>>validation3call");
+    if (kDebugMode) {
+      print(">>>>validation3call");
+    }
     bool isValid = true;
     if (userTypeController.text
         .trim()
@@ -1331,7 +1333,7 @@ class KycscreenController extends GetxController with Helper {
                 (fareInfoModel?.fareList?.length ?? 0) > 0) {
               vehicles = fareInfoModel!.fareList!
                   .map((e) =>
-                  Vehicle.fromJson(e.toJson() as Map<String, dynamic>))
+                  Vehicle.fromJson(e.toJson()))
                   .toList();
             }
             final Set<String> uniqueVehicleTypes =

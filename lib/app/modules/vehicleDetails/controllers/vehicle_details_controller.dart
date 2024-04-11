@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -119,7 +120,9 @@ class VehicleDetailsController extends GetxController {
         data: await getFormData(image),
         onSendProgress: (received, total) {
           if (total != -1) {
-            print((received / total * 100).toStringAsFixed(0) + '%');
+            if (kDebugMode) {
+              print('${(received / total * 100).toStringAsFixed(0)}%');
+            }
           }
         },
       );
@@ -140,13 +143,19 @@ class VehicleDetailsController extends GetxController {
             update(['aadhaar']);
           } else {}
         }
-        print(">>>>>>>>>>response" + response.data.toString());
+        if (kDebugMode) {
+          print(">>>>>>>>>>response${response.data}");
+        }
       } else {
-        print(">>>>>>>>>>response" + response.data.toString());
+        if (kDebugMode) {
+          print(">>>>>>>>>>response${response.data}");
+        }
         Snack.callError("Something went wrong");
       }
     } on dio.DioError catch (e) {
-      print(">>>>>>>>>>response" + e.toString());
+      if (kDebugMode) {
+        print(">>>>>>>>>>response$e");
+      }
     }
   }
 
@@ -169,7 +178,9 @@ class VehicleDetailsController extends GetxController {
         postDocument(pollutionImage!, pollution: pollution);
       } else {}
     } on PlatformException catch (e) {
-      print("Failed  to pick image: $e");
+      if (kDebugMode) {
+        print("Failed  to pick image: $e");
+      }
     }
   }
 
@@ -230,7 +241,9 @@ class VehicleDetailsController extends GetxController {
         api: "https://backend.eviman.co.in/api/vehicles/v1/get/${vehicleId ?? 0}",
         token: authToken ?? "",
         fun: (map) {
-          print(">>>>" + map.toString());
+          if (kDebugMode) {
+            print(">>>>$map");
+          }
           Get.back();
           if (map is Map &&
               map.containsKey("success") &&
