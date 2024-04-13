@@ -1,16 +1,8 @@
-# dateplan
+# eViman
 
-A new Flutter project.
+Flutter Android project(Rider Application).
 
-## Getting Started
 
-This project is a starting point for a Flutter application.
+Eviman Transport & Logistics. Your Trusted Partner in Motion
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Searching for the best transport service with fantastic logistic solutions, then you are at the right place. Eviman Transport Pvt. Ltd. is a trusted organisation serving its customers for more than 1 years with a 100% of success rate. Eviman is popular for its budget-friendly nature and on-time service providing.
