@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 
 import '../../../constants/text_styles.dart';
-import '../../../logic/controllers/theme_provider.dart';
 import '../../../widgets/CardView.dart';
 import '../../../widgets/common_appbar_view.dart';
 import '../../../widgets/remove_focuse.dart';

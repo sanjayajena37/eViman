@@ -2,6 +2,7 @@
 import 'dart:isolate';
 import 'dart:ui';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:workmanager/workmanager.dart';
 import 'package:http/http.dart' as http;
@@ -32,7 +33,9 @@ void callbackDispatcher() {
 
     // final response = await _sendLocationToAPI(latitude ?? 0, longitude ?? 0);
 
-    print('Location updated successfully.');
+    if (kDebugMode) {
+      print('Location updated successfully.');
+    }
     /*
         if (response.statusCode == 200) {
           print('Location updated successfully.');
@@ -53,15 +56,19 @@ Future<LocationData?> _getCurrentLocation() async {
     locationService.location.requestPermission();
     locationService.startLocationUpdates((locationData) async {
       // Handle the location update here, e.g., send lat-long to the server.
-      print(
+      if (kDebugMode) {
+        print(
           "Latitude: ${locationData.latitude}, Longitude: ${locationData.longitude}");
+      }
       locationData1 = locationData;
     });
 
     // locationData1 = await location.getLocation();
     return locationData1;
   } catch (e) {
-    print('Error getting location: $e');
+    if (kDebugMode) {
+      print('Error getting location: $e');
+    }
     return null;
   }
 }
@@ -83,7 +90,7 @@ Future<http.Response> _sendLocationToAPI(
 void initializeWorkManager() {
   Workmanager().initialize(callbackDispatcher, isInDebugMode: true);
   Workmanager().registerPeriodicTask('1', 'simplePeriodicTask',
-      frequency: Duration(seconds: 4),
+      frequency: const Duration(seconds: 4),
       initialDelay: Duration.zero,
       constraints: Constraints(networkType: NetworkType.connected));
 }

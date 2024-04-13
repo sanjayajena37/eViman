@@ -94,7 +94,7 @@ class EarningpageView extends GetView<EarningpageController> {
                           ),
 
                         );
-                      }):Center(child: Text("No Data found"));
+                      }):const Center(child: Text("No Data found"));
                 },
               ),
             )

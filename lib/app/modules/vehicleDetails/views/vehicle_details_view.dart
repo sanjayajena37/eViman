@@ -58,7 +58,7 @@ class VehicleDetailsView extends GetView<VehicleDetailsController> {
                     child:
                     NotificationListener<OverscrollIndicatorNotification>(
                       onNotification: (overscroll) {
-                        overscroll.disallowGlow();
+                        overscroll.disallowIndicator();
                         return true;
                       },
                       child: SingleChildScrollView(
@@ -152,7 +152,7 @@ class VehicleDetailsView extends GetView<VehicleDetailsController> {
                                                           errorWidget: (context,
                                                               url,
                                                               error) =>
-                                                              Icon(Icons
+                                                              const Icon(Icons
                                                                   .error),
                                                         )
                                                             : Image.asset(
@@ -281,7 +281,7 @@ class VehicleDetailsView extends GetView<VehicleDetailsController> {
                                       const NeverScrollableScrollPhysics(),
                                       shrinkWrap: true,
                                       itemCount: profileInfoList.length,
-                                      padding: EdgeInsets.all(2),
+                                      padding: const EdgeInsets.all(2),
                                       itemBuilder: (context, index) {
                                         return Padding(
                                           padding: const EdgeInsets.only(

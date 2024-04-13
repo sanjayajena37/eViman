@@ -5,14 +5,17 @@ extension HelperController on DriverDashboardController {
     Map sendData = {
       "online": (val) ? 1 : 0,
     };
-    print(">>>>>update-online-status" + sendData.toString());
+    if (kDebugMode) {
+      print(">>>>>update-online-status$sendData");
+    }
     Get.find<ConnectorController>().PATCH_METHOD_TOKEN(
-        api: "https://backend.eviman.co.in/api/vehicles/v1/update-status/" +
-            vehicleIdNew.toString(),
+        api: "https://backend.eviman.co.in/api/vehicles/v1/update-status/$vehicleIdNew",
         json: sendData,
         token: authToken ?? "",
         fun: (map) {
-          print(">>>>>>" + map.toString());
+          if (kDebugMode) {
+            print(">>>>>>$map");
+          }
           if (map is Map &&
               map.containsKey("success") &&
               map['success'] == true) {
@@ -66,7 +69,9 @@ extension HelperController on DriverDashboardController {
           json: sendData,
           token: authToken ?? "",
           fun: (map) {
-            print(">>>>>>" + map.toString());
+            if (kDebugMode) {
+              print(">>>>>>$map");
+            }
             if (map is Map &&
                 map.containsKey("success") &&
                 map['success'] == true) {
@@ -174,8 +179,8 @@ extension HelperController on DriverDashboardController {
                           ),
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
+                      const Padding(
+                        padding: EdgeInsets.symmetric(
                             horizontal: 08.0, vertical: 0),
                         child: Column(
                           children: [
@@ -186,8 +191,8 @@ extension HelperController on DriverDashboardController {
                           ],
                         ),
                       ),
-                      Row(
-                        children: const [
+                      const Row(
+                        children: [
                           Icon(
                             Icons.location_searching_rounded,
                             size: 20,
@@ -226,8 +231,8 @@ extension HelperController on DriverDashboardController {
                       const SizedBox(
                         height: 2,
                       ),
-                      Row(
-                        children: const [
+                      const Row(
+                        children: [
                           Icon(
                             Icons.location_on,
                             size: 20,
@@ -613,16 +618,14 @@ extension HelperController on DriverDashboardController {
                             amountEditingController.text = "";
                             otpVerifiedStatus = false;
                             // userDetails = "";
-                            print(">>>>>>>>>>" + receiveData.toString());
+                            print(">>>>>>>>>>$receiveData");
                             if (receiveData != null) {
                               try {
                                 incomingBookingModel =
                                     IncomingBooikingModel.fromJson(
                                         (receiveData ?? {})
                                             as Map<String, dynamic>);
-                                print(">>>>>>>>>>" +
-                                    (incomingBookingModel?.toJson())
-                                        .toString());
+                                print(">>>>>>>>>>${incomingBookingModel?.toJson()}");
                                 subscribeBookingDetails(incomingBookingModel
                                     ?.incomingBooking?.bookingId);
                                 createRide(
@@ -864,12 +867,12 @@ extension HelperController on DriverDashboardController {
                 top: 0,
                 child: Container(
                   height: 30,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                       shape: BoxShape.circle, color: Colors.transparent),
                   child: Align(
                     alignment: Alignment.center,
                     child: IconButton(
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.close,
                         color: Colors.black,
                       ),
@@ -883,8 +886,8 @@ extension HelperController on DriverDashboardController {
                 ))
           ]),
           backgroundColor: const Color(0xff16192C),
-          insetPadding: EdgeInsets.all(2),
-          contentPadding: EdgeInsets.all(0),
+          insetPadding: const EdgeInsets.all(2),
+          contentPadding: const EdgeInsets.all(0),
         ));
   }
 
@@ -963,18 +966,20 @@ extension HelperController on DriverDashboardController {
                 top: 0,
                 child: Container(
                   height: 30,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                       shape: BoxShape.circle, color: Colors.transparent),
                   child: Align(
                     alignment: Alignment.center,
                     child: IconButton(
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.close,
                         color: Colors.black,
                       ),
                       onPressed: () {
                         // userDetails = "";
-                        print(">>>>>>>>>>>>>>backPressed");
+                        if (kDebugMode) {
+                          print(">>>>>>>>>>>>>>backPressed");
+                        }
                         Get.back();
                       },
                     ),
@@ -982,8 +987,8 @@ extension HelperController on DriverDashboardController {
                 ))
           ]),
           backgroundColor: const Color(0xff16192C),
-          insetPadding: EdgeInsets.all(2),
-          contentPadding: EdgeInsets.all(0),
+          insetPadding: const EdgeInsets.all(2),
+          contentPadding: const EdgeInsets.all(0),
         ));
   }
 
@@ -1022,7 +1027,9 @@ extension HelperController on DriverDashboardController {
       }
       return;
     } catch (e) {
-      print(">>>>>>\n\n" + e.toString());
+      if (kDebugMode) {
+        print(">>>>>>\n\n$e");
+      }
       return;
     }
   }
@@ -1038,7 +1045,9 @@ extension HelperController on DriverDashboardController {
       // FlutterBackgroundService().invoke("isForeGround",{"sta":sta??"true"});
       return;
     } catch (e) {
-      print(">>>>>>>>>>>error JKs\n\n" + e.toString());
+      if (kDebugMode) {
+        print(">>>>>>>>>>>error JKs\n\n$e");
+      }
       return;
     }
   }
@@ -1071,7 +1080,9 @@ extension HelperController on DriverDashboardController {
     isolateField =
         await FlutterIsolate.spawn(startIsolateFun, receivePort.sendPort);
     receivePort.listen((message) {
-      print("????????????????>>>>>>>>>>>>>isolate" + message);
+      if (kDebugMode) {
+        print(">>>>>>>>>>>>>isolate" + message);
+      }
       // isolateField?.kill();
     });
 
@@ -1100,7 +1111,9 @@ Future<void> startIsolateFun(SendPort sendPort) async {
   geoLoc.GeolocatorPlatform geolocator = geoLoc.GeolocatorPlatform.instance;
   List<Map<String, double>> locationData = [];
   // sendPort.send("Isolate started");
-  print(">>>>>>>>>>>>>isolate run");
+  if (kDebugMode) {
+    print(">>>>>>>>>>>>>isolate run");
+  }
   await SharedPreferencesKeys()
       .setStringData(key: "latlong", text: locationData.toString());
 
@@ -1130,22 +1143,28 @@ Future<void> startIsolateFun(SendPort sendPort) async {
       await SharedPreferencesKeys()
           .setStringData(key: "latlong", text: locationData.toString());
       sendPort.send(locationData.toString());
-      print(">>>>>>>>>message from isolate JKS2" + locationData.toString());
+      if (kDebugMode) {
+        print(">>>>>>>>>message from isolate JKS2$locationData");
+      }
     },
     onError: (e) {
-      print(">>>>>>>>>>exception" + e.toString());
+      if (kDebugMode) {
+        print(">>>>>>>>>>exception$e");
+      }
       // sendPort.send("Error: $e");
     },
     cancelOnError: true,
   );
   Future.delayed(
-    Duration(seconds: 500),
+    const Duration(seconds: 500),
     () {
       positionStream.cancel();
     },
   );
 
-  print(">>>>>>>>>message from isolate JKS");
+  if (kDebugMode) {
+    print(">>>>>>>>>message from isolate JKS");
+  }
 }
 
 @pragma("vm:entry-point")
@@ -1174,7 +1193,9 @@ void startIsolateFun2(SendPort sendPort) async {
       sendPort.send(data);
     },
     onError: (e) {
-      print("Error: $e");
+      if (kDebugMode) {
+        print("Error: $e");
+      }
       sendPort.send("Error: $e");
     },
     cancelOnError: true,
@@ -1182,7 +1203,7 @@ void startIsolateFun2(SendPort sendPort) async {
 
   // Keep the isolate running
   await Future.delayed(
-      Duration(days: 365)); // You can adjust the duration as needed
+      const Duration(days: 365)); // You can adjust the duration as needed
 }
 
 @pragma("vm:entry-point")

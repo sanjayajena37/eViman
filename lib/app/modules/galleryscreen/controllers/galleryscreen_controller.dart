@@ -35,7 +35,7 @@ class GalleryscreenController extends GetxController {
                 isActive: 1,)]);
               update(['ref']);
             }
-            log(">>>>>>>>>>>>map"+jsonEncode(map) .toString());
+            log(">>>>>>>>>>>>map${jsonEncode(map)}");
           });
     }catch(e){
       Get.back();

@@ -3,35 +3,25 @@ import 'dart:convert';
 import 'dart:isolate';
 import 'dart:ui';
 
-import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_background_service_android/flutter_background_service_android.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 
 import 'package:get/get.dart';
 import 'package:google_maps_flutter_android/google_maps_flutter_android.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:shake/shake.dart';
 import 'package:upgrader/upgrader.dart';
-import 'package:vibration/vibration.dart';
 
 import 'MainClass.dart';
 import 'app/Firebase/FirebaseApi.dart';
 import 'app/constants/shared_preferences_keys.dart';
-import 'app/data/BinderData.dart';
 import 'app/logic/controllers/theme_provider.dart';
-import 'app/modules/driverDashboard/controllers/workmanager_initializer.dart';
-import 'app/providers/flutterbackgroundservices.dart';
-import 'app/routes/app_pages.dart';
 import 'package:google_maps_flutter_android/google_maps_flutter_android.dart';
 import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
 import 'package:dio/dio.dart' as service1;
@@ -56,6 +46,10 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   FirebaseApi().initNotifications();
+
+    /*FirebaseFirestore.instance.settings = const Settings(
+      persistenceEnabled: true,
+    );*/
 
 
   await Upgrader.clearSavedSettings();

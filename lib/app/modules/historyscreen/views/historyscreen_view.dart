@@ -38,13 +38,13 @@ class HistoryscreenView extends GetView<HistoryscreenController> {
                 assignId: true,
                 id: "his",
                 builder: (logic) {
-                  return ((controller.rideHistory).isEmpty)?Center(child: Text("Data Not Found")):
+                  return ((controller.rideHistory).isEmpty)?const Center(child: Text("Data Not Found")):
                   ListView.builder(
                       itemCount: (controller.rideHistory).length,
-                      physics: BouncingScrollPhysics(),
+                      physics: const BouncingScrollPhysics(),
                       itemBuilder: (context, index) {
                         return Padding(
-                          padding: EdgeInsets.only(left: 12.0,
+                          padding: const EdgeInsets.only(left: 12.0,
                               right: 12,
                               bottom: 5,
                               top: 2),

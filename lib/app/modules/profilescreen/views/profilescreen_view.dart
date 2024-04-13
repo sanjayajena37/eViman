@@ -1,12 +1,9 @@
-import 'dart:io';
+
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:dateplan/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
 
 import '../../../widgets/CustomeTittleText.dart';
 import '../../../widgets/Textfield_widget.dart';
@@ -63,7 +60,7 @@ class ProfilescreenView extends GetView<ProfilescreenController> {
                     child:
                         NotificationListener<OverscrollIndicatorNotification>(
                       onNotification: (overscroll) {
-                        overscroll.disallowGlow();
+                        overscroll.disallowIndicator();
                         return true;
                       },
                       child: SingleChildScrollView(
@@ -128,7 +125,7 @@ class ProfilescreenView extends GetView<ProfilescreenController> {
                                                                                 imageProvider,
                                                                             fit:
                                                                                 BoxFit.cover,
-                                                                            colorFilter: ColorFilter.mode(Colors.red, BlendMode.colorBurn)),
+                                                                            colorFilter: const ColorFilter.mode(Colors.red, BlendMode.colorBurn)),
                                                                       ),
                                                                     ),
                                                                     progressIndicatorBuilder: (context,
@@ -157,7 +154,7 @@ class ProfilescreenView extends GetView<ProfilescreenController> {
                                                                     errorWidget: (context,
                                                                             url,
                                                                             error) =>
-                                                                        Icon(Icons
+                                                                        const Icon(Icons
                                                                             .error),
                                                                   )
                                                                 : Image.asset(
@@ -274,7 +271,7 @@ class ProfilescreenView extends GetView<ProfilescreenController> {
                               child: NotificationListener<
                                   OverscrollIndicatorNotification>(
                                 onNotification: (overscroll) {
-                                  overscroll.disallowGlow();
+                                  overscroll.disallowIndicator();
                                   return true;
                                 },
                                 child: GetBuilder<ProfilescreenController>(
@@ -286,7 +283,7 @@ class ProfilescreenView extends GetView<ProfilescreenController> {
                                           const NeverScrollableScrollPhysics(),
                                       shrinkWrap: true,
                                       itemCount: profileInfoList.length,
-                                      padding: EdgeInsets.all(2),
+                                      padding: const EdgeInsets.all(2),
                                       itemBuilder: (context, index) {
                                         return Padding(
                                           padding: const EdgeInsets.only(
@@ -429,9 +426,7 @@ class ProfilescreenView extends GetView<ProfilescreenController> {
                       controllerX.updateApi();
                     },
                   )
-                : Container(
-                    child: Text(""),
-                  ),
+                : const Text(""),
           );
         },
       ),

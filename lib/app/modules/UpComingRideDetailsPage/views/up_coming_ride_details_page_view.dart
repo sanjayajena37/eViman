@@ -82,7 +82,7 @@ class UpComingRideDetailsPageView extends GetView<UpComingRideDetailsPageControl
                                         const SizedBox(
                                           height: 8,
                                         ),
-                                        SizedBox(
+                                        const SizedBox(
                                           height: 15,
                                         ),
                                         Row(
@@ -93,7 +93,7 @@ class UpComingRideDetailsPageView extends GetView<UpComingRideDetailsPageControl
                                               mainAxisAlignment: MainAxisAlignment.start,
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: <Widget>[
-                                                Container(
+                                                SizedBox(
                                                     height: 55,
                                                     width: 10,
                                                     child: Column(
@@ -121,7 +121,7 @@ class UpComingRideDetailsPageView extends GetView<UpComingRideDetailsPageControl
                                                                   int index) {
                                                                 return Column(
                                                                   children: <Widget>[
-                                                                    SizedBox(
+                                                                    const SizedBox(
                                                                       height: 1,
                                                                     ),
                                                                     Container(
@@ -137,7 +137,7 @@ class UpComingRideDetailsPageView extends GetView<UpComingRideDetailsPageControl
                                                                 );
                                                               }),
                                                         ),
-                                                        SizedBox(
+                                                        const SizedBox(
                                                           height: 1,
                                                         ),
                                                         Container(
@@ -167,7 +167,7 @@ class UpComingRideDetailsPageView extends GetView<UpComingRideDetailsPageControl
                                                                     .getBoldStyle(),
                                                                 maxLines: 2)),
                                                       ),
-                                                      SizedBox(
+                                                      const SizedBox(
                                                         height: 21,
                                                       ),
                                                       Opacity(
@@ -189,14 +189,14 @@ class UpComingRideDetailsPageView extends GetView<UpComingRideDetailsPageControl
                                             ),
                                           ],
                                         ),
-                                        SizedBox(
+                                        const SizedBox(
                                           height: 15,
                                         ),
                                       ],
                                     ),
                                   ),
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 7,
                                 ),
                                 Card(
@@ -271,7 +271,7 @@ class UpComingRideDetailsPageView extends GetView<UpComingRideDetailsPageControl
                                     ),
                                   ),
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 4,
                                 ),
                                 Card(
@@ -301,7 +301,7 @@ class UpComingRideDetailsPageView extends GetView<UpComingRideDetailsPageControl
                                                     child: FittedBox(
                                                       fit: BoxFit.scaleDown,
                                                       child: Text(
-                                                        "${controllerX.ridesData?.clientDetails?.firstName ?? ""}",
+                                                        controllerX.ridesData?.clientDetails?.firstName ?? "",
                                                         style: TextStyles(context)
                                                             .getBoldStyle()
                                                             .copyWith(
@@ -330,7 +330,7 @@ class UpComingRideDetailsPageView extends GetView<UpComingRideDetailsPageControl
                                                     child: FittedBox(
                                                       fit: BoxFit.scaleDown,
                                                       child: Text(
-                                                        "${controllerX.ridesData?.clientDetails?.lastName ?? ""}",
+                                                        controllerX.ridesData?.clientDetails?.lastName ?? "",
                                                         style: TextStyles(context)
                                                             .getBoldStyle()
                                                             .copyWith(
@@ -359,7 +359,7 @@ class UpComingRideDetailsPageView extends GetView<UpComingRideDetailsPageControl
                                                     child: FittedBox(
                                                       fit: BoxFit.scaleDown,
                                                       child: Text(
-                                                        "${controllerX.ridesData?.clientDetails?.address ?? ""}",
+                                                        controllerX.ridesData?.clientDetails?.address ?? "",
                                                         style: TextStyles(context)
                                                             .getBoldStyle()
                                                             .copyWith(
@@ -388,7 +388,7 @@ class UpComingRideDetailsPageView extends GetView<UpComingRideDetailsPageControl
                                                     child: FittedBox(
                                                       fit: BoxFit.scaleDown,
                                                       child: Text(
-                                                        "${controllerX.ridesData?.clientDetails?.mobile ?? ""}",
+                                                        controllerX.ridesData?.clientDetails?.mobile ?? "",
                                                         style: TextStyles(context)
                                                             .getBoldStyle()
                                                             .copyWith(
@@ -467,7 +467,7 @@ class UpComingRideDetailsPageView extends GetView<UpComingRideDetailsPageControl
                                     ),
                                   ],
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 30,
                                 ),
                               ],

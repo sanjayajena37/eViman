@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
-import '../../../widgets/CustomeTittleText.dart';
 import '../../../widgets/common_appbar_view.dart';
 import '../../../widgets/common_button.dart';
 import '../../../widgets/common_text_field_view.dart';

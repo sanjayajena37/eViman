@@ -10,7 +10,9 @@ extension OtherFunctionController on DriverDashboardController {
         "https://backend.eviman.co.in/api/riders/v1/profile/${riderIdNew ?? 0}",
         token: authToken ?? "",
         fun: (map) {
-          print(">>>>" + map.toString());
+          if (kDebugMode) {
+            print(">>>>$map");
+          }
           Get.back();
           if (map is Map &&
               map.containsKey("success") &&
@@ -33,7 +35,9 @@ extension OtherFunctionController on DriverDashboardController {
         "https://backend.eviman.co.in/api/riders/v1/online-status/${riderIdNew ?? ""}",
         fun: (map) {
           incomingBookingModel = null;
-          print(">>>>>>>>>>>>>online-status" + map.toString());
+          if (kDebugMode) {
+            print(">>>>>>>>>>>>>online-status$map");
+          }
           Get.back();
           if (map != null &&
               map is Map &&
@@ -187,7 +191,9 @@ extension OtherFunctionController on DriverDashboardController {
           isYesOrNoPopup: true
       );
       if (isOk) {
-        print(">>>>>>>>>>>>>>>sta loc"+status.toString());
+        if (kDebugMode) {
+          print(">>>>>>>>>>>>>>>sta loc$status");
+        }
         if(status.isDenied){
           await permission. Permission.location.request();
           await permission. Permission.notification.request();
@@ -212,7 +218,9 @@ extension OtherFunctionController on DriverDashboardController {
     var status = await permission.Permission.location.status;
     // var status1 = await permission.Permission.locationAlways.status;
     // var status2 = await permission.Permission.notification.status;
-    print(">>>>>>>>>>>>>>status$status");
+    if (kDebugMode) {
+      print(">>>>>>>>>>>>>>status$status");
+    }
     if (status.isDenied || status.isPermanentlyDenied ) {
       bool isOk = await showCommonPopupNew6(
         // "eViman App need your run time location permission.It's required to give smooth less service to you",
@@ -283,7 +291,7 @@ extension OtherFunctionController on DriverDashboardController {
   }
 
   makingPhoneCall(String? number) async {
-    var url = Uri.parse("tel:${number ?? 9178109443}");
+    var url = Uri.parse("tel:${number ?? ""}");
     if (await canLaunchUrl(url)) {
       await launchUrl(url);
     } else {
@@ -359,8 +367,7 @@ extension OtherFunctionController on DriverDashboardController {
             } else {
               Snack.callError("Something went wrong");
             }
-            dev.log(">>>>>>>>>>>latlngList" +
-                jsonDecode((map['ride']['data']))['list'].toString());
+            dev.log(">>>>>>>>>>>latlngList${jsonDecode((map['ride']['data']))['list']}");
           });
     } catch (e) {
       Snack.callError("Something went wrong");

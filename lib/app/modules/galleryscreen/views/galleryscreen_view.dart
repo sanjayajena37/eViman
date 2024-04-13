@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import '../../../widgets/common_appbar_view.dart';
 import '../../../widgets/remove_focuse.dart';
 import '../controllers/galleryscreen_controller.dart';
-import '../details_page.dart';
 
 class GalleryscreenView extends GetView<GalleryscreenController> {
   GalleryscreenView({Key? key}) : super(key: key);
@@ -39,11 +38,11 @@ class GalleryscreenView extends GetView<GalleryscreenController> {
               builder: (logic) {
                 return Expanded(
                   child: Container(
-                    padding: EdgeInsets.symmetric(
+                    padding: const EdgeInsets.symmetric(
                       horizontal: 20,
                       vertical: 3,
                     ),
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(30),
@@ -51,7 +50,7 @@ class GalleryscreenView extends GetView<GalleryscreenController> {
                       ),
                     ),
                     child: GridView.builder(
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 3,
                         crossAxisSpacing: 10,
                         mainAxisSpacing: 10,

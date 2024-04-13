@@ -4,13 +4,13 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/animation.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../constants/shared_preferences_keys.dart';
-import '../../../data/ApiFactory.dart';
 import '../../../widgets/MyWidget.dart';
 import '../../../widgets/Snack.dart';
 import '../../ConnectorController.dart';
@@ -68,7 +68,7 @@ class ProfilescreenController extends GetxController
         api: "https://backend.eviman.co.in/api/riders/v1/profile/${riderId ?? 0}",
         token: authToken ?? "",
         fun: (map) {
-          log(">>>>" + map.toString());
+          log(">>>>$map");
           Get.back();
           if (map is Map &&
               map.containsKey("success") &&
@@ -186,7 +186,9 @@ class ProfilescreenController extends GetxController
         data: await getFormData(image),
         onSendProgress: (received, total) {
           if (total != -1) {
-            print((received / total * 100).toStringAsFixed(0) + '%');
+            if (kDebugMode) {
+              print('${(received / total * 100).toStringAsFixed(0)}%');
+            }
           }
         },
       );
@@ -211,13 +213,19 @@ class ProfilescreenController extends GetxController
             update(['pan']);
           } else {}
         }
-        print(">>>>>>>>>>response" + response.data.toString());
+        if (kDebugMode) {
+          print(">>>>>>>>>>response${response.data}");
+        }
       } else {
-        print(">>>>>>>>>>response" + response.data.toString());
+        if (kDebugMode) {
+          print(">>>>>>>>>>response${response.data}");
+        }
         Snack.callError("Something went wrong");
       }
     } on dio.DioError catch (e) {
-      print(">>>>>>>>>>response" + e.toString());
+      if (kDebugMode) {
+        print(">>>>>>>>>>response$e");
+      }
     }
   }
 
@@ -305,7 +313,9 @@ class ProfilescreenController extends GetxController
       "pan_image": uploadAadhaarImageUrl ?? ""
     };
 
-    print(">>>>>>>>>>>>>>>>>>postData"+postData.toString());
+    if (kDebugMode) {
+      print(">>>>>>>>>>>>>>>>>>postData$postData");
+    }
     MyWidgets.showLoading3();
     Get.find<ConnectorController>().PATCH_METHOD_POST_TOKEN(
         api:
@@ -321,7 +331,9 @@ class ProfilescreenController extends GetxController
           } else {
             Snack.callError((map ?? "Something went wrong").toString());
           }
-          print(">>>>>" + map.toString());
+          if (kDebugMode) {
+            print(">>>>>$map");
+          }
         });
   }
 
@@ -336,7 +348,9 @@ class ProfilescreenController extends GetxController
   getRiderId() async {
     riderId = await SharedPreferencesKeys().getStringData(key: 'riderId');
     authToken = await SharedPreferencesKeys().getStringData(key: 'authToken');
-    print(">>>>>>>>>authToken jks" + authToken.toString());
+    if (kDebugMode) {
+      print(">>>>>>>>>authToken jks$authToken");
+    }
     getProfileDetails();
   }
 

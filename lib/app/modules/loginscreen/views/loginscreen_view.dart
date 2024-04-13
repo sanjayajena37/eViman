@@ -1,18 +1,15 @@
-import 'package:dateplan/app/providers/Utils.dart';
+
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../constants/text_styles.dart';
-import '../../../routes/app_pages.dart';
 import '../../../widgets/Snack.dart';
-import '../../../widgets/bottom_top_move_animation_view.dart';
 import '../../../widgets/common_appbar_view.dart';
 import '../../../widgets/common_button.dart';
 import '../../../widgets/common_text_field_view.dart';
 import '../../../widgets/remove_focuse.dart';
-import '../FacebookTwitterButtonView.dart';
 import '../controllers/loginscreen_controller.dart';
 
 class LoginscreenView extends StatelessWidget {
@@ -55,13 +52,11 @@ class LoginscreenView extends StatelessWidget {
                                 .size
                                 .height * 0.06,
                           ),
-                          Container(
-                            // width:MediaQuery.of(context).size.width,
-                              child: Image.asset(
-                                "assets/images/logo.png",
-                                fit: BoxFit.fill,
-                                height: 200, width: 200,
-                              )),
+                          Image.asset(
+                            "assets/images/logo.png",
+                            fit: BoxFit.fill,
+                            height: 200, width: 200,
+                          ),
                           SizedBox(
                             height: MediaQuery
                                 .of(context)
@@ -80,7 +75,7 @@ class LoginscreenView extends StatelessWidget {
                             keyboardType: TextInputType.number,
                             onChanged: (String txt) {},
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 2,
                           ),
                           Padding(

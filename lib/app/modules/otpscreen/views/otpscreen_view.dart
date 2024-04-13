@@ -2,13 +2,10 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:sms_autofill/sms_autofill.dart';
-import 'package:timer_count_down/timer_controller.dart';
 import 'package:timer_count_down/timer_count_down.dart';
 
 import '../../../constants/text_styles.dart';
-import '../../../routes/app_pages.dart';
 import '../../../widgets/common_appbar_view.dart';
-import '../../../widgets/common_button.dart';
 import '../controllers/otpscreen_controller.dart';
 
 class OtpscreenView extends GetView<OtpscreenController> {
@@ -44,15 +41,13 @@ class OtpscreenView extends GetView<OtpscreenController> {
                           SizedBox(
                             height: MediaQuery.of(context).size.height * 0.06,
                           ),
-                          Container(
-                              // width:MediaQuery.of(context).size.width,
-                              child: Image.asset(
+                          Image.asset(
                             "assets/images/enterotp.png",
                             fit: BoxFit.fill,
                             height: 200,
                             width: 200,
-                          )),
-                          Row(
+                          ),
+                          const Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
@@ -62,10 +57,10 @@ class OtpscreenView extends GetView<OtpscreenController> {
                               ),
                             ],
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 10,
                           ),
-                          Text(
+                          const Text(
                             "Enter Your OTP here",
                             style: TextStyle(
                               fontSize: 12,
@@ -135,7 +130,7 @@ class OtpscreenView extends GetView<OtpscreenController> {
                                       ),
                                       width: context.width,
                                       child: Text(
-                                          "Wait | 00:${currentRemainingTime.toString().length == 4 ? "${currentRemainingTime.toString().substring(0, 2)}" : "${currentRemainingTime.toString().substring(0, 1)}"}",
+                                          "Wait | 00:${currentRemainingTime.toString().length == 4 ? currentRemainingTime.toString().substring(0, 2) : currentRemainingTime.toString().substring(0, 1)}",
                                           style: const TextStyle(fontSize: 16)),
                                     );
                                   },

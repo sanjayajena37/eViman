@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:get/get.dart';
@@ -14,7 +15,6 @@ import '../../../data/ApiFactory.dart';
 import '../../../routes/app_pages.dart';
 import '../../../widgets/MyWidget.dart';
 import '../../../widgets/Snack.dart';
-import '../../../widgets/test.dart';
 import '../../ConnectorController.dart';
 
 class OtpscreenController extends GetxController with CodeAutoFill, Helper {
@@ -93,7 +93,9 @@ class OtpscreenController extends GetxController with CodeAutoFill, Helper {
           } else {
             Snack.callError("Something went wrong");
           }
-          print(">>>>>" + map.toString());
+          if (kDebugMode) {
+            print(">>>>>$map");
+          }
         });
   }
 
@@ -105,7 +107,9 @@ class OtpscreenController extends GetxController with CodeAutoFill, Helper {
             "fcm_token":FirebaseApi().fcmToken??""
           },
           fun: (map) {
-            print(">>>>>>>>>>>>>>>>>>fcmToken${FirebaseApi().fcmToken} >>>>>>mapres  $map");
+            if (kDebugMode) {
+              print(">>>>>>>>>>>>>>>>>>fcmToken${FirebaseApi().fcmToken} >>>>>>mapres  $map");
+            }
 
       }, token: authToken ?? '');
     }
@@ -114,7 +118,9 @@ class OtpscreenController extends GetxController with CodeAutoFill, Helper {
   void verifyOtp(String otp) async {
     WidgetsFlutterBinding.ensureInitialized();
     Map sendData = {"otpToken": mapData['otpToken'] ?? "", "otp": otp ?? ""};
-    print(">>>postData" + sendData.toString());
+    if (kDebugMode) {
+      print(">>>postData$sendData");
+    }
 
     MyWidgets.showLoading3();
     Get.find<ConnectorController>().POSTMETHOD(
@@ -194,7 +200,9 @@ class OtpscreenController extends GetxController with CodeAutoFill, Helper {
                   showUnderProcess(map);
                 }
                 else if (map['status'] == "kyc-verified") {
-                  print(">>>>>>>>>>>>>>>>>\n\nfrom rider");
+                  if (kDebugMode) {
+                    print(">>>>>>>>>>>>>>>>>\n\nfrom rider");
+                  }
 
                   await SharedPreferencesKeys().setStringData(
                       key: "authToken", text: (map['authToken'] ?? 0).toString());
@@ -249,7 +257,7 @@ class OtpscreenController extends GetxController with CodeAutoFill, Helper {
           } else {
             Snack.callError((map ?? "Something went wrong").toString());
           }
-          log(">>>>>" + map.toString());
+          log(">>>>>$map");
         });
   }
 
@@ -263,7 +271,9 @@ class OtpscreenController extends GetxController with CodeAutoFill, Helper {
       // FlutterBackgroundService().invoke("setAsForeground");
       // FlutterBackgroundService().invoke("setAsBackground");
     } catch (e) {
-      print(">>>>>>>>>>>" + e.toString());
+      if (kDebugMode) {
+        print(">>>>>>>>>>>$e");
+      }
     }
   }
 
@@ -277,7 +287,9 @@ class OtpscreenController extends GetxController with CodeAutoFill, Helper {
       FlutterBackgroundService().invoke("setAsForeground");
       // FlutterBackgroundService().invoke("setAsBackground");
     } catch (e) {
-      print(">>>>>>>>>>>" + e.toString());
+      if (kDebugMode) {
+        print(">>>>>>>>>>>$e");
+      }
     }
   }
 

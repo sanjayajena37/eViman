@@ -1,53 +1,36 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:isolate';
-import 'dart:math';
 import 'dart:ui';
 import 'dart:developer' as dev;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
-import 'package:flutter_isolate/flutter_isolate.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:linear_timer/linear_timer.dart';
-import 'package:sms_autofill/sms_autofill.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:vibration/vibration.dart';
 
-import '../../../../amplifyconfiguration.dart';
-import '../../../../models/ModelProvider.dart';
 import '../../../constants/helper.dart';
 import '../../../constants/shared_preferences_keys.dart';
 import '../../../constants/text_styles.dart';
 import '../../../routes/app_pages.dart';
-import '../../../widgets/CustomeTittleText.dart';
 import '../../../widgets/MyWidget.dart';
-import '../../../widgets/Snack.dart';
 import '../../../widgets/common_button.dart';
 import '../../ConnectorController.dart';
 import '../../driverDashboard/CheckStatusModel.dart';
 import '../../driverDashboard/IncomingBooikingModel.dart';
 import '../../driverDashboard/LocationService.dart';
-import '../../driverDashboard/SubscribeBookingDetailsModel.dart';
 import '../../driverDashboard/controllers/driver_dashboard_controller.dart';
 import '../../loginscreen/controllers/loginscreen_controller.dart';
 import '../../profilescreen/ProfileViewModel.dart';
 import 'package:geocoding/geocoding.dart' as geoc;
-import 'package:http/http.dart' as http;
-import 'package:amplify_core/src/types/api/graphql/graphql_response.dart' as gr;
 import 'package:geolocator/geolocator.dart' as geoLoc;
 
 import 'package:permission_handler/permission_handler.dart' as permission;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-import 'package:amplify_api/amplify_api.dart';
-import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
-import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:location/location.dart';
 
 import '../PendingRidesModel.dart';
 import '../UpComingRidesModel.dart';
@@ -96,7 +79,9 @@ class LogesticdashboardController extends GetxController
         api: "https://backend.eviman.co.in/api/riders/v1/profile/${riderIdNew ?? 0}",
         token: authToken ?? "",
         fun: (map) {
-          print(">>>>" + map.toString());
+          if (kDebugMode) {
+            print(">>>>$map");
+          }
           Get.back();
           if (map is Map && map.containsKey("success") && map['success'] == true) {
             profileViewModel = ProfileViewModel.fromJson(map as Map<String, dynamic>);
@@ -145,7 +130,9 @@ class LogesticdashboardController extends GetxController
               incomingBookingModel?.incomingBooking?.pickupAddress ?? "Angul, Odisha, India",
           "dropAddress": incomingBookingModel?.incomingBooking?.dropAddress ?? "Bhubaneswar, Odisha"
         };
-        print(">>>>>>>>>createRideData" + postData.toString());
+        if (kDebugMode) {
+          print(">>>>>>>>>createRideData$postData");
+        }
 
         MyWidgets.showLoading3();
         await Get.find<ConnectorController>().POSTMETHOD_TOKEN(
@@ -161,7 +148,9 @@ class LogesticdashboardController extends GetxController
                 completer.complete("false");
                 // Snack.callError((map ?? "Something went wrong").toString());
               }
-              print(">>>>>mapData create ride" + map.toString());
+              if (kDebugMode) {
+                print(">>>>>mapData create ride$map");
+              }
             });
       } catch (e) {
         closeDialogIfOpen();
@@ -233,7 +222,9 @@ class LogesticdashboardController extends GetxController
         api: "https://backend.eviman.co.in/api/rides/v1/get-rides-analytics",
         token: authToken ?? "",
         fun: (map) {
-          print(">>>>>>>>>>>rides-analytics" + map.toString());
+          if (kDebugMode) {
+            print(">>>>>>>>>>>rides-analytics$map");
+          }
           if (map is Map && map.containsKey("result") && map['result'] != null) {
             totalDistanceNew = (map['result']['totalDistance'] ?? "0.00").toString();
             totalAmount = (map['result']['totalAmount'] ?? "0.00").toString();
@@ -284,7 +275,9 @@ class LogesticdashboardController extends GetxController
           // json: postData,
           fun: (map) {
             closeDialogIfOpen();
-            print(">>>>>>>>>>>>>>>>>>>>>map$map");
+            if (kDebugMode) {
+              print(">>>>>>>>>>>>>>>>>>>>>map$map");
+            }
             completer.complete(true);
             // Get.back();
           });
@@ -305,7 +298,9 @@ class LogesticdashboardController extends GetxController
     tabController = TabController(length: 2, vsync: this);
     tabController?.addListener(() {
       selectedIndex = tabController?.index;
-      print("Selected Index: " + (tabController?.index).toString());
+      if (kDebugMode) {
+        print("Selected Index: ${tabController?.index}");
+      }
     });
     // getRiderId();
     super.onInit();

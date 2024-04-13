@@ -11,14 +11,11 @@ extension MapHelper on DriverDashboardController {
     int colorIndex = 0;
     for (String mode in travelModes) {
       Get.find<ConnectorController>().GETMETHODCALL(
-          api: "https://maps.googleapis.com/maps/api/directions/json?" +
-              "origin=${sourceLocation.latitude},${sourceLocation.longitude}" + // Replace with source coordinates
-              "&destination=${destination.latitude},${destination.longitude}" + // Replace with destination coordinates
-              "&mode=$mode" +
-              "&alternatives=true" +
-              "&key=AIzaSyDwVSaWuD9KLlbKhJWj9tgKZN_QDDrvmpQ",
+          api: "https://maps.googleapis.com/maps/api/directions/json?origin=${sourceLocation.latitude},${sourceLocation.longitude}&destination=${destination.latitude},${destination.longitude}&mode=$mode&alternatives=true&key=AIzaSyDwVSaWuD9KLlbKhJWj9tgKZN_QDDrvmpQ",
           fun: (data) {
-            print(">>>>>" + data.toString());
+            if (kDebugMode) {
+              print(">>>>>$data");
+            }
             if (data["routes"] != null && data["routes"].length > 0) {
               // final route = data["routes"][0];
               List<dynamic> routes = data["routes"];
@@ -40,7 +37,9 @@ extension MapHelper on DriverDashboardController {
               }
 
               update(['map']);
-              print(">>>>>>>>resp" + routeCoordinates.toString());
+              if (kDebugMode) {
+                print(">>>>>>>>resp$routeCoordinates");
+              }
             }
           });
     }
@@ -62,12 +61,16 @@ extension MapHelper on DriverDashboardController {
 
     String url =
         "https://maps.googleapis.com/maps/api/distancematrix/json?origins=$origin&destinations=$destination&mode=$travelMode&key=$apiKey";
-    print(">>>>>>>>>url" + url);
+    if (kDebugMode) {
+      print(">>>>>>>>>url$url");
+    }
     final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
-      print(">>>>>>>>>>>" + data.toString());
+      if (kDebugMode) {
+        print(">>>>>>>>>>>$data");
+      }
       if (data["status"] == "OK" &&
           data["rows"] != null &&
           data["rows"].length > 0 &&
@@ -76,9 +79,13 @@ extension MapHelper on DriverDashboardController {
             data["rows"][0]["elements"][0]["distance"]["text"];
         int distanceValue = data["rows"][0]["elements"][0]["distance"]["value"];
 
-        print(
-            "Distance: $distanceText"); // Distance in text format (e.g., "5.4 km")
-        print("Distance Value: $distanceValue meters"); // Distance in meters
+        if (kDebugMode) {
+          print(
+            "Distance: $distanceText");
+        } // Distance in text format (e.g., "5.4 km")
+        if (kDebugMode) {
+          print("Distance Value: $distanceValue meters");
+        } // Distance in meters
         double distanceInKM = (double.parse((distanceValue??0).toString().trim())/ 1000) ;
         return (distanceInKM ?? 0).toStringAsFixed(2);
       } else {
@@ -106,12 +113,16 @@ extension MapHelper on DriverDashboardController {
 
     String url =
         "https://maps.googleapis.com/maps/api/distancematrix/json?origins=$origin&destinations=$destination&mode=$travelMode&key=$apiKey";
-    print(">>>>>>>>>url" + url);
+    if (kDebugMode) {
+      print(">>>>>>>>>url$url");
+    }
     final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
-      print(">>>>>>>>>>>" + data.toString());
+      if (kDebugMode) {
+        print(">>>>>>>>>>>$data");
+      }
       if (data["status"] == "OK" &&
           data["rows"] != null &&
           data["rows"].length > 0 &&
@@ -121,9 +132,13 @@ extension MapHelper on DriverDashboardController {
         double distanceValue =
             double.parse((data["rows"][0]["elements"][0]["distance"]["value"] != null &&
                 data["rows"][0]["elements"][0]["distance"]["value"] != "")?(data["rows"][0]["elements"][0]["distance"]["value"]??"0").toString():"0");
-        print(
-            "Distance: $distanceText"); // Distance in text format (e.g., "5.4 km")
-        print("Distance Value: $distanceValue meters"); // Distance in meters
+        if (kDebugMode) {
+          print(
+            "Distance: $distanceText");
+        } // Distance in text format (e.g., "5.4 km")
+        if (kDebugMode) {
+          print("Distance Value: $distanceValue meters");
+        } // Distance in meters
         return distanceValue ?? 0;
         // return double.parse((distanceText??"0").toString());
       } else {
@@ -174,7 +189,9 @@ extension MapHelper on DriverDashboardController {
       currentLocation = LatLng(value.latitude!, value.longitude!);
       // sourceLocation = LatLng(value.latitude!, value.longitude!);
       // currentLocation = LatLng(20.296367,85.8085564);
-      print(">>>>>>>>>>callGetLocation"+currentLocation.toString());
+      if (kDebugMode) {
+        print(">>>>>>>>>>callGetLocation$currentLocation");
+      }
       update(['top','map']);
     });
     GoogleMapController googleMapController = await mapControl.future;
@@ -196,7 +213,9 @@ extension MapHelper on DriverDashboardController {
         update(['top','map']);
       },
       onError: (e) {
-        print(">>>>>>>>>>exception" + e.toString());
+        if (kDebugMode) {
+          print(">>>>>>>>>>exception$e");
+        }
         // sendPort.send("Error: $e");
       },
       cancelOnError: true,

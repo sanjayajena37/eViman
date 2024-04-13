@@ -16,7 +16,9 @@ extension AppSyncController on DriverDashboardController {
   }
 
   void subscribeIncomingBooking() {
-    print(">>>>>>>>>>>>>>>>>riderId" + riderIdNew.toString());
+    if (kDebugMode) {
+      print(">>>>>>>>>>>>>>>>>riderId$riderIdNew");
+    }
     int riderId = int.parse((riderIdNew != null && riderIdNew != "")
         ? ((riderIdNew ?? 0).toString())
         : "0"); // Replace with the desired rider ID
@@ -54,7 +56,9 @@ extension AppSyncController on DriverDashboardController {
     subscription = operation.listen(
           (event) {
         if (event.data != null) {
-          print(">>>>>>>>>>>>>>>>event.data"+event.data.toString());
+          if (kDebugMode) {
+            print(">>>>>>>>>>>>>>>>event.data${event.data}");
+          }
           Map? receiveDataNewClose = jsonDecode(event.data as String) ?? {};
           if(receiveDataNewClose != null &&
               receiveDataNewClose['incomingBooking']['status'].toString().trim() == "Booking Timeout"){
@@ -135,12 +139,12 @@ extension AppSyncController on DriverDashboardController {
                       pickUpDistance: value1,
                       travelDistance: value2,
                       receiveData: receiveData);
-                  safePrint("distance value2" + value2.toString());
+                  safePrint("distance value2$value2");
                 });
-                safePrint("distance value1" + value1.toString());
+                safePrint("distance value1$value1");
               });
 
-              safePrint(">>>>>>>>>>>mapData" + receiveData.toString());
+              safePrint(">>>>>>>>>>>mapData$receiveData");
             }
             else {
               // Snack.callSuccess("Please take action quick");

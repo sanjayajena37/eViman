@@ -6,7 +6,6 @@ import '../../../constants/text_styles.dart';
 import '../../../constants/themes.dart';
 import '../../../routes/app_pages.dart';
 import '../../../widgets/common_button.dart';
-import '../../../widgets/common_text_field_view.dart';
 import '../../../widgets/common_text_field_view1.dart';
 import '../../../widgets/remove_focuse.dart';
 import '../../loginscreen/FacebookTwitterButtonView.dart';

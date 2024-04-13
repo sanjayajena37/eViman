@@ -57,6 +57,8 @@ dependencies:
   upgrader:
   share_plus:
   flutter_analog_clock:
+  cloud_firestore:
+  firebase_database:
   #  new_version_plus:
   # device_info_plus: ^8.1.0
 

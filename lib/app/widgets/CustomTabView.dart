@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../data/app_data.dart';
 
 
 class CustomTabView extends StatefulWidget {

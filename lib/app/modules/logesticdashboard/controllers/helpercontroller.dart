@@ -81,7 +81,9 @@ extension HelperController on LogesticdashboardController {
                     duration: const Duration(seconds: 40),
                     onTimerEnd: () {
                       if (Get.isDialogOpen == true) {
-                        print("timer ended");
+                        if (kDebugMode) {
+                          print("timer ended");
+                        }
                         // userDetails = "";
                         maxChildSize = Rx<double>(0.2);
                         snapSize = Rx<List<double>>([0.1, 0.2]);
@@ -114,15 +116,15 @@ extension HelperController on LogesticdashboardController {
                   ),
                   Row(
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.location_searching_rounded,
                         size: 20,
                         color: Colors.red,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 20,
                       ),
-                      Container(
+                      SizedBox(
                         width: Get.width * 0.7,
                         child: Text(
                           pickupAddress ?? "Lagos-Abeokuta Expressway KM 748",
@@ -157,15 +159,15 @@ extension HelperController on LogesticdashboardController {
                   ),
                   Row(
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.location_on,
                         size: 20,
                         color: Color(0xffADD685),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 20,
                       ),
-                      Container(
+                      SizedBox(
                         width: Get.width * 0.7,
                         child: Text(
                           dropAddress ?? "Queen Street 73",
@@ -191,7 +193,7 @@ extension HelperController on LogesticdashboardController {
                               Column(
                                 children: [
                                   Container(
-                                    margin: EdgeInsets.only(top: 10),
+                                    margin: const EdgeInsets.only(top: 10),
                                     child: const Icon(
                                       Icons.map,
                                       color: Color(0xffA6B7D4),
@@ -206,6 +208,7 @@ extension HelperController on LogesticdashboardController {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   FittedBox(
+                                    fit: BoxFit.contain,
                                     child: Text(
                                       pickUpDistance ?? "32Km",
                                       style: TextStyles(context)
@@ -214,7 +217,6 @@ extension HelperController on LogesticdashboardController {
                                           color: Colors.white,
                                           fontSize: 28),
                                     ),
-                                    fit: BoxFit.contain,
                                   ),
                                   Text(
                                     "PickUp distance",
@@ -230,7 +232,7 @@ extension HelperController on LogesticdashboardController {
                         Container(
                           height: 60,
                           width: 2,
-                          color: Color(0xffA6B7D4),
+                          color: const Color(0xffA6B7D4),
                         ),
                         SizedBox(
                           height: 70,
@@ -239,7 +241,7 @@ extension HelperController on LogesticdashboardController {
                               Column(
                                 children: [
                                   Container(
-                                    margin: EdgeInsets.only(top: 10),
+                                    margin: const EdgeInsets.only(top: 10),
                                     child: const Icon(
                                       Icons.map,
                                       color: Color(0xffA6B7D4),
@@ -254,6 +256,7 @@ extension HelperController on LogesticdashboardController {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   FittedBox(
+                                    fit: BoxFit.contain,
                                     child: Text(
                                       travelDistance ?? "32Km",
                                       style: TextStyles(context)
@@ -262,7 +265,6 @@ extension HelperController on LogesticdashboardController {
                                           color: Colors.white,
                                           fontSize: 28),
                                     ),
-                                    fit: BoxFit.contain,
                                   ),
                                   Text(
                                     "Traveled distance",
@@ -290,7 +292,7 @@ extension HelperController on LogesticdashboardController {
                       ),
                     ],
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 3,
                   ),
                   Row(
@@ -319,7 +321,7 @@ extension HelperController on LogesticdashboardController {
                           },
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 5,
                       ),
                       Expanded(
@@ -341,12 +343,12 @@ extension HelperController on LogesticdashboardController {
                 left: 266,
                 child: Container(
                   height: 30,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                       shape: BoxShape.circle, color: Colors.transparent),
                   child: Align(
                     alignment: Alignment.center,
                     child: IconButton(
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.close,
                         color: Colors.white,
                       ),
@@ -358,8 +360,8 @@ extension HelperController on LogesticdashboardController {
                 ))
           ]),
           backgroundColor: const Color(0xff16192C),
-          insetPadding: EdgeInsets.all(2),
-          contentPadding: EdgeInsets.all(0),
+          insetPadding: const EdgeInsets.all(2),
+          contentPadding: const EdgeInsets.all(0),
         ));
   }
 
@@ -389,7 +391,9 @@ extension HelperController on LogesticdashboardController {
       }
       return;
     } catch (e) {
-      print(">>>>>>\n\n" + e.toString());
+      if (kDebugMode) {
+        print(">>>>>>\n\n$e");
+      }
       return;
     }
   }
@@ -405,7 +409,9 @@ extension HelperController on LogesticdashboardController {
       // FlutterBackgroundService().invoke("isForeGround",{"sta":sta??"true"});
       return;
     } catch (e) {
-      print(">>>>>>>>>>>error JKs\n\n" + e.toString());
+      if (kDebugMode) {
+        print(">>>>>>>>>>>error JKs\n\n$e");
+      }
       return;
     }
   }

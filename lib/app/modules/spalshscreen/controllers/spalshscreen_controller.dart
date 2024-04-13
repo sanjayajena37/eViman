@@ -2,16 +2,13 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:dateplan/app/constants/helper.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../../constants/shared_preferences_keys.dart';
-import '../../../providers/Utils.dart';
 import '../../../routes/app_pages.dart';
 import 'package:geolocator/geolocator.dart' as geoLoc;
 
@@ -48,21 +45,6 @@ class SpalshscreenController extends GetxController with Helper{
 
   @override
   void onClose() {
-
-   /* Navigator.push(
-      context,
-      PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) => SecondScreen(),
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          const begin = Offset(1.0, 0.0);
-          const end = Offset.zero;
-          const curve = Curves.ease;
-          var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-          var offsetAnimation = animation.drive(tween);
-          return SlideTransition(position: offsetAnimation, child: child);
-        },
-      ),
-    );*/
     super.onClose();
   }
 
@@ -210,7 +192,6 @@ class SpalshscreenController extends GetxController with Helper{
   }
 
   getLoginDetails() async {
-
     String? isLogin = await SharedPreferencesKeys().getStringData(key: 'isLogin');
     String? vehicleId = await SharedPreferencesKeys().getStringData(key: 'vehicleId');
     String? vehicleMode = await SharedPreferencesKeys().getStringData(key: 'vehicleMode');
@@ -232,7 +213,11 @@ class SpalshscreenController extends GetxController with Helper{
         });
         permissionAllow = false;
         Snack.callError("Login Expired");
-      }else{
+      }
+      else{
+        if (kDebugMode) {
+          print(">>>>>>>>>>>>>>>>>>>>isLogin$isLogin");
+        }
         if(isLogin == "true"){
           if (kDebugMode) {
             print(">>>>>>>>>>>>>>>>>>>>vehicleMode$vehicleMode");

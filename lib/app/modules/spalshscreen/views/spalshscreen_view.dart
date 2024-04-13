@@ -1,18 +1,12 @@
-import 'package:animated_text_kit/animated_text_kit.dart';
-import 'package:dateplan/app/providers/Utils.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:upgrader/upgrader.dart';
 
 import '../../../constants/localfiles.dart';
 import '../../../constants/text_styles.dart';
-import '../../../constants/themes.dart';
 import '../../../logic/controllers/theme_provider.dart';
-import '../../../routes/app_pages.dart';
-import '../../../widgets/Snack.dart';
 import '../../../widgets/common_button.dart';
 import '../controllers/spalshscreen_controller.dart';
 import 'package:lottie/lottie.dart' as lottie;
@@ -62,7 +56,7 @@ class SpalshscreenView extends GetView<SpalshscreenController> {
                       child: SizedBox(),
                     ),
                     Center(
-                      child: Container(
+                      child: SizedBox(
                         width: MediaQuery
                             .of(context)
                             .size
@@ -154,7 +148,7 @@ class SpalshscreenView extends GetView<SpalshscreenController> {
               height: Get.height * 0.9,
               child: Column(
                 children: [
-                  SizedBox(
+                  const SizedBox(
                     height: 15,
                   ),
                   Padding(
@@ -245,7 +239,7 @@ class SpalshscreenView extends GetView<SpalshscreenController> {
                             .copyWith(
                             fontSize: 15, color: Colors.red),
                       )),
-                  SizedBox(
+                  const SizedBox(
                     height: 4,
                   ),
                   Padding(
@@ -264,7 +258,7 @@ class SpalshscreenView extends GetView<SpalshscreenController> {
                           )),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 7,
                   ),
                   Padding(
@@ -283,7 +277,7 @@ class SpalshscreenView extends GetView<SpalshscreenController> {
                           )),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 7,
                   ),
                   Padding(
