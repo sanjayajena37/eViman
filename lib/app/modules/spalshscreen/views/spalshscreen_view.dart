@@ -1,18 +1,12 @@
-import 'package:animated_text_kit/animated_text_kit.dart';
-import 'package:dateplan/app/providers/Utils.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:upgrader/upgrader.dart';
 
 import '../../../constants/localfiles.dart';
 import '../../../constants/text_styles.dart';
-import '../../../constants/themes.dart';
 import '../../../logic/controllers/theme_provider.dart';
-import '../../../routes/app_pages.dart';
-import '../../../widgets/Snack.dart';
 import '../../../widgets/common_button.dart';
 import '../controllers/spalshscreen_controller.dart';
 import 'package:lottie/lottie.dart' as lottie;

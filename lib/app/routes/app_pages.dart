@@ -1,4 +1,3 @@
-import 'package:flutter/animation.dart';
 
 import 'package:get/get.dart';
 
@@ -199,6 +198,8 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.LOGESTICDASHBOARD,
+      transition: Transition.fadeIn,
+      transitionDuration: const Duration(milliseconds: 1000),
       page: () => LogesticdashboardView(),
       binding: LogesticdashboardBinding(),
     ),

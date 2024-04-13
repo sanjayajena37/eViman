@@ -9,7 +9,6 @@ import 'package:get/get.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 
 import '../../../routes/app_pages.dart';
-import '../../../utils/validator.dart';
 import '../../../widgets/MyWidget.dart';
 import '../../../widgets/Snack.dart';
 import '../../ConnectorController.dart';

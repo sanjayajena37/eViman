@@ -11,7 +11,6 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../constants/shared_preferences_keys.dart';
-import '../../../data/ApiFactory.dart';
 import '../../../widgets/MyWidget.dart';
 import '../../../widgets/Snack.dart';
 import '../../ConnectorController.dart';

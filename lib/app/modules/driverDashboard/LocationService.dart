@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:ui';
 
-import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 
 class LocationService {

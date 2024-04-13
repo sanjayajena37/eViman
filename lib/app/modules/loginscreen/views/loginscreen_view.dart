@@ -1,18 +1,15 @@
-import 'package:dateplan/app/providers/Utils.dart';
+
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../constants/text_styles.dart';
-import '../../../routes/app_pages.dart';
 import '../../../widgets/Snack.dart';
-import '../../../widgets/bottom_top_move_animation_view.dart';
 import '../../../widgets/common_appbar_view.dart';
 import '../../../widgets/common_button.dart';
 import '../../../widgets/common_text_field_view.dart';
 import '../../../widgets/remove_focuse.dart';
-import '../FacebookTwitterButtonView.dart';
 import '../controllers/loginscreen_controller.dart';
 
 class LoginscreenView extends StatelessWidget {

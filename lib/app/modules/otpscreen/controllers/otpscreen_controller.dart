@@ -15,7 +15,6 @@ import '../../../data/ApiFactory.dart';
 import '../../../routes/app_pages.dart';
 import '../../../widgets/MyWidget.dart';
 import '../../../widgets/Snack.dart';
-import '../../../widgets/test.dart';
 import '../../ConnectorController.dart';
 
 class OtpscreenController extends GetxController with CodeAutoFill, Helper {

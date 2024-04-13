@@ -1,12 +1,9 @@
-import 'dart:io';
+
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:dateplan/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
 
 import '../../../widgets/CustomeTittleText.dart';
 import '../../../widgets/Textfield_widget.dart';
@@ -63,7 +60,7 @@ class ProfilescreenView extends GetView<ProfilescreenController> {
                     child:
                         NotificationListener<OverscrollIndicatorNotification>(
                       onNotification: (overscroll) {
-                        overscroll.disallowGlow();
+                        overscroll.disallowIndicator();
                         return true;
                       },
                       child: SingleChildScrollView(
@@ -274,7 +271,7 @@ class ProfilescreenView extends GetView<ProfilescreenController> {
                               child: NotificationListener<
                                   OverscrollIndicatorNotification>(
                                 onNotification: (overscroll) {
-                                  overscroll.disallowGlow();
+                                  overscroll.disallowIndicator();
                                   return true;
                                 },
                                 child: GetBuilder<ProfilescreenController>(

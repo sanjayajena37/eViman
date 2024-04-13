@@ -2,16 +2,13 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:dateplan/app/constants/helper.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../../constants/shared_preferences_keys.dart';
-import '../../../providers/Utils.dart';
 import '../../../routes/app_pages.dart';
 import 'package:geolocator/geolocator.dart' as geoLoc;
 

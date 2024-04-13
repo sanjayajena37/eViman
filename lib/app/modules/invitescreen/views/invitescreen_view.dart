@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_gif/flutter_gif.dart';
 
 import 'package:get/get.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../../../constants/text_styles.dart';
 import '../../../constants/themes.dart';
-import '../../../widgets/CustomeTittleText.dart';
 import '../../../widgets/common_button.dart';
 import '../controllers/invitescreen_controller.dart';
 

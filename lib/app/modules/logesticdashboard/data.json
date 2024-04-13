@@ -1,50 +1,5 @@
 {
   "success": true,
   "message": "Ride Details Fetched !",
-  "rides": [
-    {
-      "booking_id": "EVIMAN_1037",
-      "total_amount": 85.56,
-      "amount_paid": 76.96,
-      "is_paid": true,
-      "ride_status": "COMPLETED",
-      "pickup_address": "Doddanekkundi CRS Bengaluru",
-      "drop_address": "Marathahalli, Bengaluru, Karnataka, India",
-      "from_date": "29/01/2024",
-      "to_date": null
-    },
-    {
-      "booking_id": "EVIMAN_1041",
-      "total_amount": 31.016,
-      "amount_paid": 0,
-      "is_paid": false,
-      "ride_status": "CANCELLED BY RIDER",
-      "pickup_address": "Plot No. 887/888 Bhubaneswar",
-      "drop_address": "Nayapalli, Bhubaneswar, Odisha, India",
-      "from_date": "29/01/2024",
-      "to_date": null
-    },
-    {
-      "booking_id": "EVIMAN_1033",
-      "total_amount": 25.884,
-      "amount_paid": 53.7,
-      "is_paid": true,
-      "ride_status": "COMPLETED",
-      "pickup_address": "CROSSROAD Mall, Madhusudan Marg, Daily Market, Udit Nagar, Rourkela, Odisha, India",
-      "drop_address": "Traffic Chowk Bus Bay, Udit Nagar, Rourkela, Odisha, India",
-      "from_date": "30/01/2024",
-      "to_date": null
-    },
-    {
-      "booking_id": "EVIMAN_1036",
-      "total_amount": 61.9,
-      "amount_paid": 0,
-      "is_paid": false,
-      "ride_status": "CANCELLED BY RIDER",
-      "pickup_address": "#22 Bengaluru",
-      "drop_address": "Murgesh Pallya, Bengaluru, Karnataka, India",
-      "from_date": "30/01/2024",
-      "to_date": null
-    }
-  ]
+  "rides": []
 }

@@ -4,10 +4,8 @@ import 'package:get/get.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:upgrader/upgrader.dart';
 
-import '../../../constants/themes.dart';
 import '../../../routes/app_pages.dart';
 import '../../../widgets/common_button.dart';
-import '../../loginscreen/views/loginscreen_view.dart';
 import '../controllers/introscreen_controller.dart';
 import '../pagePopup.dart';
 

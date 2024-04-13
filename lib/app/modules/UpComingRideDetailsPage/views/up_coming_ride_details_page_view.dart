@@ -121,7 +121,7 @@ class UpComingRideDetailsPageView extends GetView<UpComingRideDetailsPageControl
                                                                   int index) {
                                                                 return Column(
                                                                   children: <Widget>[
-                                                                    SizedBox(
+                                                                    const SizedBox(
                                                                       height: 1,
                                                                     ),
                                                                     Container(
@@ -137,7 +137,7 @@ class UpComingRideDetailsPageView extends GetView<UpComingRideDetailsPageControl
                                                                 );
                                                               }),
                                                         ),
-                                                        SizedBox(
+                                                        const SizedBox(
                                                           height: 1,
                                                         ),
                                                         Container(
@@ -167,7 +167,7 @@ class UpComingRideDetailsPageView extends GetView<UpComingRideDetailsPageControl
                                                                     .getBoldStyle(),
                                                                 maxLines: 2)),
                                                       ),
-                                                      SizedBox(
+                                                      const SizedBox(
                                                         height: 21,
                                                       ),
                                                       Opacity(

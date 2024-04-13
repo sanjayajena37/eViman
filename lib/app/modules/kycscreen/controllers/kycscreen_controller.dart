@@ -1,9 +1,7 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:dateplan/app/constants/helper.dart';
-import 'package:dateplan/app/modules/keyscreen/controllers/keyscreen_controller.dart';
 import 'package:dateplan/app/widgets/Snack.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
@@ -12,11 +10,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lottie/lottie.dart';
 
-import '../../../constants/themes.dart';
 import '../../../data/ApiFactory.dart';
 import '../../../routes/app_pages.dart';
 import '../../../utils/validator.dart';
@@ -24,7 +20,6 @@ import '../../../widgets/KeyvalueModel.dart';
 import '../../../widgets/MyWidget.dart';
 import '../../../widgets/common_button.dart';
 import '../../../widgets/common_text_field_view.dart';
-import '../../../widgets/custom_dialog.dart';
 import '../../ConnectorController.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:dio/dio.dart' as service;

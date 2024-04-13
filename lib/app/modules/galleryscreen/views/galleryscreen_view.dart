@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import '../../../widgets/common_appbar_view.dart';
 import '../../../widgets/remove_focuse.dart';
 import '../controllers/galleryscreen_controller.dart';
-import '../details_page.dart';
 
 class GalleryscreenView extends GetView<GalleryscreenController> {
   GalleryscreenView({Key? key}) : super(key: key);

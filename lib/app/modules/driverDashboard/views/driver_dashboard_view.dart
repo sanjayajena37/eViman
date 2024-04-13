@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
-import 'dart:isolate';
 
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -9,37 +7,23 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
-import 'package:flutter_background_service/flutter_background_service.dart';
-import 'package:flutter_isolate/flutter_isolate.dart';
 
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:lottie/lottie.dart' as lottie;
-import 'package:permission_handler/permission_handler.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:upgrader/upgrader.dart';
 
-import 'package:url_launcher/url_launcher.dart';
-import 'package:workmanager/workmanager.dart';
 
-import '../../../constants/shared_preferences_keys.dart';
 import '../../../constants/text_styles.dart';
-import '../../../constants/themes.dart';
 import '../../../logic/controllers/theme_provider.dart';
 import '../../../providers/Utils.dart';
 import '../../../routes/app_pages.dart';
 import '../../../widgets/CustomeTittleText.dart';
-import '../../../widgets/DraggablePopup.dart';
 import '../../../widgets/MovableContainer.dart';
-import '../../../widgets/RoundedButtonWidget.dart';
-import '../../../widgets/Snack.dart';
-import '../../../widgets/SpeedometerContainer.dart';
 import '../../../widgets/common_button.dart';
-import '../../../widgets/common_text_field_view.dart';
 import '../../../widgets/remove_focuse.dart';
-import '../../../widgets/tap_effect.dart';
 import '../controllers/driver_dashboard_controller.dart';
-import 'package:dateplan/app/constants/helper.dart';
 
 class DriverDashboardView extends StatelessWidget {
   DriverDashboardView({Key? key}) : super(key: key);

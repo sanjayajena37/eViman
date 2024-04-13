@@ -7,7 +7,6 @@ import 'dart:ui';
 import 'dart:developer' as dev;
 
 import 'package:amplify_api/amplify_api.dart';
-import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:assets_audio_player/assets_audio_player.dart';
@@ -27,13 +26,11 @@ import 'package:permission_handler/permission_handler.dart' as permission;
 
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:iconsax/iconsax.dart';
 import 'package:linear_timer/linear_timer.dart';
 import 'package:location/location.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:vibration/vibration.dart';
-import 'package:workmanager/workmanager.dart';
 
 import '../../../../amplifyconfiguration.dart';
 
@@ -43,7 +40,6 @@ import '../../../constants/shared_preferences_keys.dart';
 import '../../../constants/text_styles.dart';
 import '../../../widgets/CustomeTittleText.dart';
 import '../../../widgets/MyWidget.dart';
-import '../../../widgets/RoundedButtonWidget.dart';
 import '../../../widgets/Snack.dart';
 import '../../../widgets/common_button.dart';
 import '../../ConnectorController.dart';
@@ -51,16 +47,13 @@ import '../../loginscreen/controllers/loginscreen_controller.dart';
 import '../../profilescreen/ProfileViewModel.dart';
 import '../CheckStatusModel.dart';
 import '../IncomingBooikingModel.dart';
-import '../IncomingBooking.dart';
 import 'package:amplify_core/src/types/api/graphql/graphql_response.dart' as gr;
 
 import '../LocationService.dart';
 import '../SubscribeBookingDetailsModel.dart';
-import 'AmplifyApiName.dart';
 import 'package:geocoding/geocoding.dart' as geoc;
 import 'package:http/http.dart' as http;
 
-import 'location_isolate.dart';
 part 'mapcontroller.dart';
 part 'appsyncController.dart';
 part 'helpercontroller.dart';

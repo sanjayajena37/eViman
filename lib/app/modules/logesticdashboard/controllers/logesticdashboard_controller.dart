@@ -1,53 +1,36 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:isolate';
-import 'dart:math';
 import 'dart:ui';
 import 'dart:developer' as dev;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
-import 'package:flutter_isolate/flutter_isolate.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:linear_timer/linear_timer.dart';
-import 'package:sms_autofill/sms_autofill.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:vibration/vibration.dart';
 
-import '../../../../amplifyconfiguration.dart';
-import '../../../../models/ModelProvider.dart';
 import '../../../constants/helper.dart';
 import '../../../constants/shared_preferences_keys.dart';
 import '../../../constants/text_styles.dart';
 import '../../../routes/app_pages.dart';
-import '../../../widgets/CustomeTittleText.dart';
 import '../../../widgets/MyWidget.dart';
-import '../../../widgets/Snack.dart';
 import '../../../widgets/common_button.dart';
 import '../../ConnectorController.dart';
 import '../../driverDashboard/CheckStatusModel.dart';
 import '../../driverDashboard/IncomingBooikingModel.dart';
 import '../../driverDashboard/LocationService.dart';
-import '../../driverDashboard/SubscribeBookingDetailsModel.dart';
 import '../../driverDashboard/controllers/driver_dashboard_controller.dart';
 import '../../loginscreen/controllers/loginscreen_controller.dart';
 import '../../profilescreen/ProfileViewModel.dart';
 import 'package:geocoding/geocoding.dart' as geoc;
-import 'package:http/http.dart' as http;
-import 'package:amplify_core/src/types/api/graphql/graphql_response.dart' as gr;
 import 'package:geolocator/geolocator.dart' as geoLoc;
 
 import 'package:permission_handler/permission_handler.dart' as permission;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-import 'package:amplify_api/amplify_api.dart';
-import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
-import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:location/location.dart';
 
 import '../PendingRidesModel.dart';
 import '../UpComingRidesModel.dart';

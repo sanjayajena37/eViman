@@ -9,10 +9,8 @@ import 'package:get/get.dart';
 
 import '../../MainClass.dart';
 import '../../firebase_options.dart';
-import '../../main.dart';
 import '../data/ApiFactory.dart';
 import '../modules/ConnectorController.dart';
-import '../routes/app_pages.dart';
 
 @pragma("vm:entry-point")
 @pragma("vm:entry-point", true)

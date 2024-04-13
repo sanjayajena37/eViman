@@ -2,13 +2,10 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:sms_autofill/sms_autofill.dart';
-import 'package:timer_count_down/timer_controller.dart';
 import 'package:timer_count_down/timer_count_down.dart';
 
 import '../../../constants/text_styles.dart';
-import '../../../routes/app_pages.dart';
 import '../../../widgets/common_appbar_view.dart';
-import '../../../widgets/common_button.dart';
 import '../controllers/otpscreen_controller.dart';
 
 class OtpscreenView extends GetView<OtpscreenController> {
