@@ -9,6 +9,10 @@
         android:required="false" />
 
     <queries>
+        <!-- Declare apps that your app can interact with -->
+        <package android:name="com.google.android.gm" />
+        <package android:name="com.yahoo.mobile.client.android.mail" />
+        <package android:name="com.microsoft.office.outlook" />
         <!-- If your app checks for SMS support -->
         <intent>
             <action android:name="android.intent.action.VIEW" />
@@ -36,10 +40,15 @@
             <action android:name="android.intent.action.SEND" />
             <data android:mimeType="*/*" />
         </intent>
+        <!-- Example intent to open an email -->
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="mailto" />
+        </intent>
 
     </queries>
 
-    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
+<!--    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />-->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
     <uses-permission android:name="android.permission.INTERNET" />
